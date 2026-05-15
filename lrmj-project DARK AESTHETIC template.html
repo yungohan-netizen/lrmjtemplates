@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LRMJ Project — Ferronnerie sur mesure · Belgique</title>
+  <meta name="description" content="Artisan ferronnier belge. Portails, garde-corps, serres, baies vitrées sur mesure. Opwijk.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+
+  /* ─────────────────────────────────────────────
+     TOKENS
+  ───────────────────────────────────────────── */
+  :root {
+    --bg:    #080807;
+    --bg2:   #0f0f0e;
+    --fg:    #F2EFEA;
+    --fg2:   rgba(242,239,234,.42);
+    --fg3:   rgba(242,239,234,.10);
+    --cu:    #C4A882;
+    --ease:  cubic-bezier(0.16, 1, 0.3, 1);
+    --f:     'Syne', system-ui, sans-serif;
+  }
+
+  /* ─────────────────────────────────────────────
+     RESET
+  ───────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--f);
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  a { color: inherit; text-decoration: none; }
+  @media (hover: none) { body { cursor: auto; } }
+
+  /* ─────────────────────────────────────────────
+     CURSOR
+  ───────────────────────────────────────────── */
+  .cur {
+    position: fixed; top: 0; left: 0;
+    width: 7px; height: 7px;
+    background: var(--fg);
+    border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    mix-blend-mode: difference;
+    transition: width .25s var(--ease), height .25s var(--ease);
+  }
+  .cur-ring {
+    position: fixed; top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(242,239,234,.35);
+    border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    mix-blend-mode: difference;
+    transition: width .5s var(--ease), height .5s var(--ease), border-color .3s;
+  }
+  .cur-ring.big { width: 72px; height: 72px; border-color: rgba(242,239,234,.2); }
+  @media (hover: none) { .cur, .cur-ring { display: none; } }
+
+  /* ─────────────────────────────────────────────
+     PROGRESS
+  ───────────────────────────────────────────── */
+  .prog {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 1px; background: var(--cu);
+    transform-origin: left; transform: scaleX(0);
+    z-index: 1000; transition: transform .05s linear;
+  }
+
+  /* ─────────────────────────────────────────────
+     NAV
+  ───────────────────────────────────────────── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+    padding: 0 5vw; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background .5s, backdrop-filter .5s;
+  }
+  .nav.frosted {
+    background: rgba(8,8,7,.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--fg3);
+  }
+  .nav-logo {
+    font-size: .72rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--fg); opacity: .85;
+    transition: opacity .2s;
+  }
+  .nav-logo:hover { opacity: 1; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: .65rem; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--fg2); transition: color .2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px; background: var(--cu);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .35s var(--ease);
+  }
+  .nav-links a:hover { color: var(--fg); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-tel {
+    font-size: .72rem; font-weight: 600;
+    letter-spacing: .04em; color: var(--fg);
+    opacity: .7; transition: opacity .2s;
+  }
+  .nav-tel:hover { opacity: 1; }
+  .nav-burger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: none; padding: 4px;
+  }
+  .nav-burger span {
+    display: block; width: 20px; height: 1px;
+    background: var(--fg); opacity: .7;
+    transition: transform .3s, opacity .3s;
+  }
+  @media (max-width: 768px) {
+    .nav-links, .nav-tel { display: none; }
+    .nav-burger { display: flex; }
+  }
+
+  /* ─────────────────────────────────────────────
+     MOB MENU
+  ───────────────────────────────────────────── */
+  .mob {
+    position: fixed; inset: 0;
+    background: var(--bg2); z-index: 800;
+    display: flex; flex-direction: column;
+    padding: 6rem 6vw 4rem;
+    transform: translateX(100%);
+    transition: transform .6s var(--ease);
+  }
+  .mob.open { transform: none; }
+  .mob-x {
+    position: absolute; top: 1.5rem; right: 6vw;
+    font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--fg2); cursor: none;
+  }
+  .mob a {
+    font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 700;
+    color: var(--fg); line-height: 1.15; letter-spacing: -.02em;
+    text-transform: uppercase; margin-bottom: .1em;
+    transition: color .2s;
+  }
+  .mob a:hover { color: var(--cu); }
+  .mob-footer {
+    margin-top: auto; font-size: .72rem; font-weight: 600;
+    color: var(--cu); letter-spacing: .04em;
+  }
+
+  /* ─────────────────────────────────────────────
+     HERO
+  ───────────────────────────────────────────── */
+  .hero {
+    position: relative; height: 100svh; min-height: 620px;
+    overflow: hidden; background: var(--bg);
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 5vw 5vh;
+  }
+
+  /* VIDEO — replace .hero-vid with <video autoplay muted loop playsinline> */
+  .hero-vid {
+    position: absolute; inset: 0;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .hero-vid video,
+  .hero-vid-placeholder {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .hero-vid-placeholder {
+    background:
+      radial-gradient(ellipse 70% 60% at 60% 55%, rgba(80,60,30,.12) 0%, transparent 65%),
+      radial-gradient(ellipse 45% 55% at 20% 30%, rgba(196,168,130,.05) 0%, transparent 60%),
+      linear-gradient(160deg, #1a1710 0%, #080807 45%, #0d0d0c 100%);
+    animation: ambience 25s ease-in-out infinite alternate;
+  }
+  @keyframes ambience {
+    0%   { filter: brightness(1); }
+    100% { filter: brightness(1.15) contrast(1.05); }
+  }
+
+  /* Gradient vignette */
+  .hero-vignette {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to top, rgba(8,8,7,.95) 0%, rgba(8,8,7,.3) 40%, transparent 70%),
+      linear-gradient(to right, rgba(8,8,7,.4) 0%, transparent 50%);
+    z-index: 1;
+  }
+
+  /* Hero label */
+  .hero-label {
+    position: relative; z-index: 2;
+    font-size: .62rem; font-weight: 500;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--fg2); margin-bottom: 2.5vh;
+    display: flex; align-items: center; gap: .8rem;
+    opacity: 0; animation: labelIn .8s .2s var(--ease) forwards;
+  }
+  .hero-label-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--cu); flex-shrink: 0;
+    animation: dotPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  @keyframes labelIn { to { opacity: 1; } }
+
+  /* Hero title — clip-path line reveal */
+  .hero-title {
+    position: relative; z-index: 2;
+    font-size: clamp(3.5rem, 13vw, 16rem);
+    font-weight: 800; line-height: .88;
+    letter-spacing: -.035em; text-transform: uppercase;
+    margin-bottom: 4vh;
+  }
+  .hero-line { display: block; overflow: hidden; }
+  .hero-line-inner {
+    display: block;
+    transform: translateY(108%);
+    animation: lineUp 1.1s var(--ease) forwards;
+  }
+  .hero-line:nth-child(1) .hero-line-inner { animation-delay: .35s; }
+  .hero-line:nth-child(2) .hero-line-inner { animation-delay: .5s; }
+  .hero-line-em { font-weight: 400; font-style: italic; color: var(--fg2); }
+  @keyframes lineUp { to { transform: translateY(0); } }
+
+  /* Hero foot */
+  .hero-foot {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1.5rem;
+    opacity: 0; animation: labelIn .8s 1s var(--ease) forwards;
+  }
+  .hero-foot-l {
+    font-size: .78rem; font-weight: 400;
+    color: var(--fg2); line-height: 1.7;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: .8rem;
+    font-size: .65rem; font-weight: 600;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--fg); border-bottom: 1px solid var(--cu);
+    padding-bottom: 2px; transition: gap .35s var(--ease), color .2s;
+  }
+  .hero-cta:hover { gap: 1.4rem; color: var(--cu); }
+
+  /* Scroll cue */
+  .hero-scroll {
+    position: absolute; right: 5vw; top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: right center;
+    font-size: .55rem; font-weight: 500;
+    letter-spacing: .3em; text-transform: uppercase;
+    color: var(--fg3); white-space: nowrap;
+    z-index: 2;
+    opacity: 0; animation: labelIn .8s 1.5s var(--ease) forwards;
+  }
+
+  /* ─────────────────────────────────────────────
+     SHARED REVEAL
+  ───────────────────────────────────────────── */
+  .r { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .r.vis { opacity: 1; transform: none; }
+  .r.d1 { transition-delay: .1s; }
+  .r.d2 { transition-delay: .2s; }
+  .r.d3 { transition-delay: .3s; }
+  .r.d4 { transition-delay: .4s; }
+
+  /* ─────────────────────────────────────────────
+     SECTION UTILS
+  ───────────────────────────────────────────── */
+  .sec-label {
+    font-size: .6rem; font-weight: 600;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--cu); display: block; margin-bottom: 1.25rem;
+  }
+  .sec-title {
+    font-size: clamp(2rem, 5vw, 5.5rem);
+    font-weight: 700; letter-spacing: -.03em;
+    line-height: .9; text-transform: uppercase;
+  }
+  .sec-title em { font-weight: 400; font-style: italic; color: var(--fg2); }
+
+  /* ─────────────────────────────────────────────
+     GALLERY — Full-bleed, edge to edge
+  ───────────────────────────────────────────── */
+  .gallery { padding: 14vh 0 0; background: var(--bg); }
+  .gallery-header {
+    padding: 0 5vw 5vh;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .gallery-count {
+    font-size: .6rem; font-weight: 500; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--fg3);
+  }
+
+  /* Editorial grid — no gaps, perfectly flush */
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 28vw;
+    gap: 3px;
+  }
+  .gi-1  { grid-column: 1/6;  grid-row: 1/3; }
+  .gi-2  { grid-column: 6/9;  grid-row: 1/2; }
+  .gi-3  { grid-column: 9/13; grid-row: 1/2; }
+  .gi-4  { grid-column: 6/10; grid-row: 2/3; }
+  .gi-5  { grid-column: 10/13;grid-row: 2/3; }
+  .gi-6  { grid-column: 1/5;  grid-row: 3/4; }
+  .gi-7  { grid-column: 5/9;  grid-row: 3/4; }
+  .gi-8  { grid-column: 9/13; grid-row: 3/4; }
+
+  .gal-item {
+    position: relative; overflow: hidden; cursor: none;
+    background: var(--bg2);
+  }
+  .gal-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    transform: scale(1.06);
+    transition: transform .9s var(--ease);
+  }
+  .gal-item:hover .gal-img { transform: scale(1.0); }
+  .gal-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,8,7,.85) 0%, transparent 55%);
+    opacity: 0; transition: opacity .4s;
+  }
+  .gal-item:hover .gal-overlay { opacity: 1; }
+  .gal-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1.75rem 1.5rem 1.25rem;
+    transform: translateY(6px); opacity: 0;
+    transition: transform .4s var(--ease), opacity .35s;
+  }
+  .gal-item:hover .gal-info { transform: none; opacity: 1; }
+  .gal-title {
+    font-size: .82rem; font-weight: 600;
+    letter-spacing: .04em; color: var(--fg);
+    margin-bottom: .2rem;
+  }
+  .gal-sub {
+    font-size: .6rem; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(242,239,234,.45);
+  }
+  /* Placeholder BGs when no photo */
+  .gp-1  { background: linear-gradient(145deg,#1c1710 0%,#0d0c09 60%,#181512 100%); }
+  .gp-2  { background: linear-gradient(145deg,#141820 0%,#0a0c14 60%,#121620 100%); }
+  .gp-3  { background: linear-gradient(145deg,#1a140e 0%,#0d0b09 60%,#1e160e 100%); }
+  .gp-4  { background: linear-gradient(145deg,#131313 0%,#090909 60%,#181818 100%); }
+  .gp-5  { background: linear-gradient(145deg,#1c1e14 0%,#10120a 60%,#1a1c14 100%); }
+  .gp-6  { background: linear-gradient(145deg,#201610 0%,#120e08 60%,#1c1410 100%); }
+  .gp-7  { background: linear-gradient(145deg,#12141e 0%,#0a0c14 60%,#141620 100%); }
+  .gp-8  { background: linear-gradient(145deg,#1e1c10 0%,#10100a 60%,#201e12 100%); }
+
+  @media (max-width: 860px) {
+    .gal-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 44vw; }
+    .gi-1,.gi-2,.gi-3,.gi-4,.gi-5,.gi-6,.gi-7,.gi-8 { grid-column: auto; grid-row: auto; }
+    .gi-1 { grid-column: 1/3; }
+  }
+  @media (max-width: 520px) {
+    .gal-grid { grid-template-columns: 1fr; grid-auto-rows: 60vw; }
+    .gi-1 { grid-column: auto; }
+  }
+
+  /* ─────────────────────────────────────────────
+     SERVICES — List style, no cards
+  ───────────────────────────────────────────── */
+  .services {
+    padding: 14vh 5vw;
+    background: var(--bg);
+    border-top: 1px solid var(--fg3);
+  }
+  .services-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 6vh; flex-wrap: wrap; gap: 1rem;
+  }
+  .svc-list { list-style: none; }
+  .svc-item {
+    border-bottom: 1px solid var(--fg3);
+    cursor: none;
+  }
+  .svc-item-inner {
+    display: grid;
+    grid-template-columns: 3rem 1fr auto auto;
+    align-items: center; gap: 1.5rem;
+    padding: 2rem 0;
+    transition: padding .35s var(--ease);
+  }
+  .svc-item:hover .svc-item-inner { padding: 2.4rem 1rem; }
+  .svc-n {
+    font-size: .6rem; font-weight: 600;
+    letter-spacing: .18em; color: var(--cu);
+    text-transform: uppercase;
+  }
+  .svc-name {
+    font-size: clamp(1.1rem, 2.5vw, 2rem);
+    font-weight: 700; letter-spacing: -.02em;
+    text-transform: uppercase; color: var(--fg);
+    transition: color .2s;
+  }
+  .svc-item:hover .svc-name { color: var(--fg); }
+  .svc-tag {
+    font-size: .6rem; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--fg3); max-width: 18ch; text-align: right;
+    transition: color .3s;
+  }
+  .svc-item:hover .svc-tag { color: var(--fg2); }
+  .svc-arr {
+    font-size: 1rem; color: var(--fg3);
+    transform: rotate(0deg);
+    transition: transform .35s var(--ease), color .2s;
+  }
+  .svc-item:hover .svc-arr { transform: rotate(45deg); color: var(--cu); }
+  @media (max-width: 640px) {
+    .svc-item-inner { grid-template-columns: 2.5rem 1fr 1.2rem; }
+    .svc-tag { display: none; }
+  }
+
+  /* ─────────────────────────────────────────────
+     ATELIER — Immersive split
+  ───────────────────────────────────────────── */
+  .atelier {
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: 85vh;
+  }
+  .atelier-vis {
+    position: relative; overflow: hidden;
+    background: var(--bg2);
+    min-height: 50vh;
+  }
+  .atelier-vis img,
+  .atelier-vis-ph {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .atelier-vis-ph {
+    background: linear-gradient(155deg, #2c1e0e 0%, #0f0f0e 55%, #181610 100%);
+  }
+  .atelier-vis-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, transparent 60%, var(--bg) 100%);
+  }
+  .atelier-copy {
+    padding: 8vw; display: flex;
+    flex-direction: column; justify-content: center;
+    background: var(--bg);
+    border-left: 1px solid var(--fg3);
+  }
+  .atelier-title {
+    font-size: clamp(2rem, 4vw, 4.5rem);
+    font-weight: 700; letter-spacing: -.03em;
+    line-height: .92; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .atelier-title em {
+    font-weight: 400; font-style: italic; color: var(--fg2);
+  }
+  .atelier-body {
+    font-size: .9rem; color: var(--fg2);
+    line-height: 1.8; max-width: 38ch; margin-bottom: 3rem;
+  }
+  .atelier-coords {
+    border-top: 1px solid var(--fg3); padding-top: 1.75rem;
+    display: flex; flex-direction: column; gap: .35rem;
+    margin-bottom: 2.5rem;
+  }
+  .atelier-coords span {
+    font-size: .72rem; font-weight: 500;
+    letter-spacing: .04em; color: var(--fg3);
+  }
+  .atelier-coords a { color: var(--fg3); transition: color .2s; }
+  .atelier-coords a:hover { color: var(--fg); }
+  @media (max-width: 768px) {
+    .atelier { grid-template-columns: 1fr; }
+    .atelier-vis { min-height: 55vw; }
+    .atelier-vis-overlay { background: linear-gradient(to bottom, transparent 60%, var(--bg) 100%); }
+    .atelier-copy { border-left: none; border-top: 1px solid var(--fg3); padding: 5vw; }
+  }
+
+  /* ─────────────────────────────────────────────
+     PROCESS — Horizontal, minimal
+  ───────────────────────────────────────────── */
+  .process {
+    padding: 12vh 5vw;
+    background: var(--bg2);
+    border-top: 1px solid var(--fg3);
+    border-bottom: 1px solid var(--fg3);
+  }
+  .proc-grid {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 0; border: 1px solid var(--fg3);
+    margin-top: 5vh;
+  }
+  .proc-step {
+    padding: 2.5rem 2rem;
+    border-right: 1px solid var(--fg3);
+  }
+  .proc-step:last-child { border-right: none; }
+  .proc-n {
+    font-size: 4rem; font-weight: 800;
+    line-height: 1; letter-spacing: -.05em;
+    color: var(--fg3); margin-bottom: 1.5rem;
+  }
+  .proc-title {
+    font-size: .88rem; font-weight: 700;
+    letter-spacing: -.01em; text-transform: uppercase;
+    margin-bottom: .5rem; color: var(--fg);
+  }
+  .proc-desc {
+    font-size: .78rem; color: var(--fg2); line-height: 1.7;
+  }
+  @media (max-width: 768px) {
+    .proc-grid { grid-template-columns: 1fr 1fr; }
+    .proc-step:nth-child(2) { border-right: none; }
+    .proc-step:nth-child(3) { border-top: 1px solid var(--fg3); border-right: 1px solid var(--fg3); }
+    .proc-step:nth-child(4) { border-top: 1px solid var(--fg3); }
+  }
+  @media (max-width: 460px) {
+    .proc-grid { grid-template-columns: 1fr; }
+    .proc-step { border-right: none !important; border-top: 1px solid var(--fg3); }
+    .proc-step:first-child { border-top: none; }
+  }
+
+  /* ─────────────────────────────────────────────
+     CONTACT — Full-width dark, phone massive
+  ───────────────────────────────────────────── */
+  .contact {
+    padding: 14vh 5vw 10vh;
+    background: var(--bg);
+  }
+  .contact-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8vw; align-items: start;
+  }
+  .contact-left {}
+  .contact-phone-label {
+    font-size: .6rem; font-weight: 600;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--cu); margin-bottom: 1rem; display: block;
+  }
+  .contact-phone {
+    display: block;
+    font-size: clamp(2.5rem, 6vw, 7rem);
+    font-weight: 800; letter-spacing: -.04em;
+    line-height: .9; color: var(--fg);
+    margin-bottom: 3rem;
+    transition: color .2s;
+  }
+  .contact-phone:hover { color: var(--cu); }
+  .contact-det {
+    border-top: 1px solid var(--fg3);
+    padding-top: 1.75rem;
+    display: flex; flex-direction: column; gap: .4rem;
+  }
+  .contact-det span {
+    font-size: .75rem; font-weight: 400;
+    color: var(--fg3); letter-spacing: .03em;
+  }
+  .contact-det a { color: var(--fg3); transition: color .2s; }
+  .contact-det a:hover { color: var(--fg); }
+
+  /* Form */
+  .contact-right {}
+  .form-title {
+    font-size: 1.1rem; font-weight: 700;
+    letter-spacing: -.01em; text-transform: uppercase;
+    margin-bottom: .4rem;
+  }
+  .form-sub {
+    font-size: .75rem; color: var(--fg2);
+    margin-bottom: 2.5rem; line-height: 1.65;
+  }
+  .fg { margin-bottom: 1rem; }
+  .fg label {
+    display: block; font-size: .58rem; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--fg3); margin-bottom: .45rem;
+  }
+  .fg input, .fg select, .fg textarea {
+    width: 100%;
+    background: transparent;
+    border: none; border-bottom: 1px solid var(--fg3);
+    padding: .7rem 0; font-family: var(--f);
+    font-size: .88rem; color: var(--fg);
+    outline: none; appearance: none;
+    transition: border-color .2s;
+  }
+  .fg input:focus, .fg select:focus, .fg textarea:focus {
+    border-color: var(--cu);
+  }
+  .fg input::placeholder, .fg textarea::placeholder { color: var(--fg3); }
+  .fg select { cursor: none; color: var(--fg2); }
+  .fg select option { background: var(--bg2); }
+  .fg textarea { resize: none; min-height: 80px; }
+  .form-send {
+    width: 100%; margin-top: 1rem;
+    padding: 1rem 0; background: none;
+    border: 1px solid var(--fg3); color: var(--fg);
+    font-family: var(--f); font-size: .65rem; font-weight: 700;
+    letter-spacing: .2em; text-transform: uppercase;
+    cursor: none; transition: border-color .25s, color .25s, background .25s;
+  }
+  .form-send:hover {
+    border-color: var(--cu); color: var(--bg);
+    background: var(--cu);
+  }
+  @media (max-width: 768px) { .contact-inner { grid-template-columns: 1fr; } }
+
+  /* ─────────────────────────────────────────────
+     FOOTER — Single line
+  ───────────────────────────────────────────── */
+  .footer {
+    padding: 2rem 5vw;
+    border-top: 1px solid var(--fg3);
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-copy {
+    font-size: .6rem; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--fg3);
+  }
+  .footer-soc { display: flex; gap: 1.5rem; }
+  .footer-soc a {
+    font-size: .6rem; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--fg3); transition: color .2s;
+  }
+  .footer-soc a:hover { color: var(--cu); }
+
+  /* ─────────────────────────────────────────────
+     FLOATING CTA (mobile)
+  ───────────────────────────────────────────── */
+  .fab {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300;
+    background: var(--cu); color: var(--bg);
+    padding: .85rem 1.75rem;
+    font-size: .65rem; font-weight: 700;
+    letter-spacing: .16em; text-transform: uppercase;
+    opacity: 0; pointer-events: none;
+    transition: opacity .35s, transform .35s var(--ease);
+    transform: translateY(8px);
+    display: none;
+  }
+  .fab.show { opacity: 1; pointer-events: all; transform: none; }
+  @media (max-width: 768px) { .fab { display: block; } }
+
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cur"  id="cur"></div>
+  <div class="cur-ring" id="curRing"></div>
+
+  <!-- Progress -->
+  <div class="prog" id="prog"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">LRMJ Project</a>
+    <ul class="nav-links">
+      <li><a href="#gallery">Réalisations</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#atelier">L'Atelier</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="tel:0475399909" class="nav-tel">0475 39 99 09</a>
+    <div class="nav-burger" id="burger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- MOB MENU -->
+  <div class="mob" id="mob">
+    <span class="mob-x" id="mobX">Fermer ×</span>
+    <a href="#gallery" class="mob-lnk">Réalisations</a>
+    <a href="#services" class="mob-lnk">Services</a>
+    <a href="#atelier" class="mob-lnk">L'Atelier</a>
+    <a href="#contact" class="mob-lnk">Contact</a>
+    <a href="tel:0475399909" class="mob-footer">0475 39 99 09</a>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       HERO
+  ══════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-vid">
+      <!--
+        Remplacer .hero-vid-placeholder par :
+        <video autoplay muted loop playsinline>
+          <source src="atelier.mp4" type="video/mp4">
+        </video>
+      -->
+      <div class="hero-vid-placeholder"></div>
+    </div>
+    <div class="hero-vignette"></div>
+
+    <p class="hero-label">
+      <span class="hero-label-dot"></span>
+      Ferronnerie sur mesure · Belgique · Atelier Opwijk
+    </p>
+    <h1 class="hero-title">
+      <span class="hero-line"><span class="hero-line-inner">LRMJ</span></span>
+      <span class="hero-line"><span class="hero-line-inner hero-line-em">Project</span></span>
+    </h1>
+    <div class="hero-foot">
+      <p class="hero-foot-l">
+        Portails · Garde-corps · Serres<br>
+        Baies vitrées · Marquises
+      </p>
+      <a href="#contact" class="hero-cta">Devis gratuit →</a>
+    </div>
+
+    <span class="hero-scroll" aria-hidden="true">Scroll pour découvrir</span>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       GALLERY
+  ══════════════════════════════════════ -->
+  <section id="gallery">
+    <div class="gallery">
+      <div class="gallery-header r">
+        <div>
+          <span class="sec-label">Portfolio</span>
+          <h2 class="sec-title">Nos réalisations</h2>
+        </div>
+        <span class="gallery-count r d2">08 projets</span>
+      </div>
+
+      <div class="gal-grid">
+
+        <div class="gal-item gi-1 r"
+             data-index="0" data-title="Verrière de toiture" data-sub="Opwijk · 2024">
+          <div class="gal-img gp-1"></div>
+          <div class="gal-overlay"></div>
+          <div class="gal-info">
+            <div class="gal-title">Verrière de toiture</div>
+            <div class="gal-sub">Opwijk · 2024 · Acier thermolaqué</div>
+          </div>
+        </div>
+
+        <div class="gal-item gi-2 r d1"
+             data-index="1" data-title="Garde-corps inox" data-sub="Bruxelles · 2024">
+          <div class="gal-img gp-2"></div>
+          <div class="gal-overlay"></div>
+          <div class="gal-info">
+            <div class="gal-title">Garde-corps inox</div>
+            <div class="gal-sub">Bruxelles · 2024 · Inox 316L brossé</div>
+          </div>
+        </div>
+
+        <div class="gal-item gi-3 r d2"
+             data-index="2" data-title="Portail coulissant" data-sub="Asse · 2024">
+          <div class="gal-img gp-3"></div>
+          <div class="gal-overlay"></div>
+          <div class="gal-info">
+            <div class="gal-title">Portail coulissant</div>
+            <div class="gal-sub">Asse · 2024 · Acier RAL 7016</div>
+          </div>
+        </div>
+
+        <div class="gal-item gi-4 r d1"
+             data-index="3" data-title="Escalier limon central" data-sub="Ixelles · 2023">
+          <div class="gal-img gp-4"></div>
+          <div class="gal-overlay"></div>
+          <div class="gal-info">
+            <div class="gal-title">Escalier limon central</div>
+            <div class="gal-sub">Ixelles · 2023 · Acier peint + chêne</div>
+          </div>
+        </div>
+
+        <div class="gal-item gi-5 r d2"
+             data-index="4" data-title="Extension verrière" data-sub="Waterloo · 2024">
+          <div class="gal-img gp-5"></div>
+          <div class="gal-overlay"></div>
+          <div class="gal-info">
+            <div class="gal-title">Extension verrière</div>
+            <div class="gal-sub">Waterloo · 2024 · 12 m²</div>
+          </div>
+        </div>
+
+        <div class="gal-item gi-6 r"
+             data-index="5" data-title="Garde-corps terrasse" data-sub="Alost · 2023">
+          <div class="gal-img gp-6"></div>
+          <div class="gal-overlay"></div>
+          <div class="gal-info">
+            <div class="gal-title">Garde-corps terrasse</div>
+            <div class="gal-sub">Alost · 2023 · Acier + verre feuilleté</div>
+          </div>
+        </div>
+
+        <div class="gal-item gi-7 r d1"
+             data-index="6" data-title="Clôture barreaudée" data-sub="Dilbeek · 2023">
+          <div class="gal-img gp-7"></div>
+          <div class="gal-overlay"></div>
+          <div class="gal-info">
+            <div class="gal-title">Clôture barreaudée</div>
+            <div class="gal-sub">Dilbeek · 2023 · Acier galvanisé</div>
+          </div>
+        </div>
+
+        <div class="gal-item gi-8 r d2"
+             data-index="7" data-title="Baie vitrée sur mesure" data-sub="Overijse · 2023">
+          <div class="gal-img gp-8"></div>
+          <div class="gal-overlay"></div>
+          <div class="gal-info">
+            <div class="gal-title">Baie vitrée sur mesure</div>
+            <div class="gal-sub">Overijse · 2023 · 4.2m × 2.4m</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       LIGHTBOX
+  ══════════════════════════════════════ -->
+  <div id="lb" style="
+    position:fixed;inset:0;z-index:700;
+    background:rgba(6,6,5,.97);
+    backdrop-filter:blur(30px);
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;
+    transition:opacity .4s cubic-bezier(0.16,1,0.3,1);">
+    <div style="position:absolute;top:2rem;right:2rem;display:flex;gap:2rem;align-items:center;">
+      <span id="lbCount" style="font-size:.6rem;letter-spacing:.2em;color:rgba(242,239,234,.3)">01 / 08</span>
+      <button id="lbClose" style="font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(242,239,234,.4);background:none;border:none;cursor:none;transition:color.2s;">Fermer ×</button>
+    </div>
+    <div style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;gap:.4rem;">
+      <button id="lbPrev" style="width:44px;height:44px;border:1px solid rgba(242,239,234,.12);background:none;color:rgba(242,239,234,.5);cursor:none;font-size:1rem;transition:all.2s;">←</button>
+      <button id="lbNext" style="width:44px;height:44px;border:1px solid rgba(242,239,234,.12);background:none;color:rgba(242,239,234,.5);cursor:none;font-size:1rem;transition:all.2s;">→</button>
+    </div>
+    <div id="lbImg" style="
+      width:min(70vw,900px);
+      height:min(75vh,700px);
+      position:relative;overflow:hidden;
+      transition:opacity.3s cubic-bezier(0.16,1,0.3,1);">
+    </div>
+    <div style="width:260px;padding:0 2rem 0 2.5rem;border-left:1px solid rgba(242,239,234,.07);margin-left:1.5rem;">
+      <span id="lbCat" style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#C4A882;display:block;margin-bottom:1.25rem;"></span>
+      <h2 id="lbTitle" style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:-.02em;color:#F2EFEA;line-height:1.15;margin-bottom:.3rem;"></h2>
+      <p  id="lbSub"   style="font-size:.72rem;color:rgba(242,239,234,.3);margin-bottom:2rem;"></p>
+      <a  href="#contact" id="lbCta"
+          style="display:block;padding:.75rem 0;text-align:center;border:1px solid rgba(242,239,234,.15);font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#F2EFEA;transition:all.25s;margin-top:auto;">
+        Projet similaire →
+      </a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SERVICES
+  ══════════════════════════════════════ -->
+  <section class="services" id="services">
+    <div class="services-head">
+      <div class="r">
+        <span class="sec-label">Prestations</span>
+        <h2 class="sec-title">Ce que nous<br><em>fabriquons</em></h2>
+      </div>
+      <a href="#contact" class="hero-cta r d2">Devis gratuit →</a>
+    </div>
+    <ul class="svc-list">
+      <li class="svc-item r"><div class="svc-item-inner">
+        <span class="svc-n">01</span>
+        <span class="svc-name">Portails &amp; Clôtures</span>
+        <span class="svc-tag">Entrées · Jardins · Domaines</span>
+        <span class="svc-arr">↗</span>
+      </div></li>
+      <li class="svc-item r d1"><div class="svc-item-inner">
+        <span class="svc-n">02</span>
+        <span class="svc-name">Garde-corps &amp; Rampes</span>
+        <span class="svc-tag">Escaliers · Balcons · Terrasses</span>
+        <span class="svc-arr">↗</span>
+      </div></li>
+      <li class="svc-item r d2"><div class="svc-item-inner">
+        <span class="svc-n">03</span>
+        <span class="svc-name">Serres &amp; Baies vitrées</span>
+        <span class="svc-tag">Extensions · Jardins d'hiver</span>
+        <span class="svc-arr">↗</span>
+      </div></li>
+      <li class="svc-item r d3"><div class="svc-item-inner">
+        <span class="svc-n">04</span>
+        <span class="svc-name">Marquises &amp; Auvents</span>
+        <span class="svc-tag">Entrées · Protections extérieures</span>
+        <span class="svc-arr">↗</span>
+      </div></li>
+      <li class="svc-item r d4"><div class="svc-item-inner">
+        <span class="svc-n">05</span>
+        <span class="svc-name">Mobilier &amp; Sur-mesure</span>
+        <span class="svc-tag">Pièces uniques · Intérieur</span>
+        <span class="svc-arr">↗</span>
+      </div></li>
+    </ul>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       ATELIER
+  ══════════════════════════════════════ -->
+  <section class="atelier" id="atelier">
+    <div class="atelier-vis r">
+      <!--
+        Remplacer .atelier-vis-ph par :
+        <img src="atelier.jpg" alt="Atelier LRMJ">
+      -->
+      <div class="atelier-vis-ph"></div>
+      <div class="atelier-vis-overlay"></div>
+    </div>
+    <div class="atelier-copy r d2">
+      <span class="sec-label">L'Atelier</span>
+      <h2 class="atelier-title">Fabriqué ici.<br><em>Posé par nous.</em></h2>
+      <p class="atelier-body">
+        Un artisan, un atelier, zéro sous-traitance. Chaque pièce est conçue, forgée et posée par la même paire de mains — de l'esquisse au dernier boulon. Bâtiments neufs comme anciens, sur toute la Belgique.
+      </p>
+      <div class="atelier-coords">
+        <span>Broekstraat 26 · 1745 Opwijk · Belgique</span>
+        <span><a href="tel:0475399909">0475 39 99 09</a></span>
+        <span><a href="mailto:contact@lrmjproject.be">contact@lrmjproject.be</a></span>
+        <span>Lun – Sam · 8h – 18h</span>
+      </div>
+      <a href="tel:0475399909" class="hero-cta" style="align-self:flex-start">Appeler →</a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       PROCESS
+  ══════════════════════════════════════ -->
+  <section class="process">
+    <div class="r">
+      <span class="sec-label">Comment ça marche</span>
+      <h2 class="sec-title">4 étapes</h2>
+    </div>
+    <div class="proc-grid">
+      <div class="proc-step r">
+        <div class="proc-n">01</div>
+        <div class="proc-title">Contact</div>
+        <p class="proc-desc">Appelez ou écrivez. On répond dans la journée.</p>
+      </div>
+      <div class="proc-step r d1">
+        <div class="proc-n">02</div>
+        <div class="proc-title">Visite &amp; Devis</div>
+        <p class="proc-desc">On se déplace, on mesure. Devis gratuit sous 48h.</p>
+      </div>
+      <div class="proc-step r d2">
+        <div class="proc-n">03</div>
+        <div class="proc-title">Fabrication</div>
+        <p class="proc-desc">Chaque pièce forgée à l'atelier. 3 à 6 semaines.</p>
+      </div>
+      <div class="proc-step r d3">
+        <div class="proc-n">04</div>
+        <div class="proc-title">Pose</div>
+        <p class="proc-desc">Installation soignée par notre équipe. Clé en main.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CONTACT
+  ══════════════════════════════════════ -->
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+      <div class="r">
+        <span class="contact-phone-label">Appel direct</span>
+        <a href="tel:0475399909" class="contact-phone">0475<br>39 99 09</a>
+        <div class="contact-det">
+          <span>Broekstraat 26 · 1745 Opwijk</span>
+          <span><a href="mailto:contact@lrmjproject.be">contact@lrmjproject.be</a></span>
+          <span>Belgique — Bruxelles · Wallonie · Flandre</span>
+          <span>Lun – Sam · 8h – 18h · Devis gratuit</span>
+        </div>
+      </div>
+      <div class="r d2">
+        <h3 class="form-title">Demande de devis</h3>
+        <p class="form-sub">Décrivez votre projet, on vous rappelle sous 48h.</p>
+        <form id="contactForm" novalidate>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 2rem;">
+            <div class="fg">
+              <label for="prenom">Prénom *</label>
+              <input type="text" id="prenom" placeholder="Jean" required>
+            </div>
+            <div class="fg">
+              <label for="nom">Nom *</label>
+              <input type="text" id="nom" placeholder="Dupont" required>
+            </div>
+          </div>
+          <div class="fg">
+            <label for="tel">Téléphone *</label>
+            <input type="tel" id="tel" placeholder="04XX XXX XXX" required>
+          </div>
+          <div class="fg">
+            <label for="service">Type de projet</label>
+            <select id="service">
+              <option value="">Choisir…</option>
+              <option>Portail / Clôture</option>
+              <option>Garde-corps / Rampe</option>
+              <option>Serre / Baie vitrée</option>
+              <option>Marquise / Auvent</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="msg">Projet</label>
+            <textarea id="msg" placeholder="Dimensions, style, délai…"></textarea>
+          </div>
+          <button type="submit" class="form-send" id="formSend">
+            Envoyer la demande →
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer class="footer">
+    <span class="footer-copy">© 2025 LRMJ Project · Opwijk · Belgique</span>
+    <div class="footer-soc">
+      <a href="#">Instagram</a>
+      <a href="#">Facebook</a>
+    </div>
+  </footer>
+
+  <!-- FAB mobile -->
+  <a href="tel:0475399909" class="fab" id="fab">0475 39 99 09</a>
+
+  <script>
+  /* ── Cursor ── */
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('curRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    cur.style.left=mx+'px'; cur.style.top=my+'px';
+  });
+  (function lerpRing(){
+    rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(lerpRing);
+  })();
+  document.querySelectorAll('a,button,.svc-item,.gal-item').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('big'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('big'));
+  });
+
+  /* ── Scroll: progress + nav frost ── */
+  const prog = document.getElementById('prog');
+  const nav  = document.getElementById('nav');
+  const fab  = document.getElementById('fab');
+  window.addEventListener('scroll', ()=>{
+    const p = scrollY/(document.documentElement.scrollHeight-innerHeight);
+    prog.style.transform=`scaleX(${p})`;
+    nav.classList.toggle('frosted', scrollY>80);
+    fab.classList.toggle('show', scrollY>600);
+  },{passive:true});
+
+  /* ── Reveal ── */
+  const obs = new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('vis');
+  }),{threshold:.06,rootMargin:'0px 0px -20px 0px'});
+  document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+
+  /* ── Hero parallax ── */
+  const heroVid = document.querySelector('.hero-vid-placeholder, .hero-vid video');
+  if(heroVid) window.addEventListener('scroll',()=>{
+    if(scrollY<innerHeight) heroVid.style.transform=`translateY(${scrollY*.25}px)`;
+  },{passive:true});
+
+  /* ── Mobile menu ── */
+  const mob=document.getElementById('mob');
+  const open=()=>{mob.classList.add('open');document.body.style.overflow='hidden';};
+  const close=()=>{mob.classList.remove('open');document.body.style.overflow='';};
+  document.getElementById('burger').addEventListener('click',open);
+  document.getElementById('mobX').addEventListener('click',close);
+  document.querySelectorAll('.mob-lnk,.mob-footer').forEach(l=>l.addEventListener('click',close));
+
+  /* ── Gallery lightbox ── */
+  const lb       = document.getElementById('lb');
+  const lbImg    = document.getElementById('lbImg');
+  const lbCount  = document.getElementById('lbCount');
+  const lbTitle  = document.getElementById('lbTitle');
+  const lbSub    = document.getElementById('lbSub');
+  const lbCat    = document.getElementById('lbCat');
+  const items    = [...document.querySelectorAll('.gal-item')];
+  let lbIdx = 0;
+
+  function pad(n){return String(n).padStart(2,'0');}
+
+  function showLb(idx){
+    lbIdx = ((idx%items.length)+items.length)%items.length;
+    const d = items[lbIdx].dataset;
+    const bgEl = items[lbIdx].querySelector('.gal-img');
+    const bg = bgEl ? bgEl.className.split(' ').find(c=>c.startsWith('gp-')) : '';
+
+    lbImg.style.opacity='0';
+    setTimeout(()=>{
+      lbImg.innerHTML=`<div style="position:absolute;inset:0;" class="${bg}"></div>`;
+      lbTitle.textContent = d.title||'—';
+      lbSub.textContent   = d.sub||'—';
+      lbCat.textContent   = 'Réalisation';
+      lbCount.textContent = `${pad(lbIdx+1)} / ${pad(items.length)}`;
+      lbImg.style.opacity='1';
+    },200);
+  }
+
+  function openLb(idx){
+    showLb(idx);
+    lb.style.opacity='1'; lb.style.pointerEvents='all';
+    document.body.style.overflow='hidden';
+  }
+  function closeLb(){
+    lb.style.opacity='0'; lb.style.pointerEvents='none';
+    document.body.style.overflow='';
+  }
+
+  items.forEach((item,i)=>item.addEventListener('click',()=>openLb(i)));
+  document.getElementById('lbClose').addEventListener('click',closeLb);
+  document.getElementById('lbPrev').addEventListener('click',()=>showLb(lbIdx-1));
+  document.getElementById('lbNext').addEventListener('click',()=>showLb(lbIdx+1));
+  document.getElementById('lbCta').addEventListener('click',closeLb);
+  lb.addEventListener('click',e=>{if(e.target===lb)closeLb();});
+
+  // Touch swipe
+  let tx=0;
+  lb.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+  lb.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-tx;
+    if(Math.abs(dx)>45) showLb(dx<0?lbIdx+1:lbIdx-1);
+  },{passive:true});
+
+  /* ── Keyboard ── */
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){closeLb();close();}
+    if(lb.style.opacity==='1'){
+      if(e.key==='ArrowLeft')  showLb(lbIdx-1);
+      if(e.key==='ArrowRight') showLb(lbIdx+1);
+    }
+  });
+
+  /* ── Services: click to contact ── */
+  document.querySelectorAll('.svc-item').forEach(item=>{
+    item.addEventListener('click',()=>{
+      document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  /* ── Smooth anchors ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const t=document.querySelector(a.getAttribute('href'));
+      if(!t)return;
+      e.preventDefault(); close();
+      t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  /* ── Form ── */
+  document.getElementById('contactForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    const btn=document.getElementById('formSend');
+    btn.textContent='Demande envoyée — on vous rappelle sous 48h.';
+    btn.style.borderColor='#C4A882'; btn.style.color='#C4A882';
+    btn.disabled=true;
+    this.reset();
+  });
+  </script>
+</body>
+</html>

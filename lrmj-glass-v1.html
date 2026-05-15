@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LRMJ Project — Artisan Ferronnier Bruxelles · Baies Vitrées & Verrières Sur Mesure</title>
+  <meta name="description" content="Artisan ferronnier à Bruxelles. Baies vitrées, verrières, serres, portails, garde-corps et escaliers sur mesure. Romeo Lesac — 0475 39 99 09."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+/* ── DESIGN SYSTEM ────────────────────────────────────────────────────── */
+:root {
+  /* Light backgrounds */
+  --bg:       #F7F8FA;
+  --bg-1:     #FFFFFF;
+  --bg-2:     #EFF1F5;
+  --bg-glass: rgba(255,255,255,0.65);
+  --bg-glass-2: rgba(255,255,255,0.45);
+
+  /* Dark (hero & sections de contraste) */
+  --dark:     #08090D;
+  --dark-1:   #0D0F15;
+
+  /* Surfaces */
+  --glass-border: rgba(255,255,255,0.80);
+  --glass-border-dark: rgba(255,255,255,0.12);
+  --border:   rgba(14,18,28,0.08);
+  --border-2: rgba(14,18,28,0.13);
+
+  /* Text — sur fond clair */
+  --tx:       #0D0F14;
+  --tx-2:     #5A6070;
+  --tx-3:     #9AA0AE;
+
+  /* Text — sur fond sombre */
+  --tx-inv:   #F0F2F7;
+  --tx-inv-2: rgba(240,242,247,0.65);
+  --tx-inv-3: rgba(240,242,247,0.35);
+
+  /* Accent — bleu acier architectural */
+  --blue:        #3A7BD5;
+  --blue-light:  #EBF2FF;
+  --blue-dark:   #2860B0;
+  --blue-glow:   rgba(58,123,213,0.18);
+  --blue-border: rgba(58,123,213,0.25);
+
+  /* Glassmorphism standard */
+  --glass-blur: blur(20px) saturate(1.8);
+
+  /* Typography */
+  --f-display: 'Cormorant Garamond', Georgia, serif;
+  --f-body:    'DM Sans', system-ui, sans-serif;
+
+  /* Spacing */
+  --gap: clamp(1.5rem,4vw,4rem);
+
+  /* Ease */
+  --ease: cubic-bezier(0.16,1,0.3,1);
+  --ease-2: cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+/* ── RESET ──────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:78px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{background:var(--bg);color:var(--tx);font-family:var(--f-body);font-size:1rem;line-height:1.6;min-height:100dvh;overflow-x:hidden}
+img,video{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+::selection{background:var(--blue);color:#fff}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* ── SKIP LINK ── */
+.skip-link{position:absolute;top:-100px;left:1rem;background:var(--blue);color:#fff;padding:.5rem 1rem;font-weight:600;z-index:9999;border-radius:4px;font-size:.85rem}
+.skip-link:focus{top:1rem}
+
+/* ── NAV ─────────────────────────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  transition:background 400ms ease,box-shadow 400ms ease,border-color 400ms ease;
+  border-bottom:1px solid transparent;
+}
+.nav--scrolled{
+  background:rgba(247,248,250,0.82);
+  backdrop-filter:var(--glass-blur);
+  -webkit-backdrop-filter:var(--glass-blur);
+  border-bottom-color:var(--border);
+  box-shadow:0 1px 0 var(--border);
+}
+.nav--dark{
+  background:rgba(8,9,13,0.72);
+  backdrop-filter:var(--glass-blur);
+  -webkit-backdrop-filter:var(--glass-blur);
+  border-bottom-color:var(--glass-border-dark);
+}
+.nav__inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:72px;max-width:1380px;margin:0 auto;padding:0 clamp(1.25rem,3vw,2.5rem);
+}
+/* Logo */
+.nav__logo{display:flex;align-items:center;gap:.65rem;font-family:var(--f-display);font-size:1.1rem;font-weight:600;letter-spacing:.1em;color:var(--tx-inv);transition:opacity .2s}
+.nav__logo:hover{opacity:.8}
+.nav__logo-mark{width:32px;height:32px;flex-shrink:0}
+.nav--scrolled .nav__logo{color:var(--tx)}
+/* Nav links */
+.nav__links{display:flex;gap:2.25rem;list-style:none}
+.nav__links a{font-size:.8rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--tx-inv-2);transition:color .2s}
+.nav__links a:hover{color:var(--tx-inv)}
+.nav--scrolled .nav__links a{color:var(--tx-2)}
+.nav--scrolled .nav__links a:hover{color:var(--tx)}
+/* Nav actions */
+.nav__actions{display:flex;align-items:center;gap:1rem}
+.nav__phone{display:flex;align-items:center;gap:.5rem;font-size:.8rem;font-weight:500;color:var(--tx-inv-2);transition:color .2s;white-space:nowrap}
+.nav__phone svg{width:13px;height:13px;flex-shrink:0}
+.nav__phone:hover{color:var(--tx-inv)}
+.nav--scrolled .nav__phone{color:var(--tx-2)}
+.nav--scrolled .nav__phone:hover{color:var(--tx)}
+.nav__cta{
+  padding:.55rem 1.25rem;
+  background:var(--blue);color:#fff;
+  border-radius:6px;
+  font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  transition:background .2s,transform .2s,box-shadow .2s;
+  white-space:nowrap;
+}
+.nav__cta:hover{background:var(--blue-dark);transform:translateY(-1px);box-shadow:0 6px 20px rgba(58,123,213,.35)}
+/* Hamburger */
+.nav__hamburger{display:none;flex-direction:column;gap:5px;padding:6px;border-radius:4px}
+.nav__hamburger span{display:block;width:20px;height:1.5px;background:var(--tx-inv);transition:transform .3s var(--ease),opacity .3s}
+.nav--scrolled .nav__hamburger span{background:var(--tx)}
+.nav__hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav__hamburger.open span:nth-child(2){opacity:0}
+.nav__hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+/* Mobile nav */
+.nav__mobile{
+  position:fixed;inset:0;z-index:190;
+  background:rgba(8,9,13,0.96);
+  backdrop-filter:blur(40px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+  transition:opacity .35s var(--ease),transform .35s var(--ease);
+}
+.nav__mobile[hidden]{opacity:0;transform:translateY(-16px);pointer-events:none;display:flex}
+.nav__mobile-links{display:flex;flex-direction:column;align-items:center;gap:1.75rem}
+.mobile-link{font-family:var(--f-display);font-size:2.2rem;font-weight:300;color:var(--tx-inv-2);transition:color .2s}
+.mobile-link:hover{color:var(--tx-inv)}
+.nav__mobile-bottom{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:2rem}
+.nav__mobile-phone{font-size:.95rem;color:var(--tx-inv-3);font-weight:500}
+.nav__mobile-cta{
+  padding:.75rem 2rem;background:var(--blue);color:#fff;
+  border-radius:6px;font-size:.8rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase
+}
+
+/* ── LAYOUT UTILS ── */
+.wrap{max-width:1380px;margin:0 auto;padding:0 clamp(1.25rem,3vw,2.5rem)}
+.s{padding:clamp(4rem,8vw,7rem) 0}
+.s--light{background:var(--bg)}
+.s--white{background:var(--bg-1)}
+.s--muted{background:var(--bg-2)}
+.s--dark{background:var(--dark)}
+.s--dark-2{background:var(--dark-1)}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.65rem;
+  font-size:.62rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:.85rem;
+}
+.eyebrow::before{content:'';display:block;width:18px;height:1px;background:var(--blue)}
+.eyebrow--inv{color:rgba(58,123,213,.8)}
+.eyebrow--inv::before{background:rgba(58,123,213,.8)}
+.h-display{
+  font-family:var(--f-display);
+  font-size:clamp(2.8rem,5.5vw,5.5rem);
+  font-weight:300;line-height:1.05;
+  color:var(--tx);
+}
+.h-display em{font-style:italic;font-weight:300}
+.h-large{
+  font-family:var(--f-display);
+  font-size:clamp(2rem,3.5vw,3.2rem);
+  font-weight:300;line-height:1.1;
+  color:var(--tx);
+}
+.h-large em{font-style:italic}
+.h-large--inv{color:var(--tx-inv)}
+.h-large--inv em{color:var(--tx-inv)}
+.sec-intro{max-width:54ch;font-size:.95rem;color:var(--tx-2);line-height:1.8;margin-top:1rem}
+.sec-intro--inv{color:var(--tx-inv-2)}
+.fi{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.fi.in{opacity:1;transform:none}
+.fi.d1{transition-delay:.1s}
+.fi.d2{transition-delay:.2s}
+.fi.d3{transition-delay:.3s}
+.fi.d4{transition-delay:.4s}
+.fi.d5{transition-delay:.5s}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.7rem 1.5rem;border-radius:6px;
+  font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  transition:all .25s var(--ease);white-space:nowrap;cursor:pointer;
+}
+.btn--blue{background:var(--blue);color:#fff;border:1.5px solid var(--blue)}
+.btn--blue:hover{background:var(--blue-dark);border-color:var(--blue-dark);transform:translateY(-2px);box-shadow:0 8px 28px rgba(58,123,213,.35)}
+.btn--outline{background:transparent;color:var(--tx);border:1.5px solid var(--border-2)}
+.btn--outline:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px)}
+.btn--outline-inv{background:transparent;color:var(--tx-inv);border:1.5px solid var(--glass-border-dark)}
+.btn--outline-inv:hover{border-color:rgba(58,123,213,.6);color:#fff;background:rgba(58,123,213,.1)}
+.btn--glass{
+  background:var(--bg-glass);color:var(--tx);
+  border:1.5px solid var(--glass-border);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.btn--glass:hover{background:rgba(255,255,255,.9);transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,0,0,.1)}
+
+/* ── HERO ──────────────────────────────────────────────────────────── */
+.hero{
+  position:relative;height:100dvh;min-height:620px;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+}
+.hero__img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  filter:brightness(.72) saturate(.9);
+  transform:scale(1.04);
+  animation:heroZoom 12s var(--ease-2) forwards;
+}
+@keyframes heroZoom{to{transform:scale(1)}}
+
+/* Gradient overlay bottom-up for text legibility */
+.hero__gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(8,9,13,0.15) 0%,
+    rgba(8,9,13,0) 30%,
+    rgba(8,9,13,0) 40%,
+    rgba(8,9,13,0.55) 70%,
+    rgba(8,9,13,0.85) 100%
+  );
+}
+/* Subtle top fade for nav */
+.hero__top-fade{
+  position:absolute;top:0;left:0;right:0;height:140px;
+  background:linear-gradient(to bottom,rgba(8,9,13,.4),transparent);
+}
+
+.hero__content{
+  position:relative;z-index:2;
+  width:100%;
+  padding:0 clamp(1.25rem,3vw,2.5rem) clamp(3rem,6vw,5rem);
+  max-width:1380px;margin:0 auto;
+  display:flex;flex-direction:column;gap:2rem;
+}
+.hero__badge{
+  display:inline-flex;align-items:center;gap:.65rem;
+  padding:.45rem 1rem;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:999px;
+  font-size:.65rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.85);
+  width:fit-content;
+  animation:fadeUp .8s .2s var(--ease) both;
+}
+.hero__badge-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;box-shadow:0 0 8px var(--blue)}
+.hero__title{
+  font-family:var(--f-display);
+  font-size:clamp(3rem,6.5vw,6.5rem);
+  font-weight:300;line-height:1.0;
+  color:#fff;
+  max-width:14ch;
+  animation:fadeUp .9s .35s var(--ease) both;
+}
+.hero__title em{
+  font-style:italic;
+  color:rgba(255,255,255,.75);
+}
+.hero__actions{
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  animation:fadeUp .9s .5s var(--ease) both;
+}
+/* Hero glass panel with specs */
+.hero__panel{
+  position:absolute;right:clamp(1.25rem,4vw,3rem);bottom:clamp(3rem,6vw,5rem);
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(24px) saturate(1.5);
+  -webkit-backdrop-filter:blur(24px) saturate(1.5);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:12px;
+  padding:1.5rem 1.75rem;
+  min-width:220px;
+  animation:fadeUp .9s .6s var(--ease) both;
+}
+.hero__panel-item{padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+.hero__panel-item:last-child{border-bottom:none;padding-bottom:0}
+.hero__panel-item:first-child{padding-top:0}
+.hero__panel-lbl{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px}
+.hero__panel-val{font-family:var(--f-display);font-size:1.1rem;font-weight:400;color:#fff;line-height:1.2}
+/* Scroll cue */
+.hero__scroll{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:rgba(255,255,255,.35);
+  animation:fadeUp .9s .8s var(--ease) both;
+  transition:color .2s;
+}
+.hero__scroll:hover{color:rgba(255,255,255,.65)}
+.hero__scroll-line{width:1px;height:32px;background:currentColor;animation:scrollPulse 2s 1.5s ease-in-out infinite}
+.hero__scroll svg{width:14px;height:14px}
+@keyframes scrollPulse{0%,100%{opacity:.35;transform:scaleY(1)}50%{opacity:.8;transform:scaleY(.7)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ── TICKER ── */
+.ticker{
+  background:var(--dark);
+  border-top:1px solid rgba(255,255,255,0.05);
+  overflow:hidden;padding:.9rem 0;
+}
+.ticker__track{
+  display:flex;gap:0;
+  animation:ticker 28s linear infinite;
+  width:max-content;
+}
+.ticker__track:hover{animation-play-state:paused}
+.ticker__item{
+  display:flex;align-items:center;gap:1.5rem;
+  padding:0 2.5rem;
+  font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(240,242,247,.35);
+  white-space:nowrap;
+  transition:color .2s;
+}
+.ticker__dot{width:3px;height:3px;border-radius:50%;background:var(--blue);opacity:.6;flex-shrink:0}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── INTRO STRIP ──────────────────────────────────────────────────── */
+.intro{
+  background:var(--bg-1);
+  border-bottom:1px solid var(--border);
+}
+.intro__inner{
+  display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;
+  align-items:stretch;
+}
+.intro__divider{background:var(--border)}
+.intro__item{
+  padding:2.5rem 2rem;
+  transition:background .2s;
+}
+.intro__item:hover{background:var(--bg-2)}
+.intro__num{
+  font-family:var(--f-display);
+  font-size:2.8rem;font-weight:300;
+  color:var(--tx);line-height:1;
+  margin-bottom:.4rem;
+}
+.intro__num span{font-size:1.2rem;color:var(--blue);margin-left:2px}
+.intro__lbl{font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-3)}
+
+/* ── VITRAGE (hero de section) ─────────────────────────────────────── */
+.vitrage{position:relative;overflow:hidden}
+.vitrage__grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto;
+  min-height:600px;
+}
+.vitrage__text{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(3rem,6vw,6rem) clamp(2rem,4vw,4rem);
+  background:var(--bg-1);
+  border-right:1px solid var(--border);
+}
+.vitrage__img-wrap{position:relative;overflow:hidden;min-height:400px}
+.vitrage__img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+  filter:brightness(.85) saturate(.85);
+  transition:transform 8s var(--ease-2),filter .6s;
+}
+.vitrage__img-wrap:hover .vitrage__img{transform:scale(1.04);filter:brightness(.92) saturate(1)}
+/* Glass overlay badge on photo */
+.vitrage__photo-badge{
+  position:absolute;bottom:2rem;left:2rem;z-index:2;
+  padding:.75rem 1.25rem;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(20px) saturate(1.6);
+  -webkit-backdrop-filter:blur(20px) saturate(1.6);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:8px;
+  color:#fff;
+  font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+}
+.vitrage__list{
+  list-style:none;display:flex;flex-direction:column;gap:.75rem;
+  margin:1.75rem 0 2.25rem;
+}
+.vitrage__list li{
+  display:flex;align-items:center;gap:.85rem;
+  font-size:.9rem;color:var(--tx-2);
+}
+.vitrage__list-icon{
+  width:28px;height:28px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--blue-light);border:1px solid var(--blue-border);
+}
+.vitrage__list-icon svg{width:12px;height:12px;color:var(--blue)}
+
+/* ── GALLERY ──────────────────────────────────────────────────────── */
+.gallery{background:var(--bg)}
+.gallery__header{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;
+  margin-bottom:2.5rem;
+}
+/* Masonry via CSS columns */
+.masonry{
+  columns:3;column-gap:6px;
+  orphans:1;widows:1;
+}
+.masonry__item{
+  break-inside:avoid;margin-bottom:6px;
+  position:relative;overflow:hidden;cursor:pointer;
+  border-radius:4px;
+}
+.masonry__item img{
+  width:100%;height:auto;display:block;
+  filter:brightness(.88) saturate(.8);
+  transition:filter .6s var(--ease),transform .7s var(--ease);
+}
+.masonry__item:hover img{filter:brightness(.98) saturate(1.05);transform:scale(1.03)}
+.masonry__label{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:.75rem 1rem .75rem;
+  background:linear-gradient(transparent,rgba(8,9,13,.75));
+  font-size:.65rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.85);
+  transform:translateY(100%);
+  transition:transform .35s var(--ease);
+}
+.masonry__item:hover .masonry__label{transform:none}
+.masonry__item.hidden{display:none}
+.masonry__footer{text-align:center;margin-top:2.5rem}
+.masonry__load{
+  padding:.75rem 2rem;border-radius:6px;
+  background:transparent;color:var(--tx);
+  border:1.5px solid var(--border-2);
+  font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  transition:all .25s;cursor:pointer;
+}
+.masonry__load:hover{border-color:var(--blue);color:var(--blue)}
+.masonry__load.done{opacity:.3;pointer-events:none}
+
+/* ── SERVICES ─────────────────────────────────────────────────────── */
+.svc__header{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;margin-bottom:2.5rem}
+.svc-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+}
+.svc-card{
+  background:var(--bg-1);overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:background .2s;
+  cursor:default;
+}
+.svc-card:hover{background:var(--bg-2)}
+.svc-card--feat{grid-column:span 3;flex-direction:row}
+.svc-img-wrap{overflow:hidden;flex-shrink:0}
+.svc-img{
+  width:100%;height:220px;object-fit:cover;
+  filter:brightness(.82) saturate(.75);
+  transition:transform .7s var(--ease-2),filter .6s;
+}
+.svc-card--feat .svc-img{width:500px;height:100%}
+.svc-card:hover .svc-img{transform:scale(1.04);filter:brightness(.92) saturate(.9)}
+.svc-body{padding:1.75rem;display:flex;flex-direction:column;flex:1;gap:.3rem}
+.svc-tag{font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:.3rem}
+.svc-title{font-family:var(--f-display);font-size:1.25rem;font-weight:400;color:var(--tx);line-height:1.15}
+.svc-desc{font-size:.86rem;color:var(--tx-2);line-height:1.8;flex:1;margin-top:.4rem}
+
+/* ── GLASS FEATURE SECTION ─────────────────────────────────────────── */
+/* Full-bleed dark photo with floating glass cards */
+.glass-feature{position:relative;overflow:hidden;min-height:520px;display:flex;align-items:center}
+.glass-feature__bg{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;filter:brightness(.55) saturate(.7);
+}
+.glass-feature__overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(8,9,13,.7) 0%,rgba(8,9,13,.3) 60%,rgba(8,9,13,.1) 100%);
+}
+.glass-feature__inner{
+  position:relative;z-index:2;
+  width:100%;max-width:1380px;margin:0 auto;
+  padding:clamp(3rem,6vw,5rem) clamp(1.25rem,3vw,2.5rem);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);
+  align-items:center;
+}
+.glass-card{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(24px) saturate(1.4);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:14px;
+  padding:2rem 2.25rem;
+}
+.glass-card__num{
+  font-family:var(--f-display);font-size:3rem;font-weight:300;
+  color:rgba(255,255,255,.18);line-height:1;
+  margin-bottom:1.25rem;
+}
+.glass-card__title{font-family:var(--f-display);font-size:1.3rem;font-weight:400;color:#fff;margin-bottom:.75rem}
+.glass-card__desc{font-size:.87rem;color:rgba(255,255,255,.55);line-height:1.8}
+.glass-steps{display:flex;flex-direction:column;gap:1rem}
+
+/* ── TESTIMONIALS ──────────────────────────────────────────────────── */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.testi-card{background:var(--bg-1);padding:2.25rem 2rem;transition:background .2s}
+.testi-card:hover{background:var(--bg-2)}
+.testi-stars{margin-bottom:1.25rem}
+.testi-quote{font-family:var(--f-display);font-size:1.05rem;font-style:italic;line-height:1.75;color:var(--tx-2);margin-bottom:1.75rem;quotes:none}
+.testi-author{display:flex;align-items:center;gap:.75rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+.testi-av{width:34px;height:34px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--f-display);font-size:.95rem;font-weight:600;flex-shrink:0}
+.testi-name{font-size:.85rem;font-weight:500;color:var(--tx)}
+.testi-loc{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-3);margin-top:2px}
+
+/* ── ABOUT ─────────────────────────────────────────────────────────── */
+.about-grid{display:grid;grid-template-columns:5fr 4fr;gap:clamp(3rem,6vw,6rem);align-items:center}
+.about-label{font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-3);margin-bottom:1rem}
+.about-title{font-family:var(--f-display);font-size:clamp(1.75rem,3vw,2.6rem);font-weight:300;line-height:1.15;color:var(--tx);max-width:20ch}
+.about-title em{font-style:italic}
+.about-body{font-size:.93rem;color:var(--tx-2);line-height:1.9;margin-top:1.5rem;max-width:52ch}
+.about-hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2.5rem}
+.about-hl{background:var(--bg-2);padding:1.25rem 1.5rem;transition:background .2s}
+.about-hl:hover{background:var(--bg-1)}
+.about-hl-val{font-family:var(--f-display);font-size:1.3rem;font-weight:400;color:var(--tx);line-height:1}
+.about-hl-lbl{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-3);margin-top:.4rem}
+.about-img-wrap{border-radius:8px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.12)}
+.about-img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:brightness(.88) saturate(.8);transition:filter .5s}
+.about-img-wrap:hover .about-img{filter:brightness(.95) saturate(.95)}
+
+/* ── CONTACT ──────────────────────────────────────────────────────── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(3rem,6vw,5rem);align-items:start}
+.contact-info-list{list-style:none;display:flex;flex-direction:column;gap:1rem;margin-top:2rem}
+.contact-info-item{display:flex;align-items:flex-start;gap:.9rem}
+.contact-info-ico{
+  width:38px;height:38px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--blue-light);border:1px solid var(--blue-border);
+}
+.contact-info-ico svg{width:14px;height:14px;color:var(--blue)}
+.contact-info-lbl{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-3);margin-bottom:2px}
+.contact-info-val{font-size:.93rem;color:var(--tx);font-weight:500}
+.contact-info-val a{transition:color .2s}
+.contact-info-val a:hover{color:var(--blue)}
+/* Form */
+.contact-form{
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  border-radius:12px;padding:2.5rem;
+  box-shadow:0 2px 32px rgba(0,0,0,.05);
+}
+.form-eye{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:.65rem}
+.form-eye::before{content:'';display:block;width:16px;height:1px;background:var(--blue)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.form-field{display:flex;flex-direction:column;gap:.35rem}
+.form-field--full{grid-column:1/-1}
+.form-lbl{font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-3)}
+.form-inp,.form-sel,.form-txt{
+  width:100%;padding:11px .9rem;
+  border:1.5px solid var(--border);border-radius:6px;
+  font-size:.88rem;font-family:var(--f-body);
+  background:var(--bg);color:var(--tx);
+  transition:border-color .2s,box-shadow .2s;
+  appearance:none;
+}
+.form-inp::placeholder,.form-txt::placeholder{color:var(--tx-3)}
+.form-inp:focus,.form-sel:focus,.form-txt:focus{
+  outline:none;border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(58,123,213,.12);
+}
+.form-txt{resize:vertical;min-height:100px}
+.form-sel option{background:var(--bg-1)}
+.form-submit{
+  width:100%;margin-top:.75rem;
+  background:var(--blue);color:#fff;
+  border-radius:6px;padding:13px 2rem;
+  font-size:.7rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  cursor:pointer;transition:all .25s var(--ease);
+  border:none;
+}
+.form-submit:hover{background:var(--blue-dark);transform:translateY(-2px);box-shadow:0 10px 30px rgba(58,123,213,.3)}
+.form-submit:disabled{opacity:.5;pointer-events:none}
+.form-success{
+  display:none;margin-top:1rem;padding:1rem;border-radius:6px;
+  background:var(--blue-light);border:1px solid var(--blue-border);
+  color:var(--blue-dark);font-size:.88rem;text-align:center;
+}
+.form-success.visible{display:block}
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+.footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding:clamp(4rem,6vw,6rem) 0 2.5rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem}
+.footer-brand{font-family:var(--f-display);font-size:1.15rem;letter-spacing:.1em;color:var(--tx-inv);margin-bottom:.65rem}
+.footer-desc{font-size:.84rem;line-height:1.75;color:var(--tx-inv-2);max-width:30ch}
+.footer-hdg{font-size:.58rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--tx-inv-3);margin-bottom:1.25rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.footer-links a{font-size:.86rem;color:var(--tx-inv-2);transition:color .2s,padding-left .2s}
+.footer-links a:hover{color:#fff;padding-left:4px}
+.footer-btm{border-top:1px solid rgba(255,255,255,.06);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.footer-copy{font-size:.74rem;color:var(--tx-inv-3)}
+.footer-copy a{color:inherit;transition:color .2s}
+.footer-copy a:hover{color:var(--tx-inv-2)}
+
+/* ── FLOATING CTA ── */
+.fab{
+  position:fixed;bottom:2rem;right:2rem;z-index:150;
+  padding:.65rem 1.25rem;
+  background:var(--blue);color:#fff;
+  border-radius:999px;
+  font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  box-shadow:0 6px 28px rgba(58,123,213,.4);
+  display:flex;align-items:center;gap:.6rem;
+  transition:all .4s var(--ease);
+  opacity:0;transform:translateY(20px);pointer-events:none;
+}
+.fab.visible{opacity:1;transform:none;pointer-events:auto}
+.fab:hover{background:var(--blue-dark);transform:translateY(-2px);box-shadow:0 10px 36px rgba(58,123,213,.5)}
+.fab svg{width:14px;height:14px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .vitrage__grid{grid-template-columns:1fr}
+  .vitrage__img-wrap{min-height:320px}
+  .vitrage__text{border-right:none;border-bottom:1px solid var(--border)}
+  .hero__panel{display:none}
+}
+@media(max-width:900px){
+  .svc-grid{grid-template-columns:1fr 1fr}
+  .svc-card--feat{grid-column:span 2;flex-direction:column}
+  .svc-card--feat .svc-img{width:100%;height:240px}
+  .testi-grid{grid-template-columns:1fr 1fr;gap:.75rem;background:none;border:none}
+  .testi-card{border-radius:10px;border:1px solid var(--border)}
+  .glass-feature__inner{grid-template-columns:1fr}
+  .intro__inner{grid-template-columns:1fr;gap:0}
+  .intro__divider{display:none}
+  .intro__item{border-bottom:1px solid var(--border)}
+  .about-grid{grid-template-columns:1fr}
+  .about-img-wrap{display:none}
+  .masonry{columns:2}
+  .nav__links{display:none}
+  .nav__phone{display:none}
+  .nav__hamburger{display:flex}
+}
+@media(max-width:768px){
+  .contact-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .svc-grid{grid-template-columns:1fr}
+  .svc-card--feat{grid-column:1}
+  .testi-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .masonry{columns:1}
+  .footer-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .footer-btm{flex-direction:column;align-items:flex-start}
+  .fab{bottom:1.25rem;right:1.25rem;padding:.55rem 1rem;font-size:.65rem}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Aller au contenu principal</a>
+
+<!-- ── NAV ── -->
+<header class="nav nav--dark" id="siteNav">
+  <div class="nav__inner">
+    <a href="#" class="nav__logo" aria-label="LRMJ Project — Accueil">
+      <!-- Logo SVG géométrique — "L" et "R" stylisés, évoque une structure métallique -->
+      <svg class="nav__logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="1" y="1" width="34" height="34" rx="5" stroke="currentColor" stroke-width="1.2" stroke-opacity=".3"/>
+        <path d="M9 9v18h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 9h7.5a3.5 3.5 0 0 1 0 7H18m5 0 5.5 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <span class="nav__logo-text" style="font-size:1rem;letter-spacing:.15em;font-weight:600">LRMJ</span>
+    </a>
+
+    <ul class="nav__links" role="list">
+      <li><a href="#realisations">Réalisations</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#processus">Processus</a></li>
+      <li><a href="#about">Atelier</a></li>
+    </ul>
+
+    <div class="nav__actions">
+      <a href="tel:0475399909" class="nav__phone" aria-label="Appeler LRMJ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 10.8a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 2 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L6.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 14.9z"/></svg>
+        <span>0475 39 99 09</span>
+      </a>
+      <a href="#contact" class="nav__cta">Devis Gratuit</a>
+      <button class="nav__hamburger" id="navHamburger" aria-expanded="false" aria-controls="navMobile" aria-label="Ouvrir le menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<div class="nav__mobile" id="navMobile" role="dialog" aria-modal="true" aria-label="Menu de navigation" hidden>
+  <nav class="nav__mobile-links">
+    <a href="#realisations" class="mobile-link">Réalisations</a>
+    <a href="#services"     class="mobile-link">Services</a>
+    <a href="#processus"    class="mobile-link">Processus</a>
+    <a href="#about"        class="mobile-link">Atelier</a>
+    <a href="#contact"      class="mobile-link">Contact</a>
+  </nav>
+  <div class="nav__mobile-bottom">
+    <a href="tel:0475399909" class="nav__mobile-phone">0475 39 99 09</a>
+    <a href="#contact" class="nav__mobile-cta">Demander un devis →</a>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ── HERO ── -->
+<section class="hero" aria-label="LRMJ Project — Artisan ferronnier à Bruxelles">
+  <h1 class="sr-only">LRMJ Project — Artisan Ferronnier Bruxelles, Baies Vitrées et Verrières Sur Mesure</h1>
+
+  <img class="hero__img"
+    src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80"
+    alt="Verrière en fer et verre — réalisation LRMJ Project"
+    fetchpriority="high"
+  />
+  <div class="hero__gradient"   aria-hidden="true"></div>
+  <div class="hero__top-fade"   aria-hidden="true"></div>
+
+  <!-- Glass info panel — right -->
+  <div class="hero__panel" aria-hidden="true">
+    <div class="hero__panel-item">
+      <div class="hero__panel-lbl">Spécialité</div>
+      <div class="hero__panel-val">Baies Vitrées<br>& Verrières</div>
+    </div>
+    <div class="hero__panel-item">
+      <div class="hero__panel-lbl">Zone d'intervention</div>
+      <div class="hero__panel-val">Bruxelles<br>& environs</div>
+    </div>
+    <div class="hero__panel-item">
+      <div class="hero__panel-lbl">Depuis</div>
+      <div class="hero__panel-val">2011</div>
+    </div>
+  </div>
+
+  <div class="hero__content wrap">
+    <div class="hero__badge">
+      <span class="hero__badge-dot" aria-hidden="true"></span>
+      Artisan à Bruxelles · Sur mesure
+    </div>
+    <h2 class="hero__title" aria-hidden="true">
+      Métal<br>et <em>lumière.</em>
+    </h2>
+    <div class="hero__actions">
+      <a href="#realisations" class="btn btn--glass">Voir les réalisations</a>
+      <a href="#contact"      class="btn btn--outline-inv">Demander un devis →</a>
+    </div>
+  </div>
+
+  <a href="#realisations" class="hero__scroll" aria-label="Défiler vers les réalisations">
+    <div class="hero__scroll-line" aria-hidden="true"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+  </a>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track" id="ticker">
+    <!-- Duplicated for seamless loop -->
+    <span class="ticker__item"><span class="ticker__dot"></span>Baies Vitrées</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Verrières</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Serres de Jardin</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Portails Sur Mesure</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Garde-corps</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Escaliers Métalliques</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Meubles Acier</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Marquises & Auvents</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Bruxelles & Environs</span>
+    <!-- Clone -->
+    <span class="ticker__item"><span class="ticker__dot"></span>Baies Vitrées</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Verrières</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Serres de Jardin</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Portails Sur Mesure</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Garde-corps</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Escaliers Métalliques</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Meubles Acier</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Marquises & Auvents</span>
+    <span class="ticker__item"><span class="ticker__dot"></span>Bruxelles & Environs</span>
+  </div>
+</div>
+
+<!-- ── INTRO STRIP ── -->
+<div class="intro" role="complementary" aria-label="Chiffres clés">
+  <div class="intro__inner wrap">
+    <div class="intro__item fi">
+      <div class="intro__num">+14<span>ans</span></div>
+      <div class="intro__lbl">d'expérience à Bruxelles</div>
+    </div>
+    <div class="intro__divider" aria-hidden="true"></div>
+    <div class="intro__item fi d1">
+      <div class="intro__num">100<span>%</span></div>
+      <div class="intro__lbl">fabrication artisanale</div>
+    </div>
+    <div class="intro__divider" aria-hidden="true"></div>
+    <div class="intro__item fi d2">
+      <div class="intro__num">Sur<span style="font-size:1rem"> mesure</span></div>
+      <div class="intro__lbl">du dessin à la pose</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── VITRAGE — Feature section ── -->
+<section class="vitrage s--white" id="vitrage" aria-labelledby="vitrage-title">
+  <div class="vitrage__grid wrap" style="max-width:none;padding:0;">
+    <div class="vitrage__text" style="padding-left:clamp(1.5rem,5vw,5rem);padding-right:clamp(1.5rem,5vw,5rem)">
+      <span class="eyebrow fi">Spécialité</span>
+      <h2 class="h-large fi d1" id="vitrage-title">
+        La lumière<br>comme <em>matériau.</em>
+      </h2>
+      <p class="sec-intro fi d2">
+        Baies vitrées, verrières et serres de jardin — LRMJ Project maîtrise l'alliance du fer forgé et du verre pour créer des espaces inondés de lumière. Chaque structure est conçue, soudée et posée en atelier propre.
+      </p>
+      <ul class="vitrage__list fi d3" aria-label="Prestations vitrées">
+        <li>
+          <span class="vitrage__list-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 8 6 11 13 4"/></svg>
+          </span>
+          Baies vitrées intérieures &amp; extensions
+        </li>
+        <li>
+          <span class="vitrage__list-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 8 6 11 13 4"/></svg>
+          </span>
+          Serres de jardin sur mesure
+        </li>
+        <li>
+          <span class="vitrage__list-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 8 6 11 13 4"/></svg>
+          </span>
+          Verrières de toit et lanterneaux
+        </li>
+        <li>
+          <span class="vitrage__list-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 8 6 11 13 4"/></svg>
+          </span>
+          Châssis acier et verre feuilleté ou trempé
+        </li>
+      </ul>
+      <a href="#contact" class="btn btn--blue fi d4">Discuter de votre projet →</a>
+    </div>
+    <div class="vitrage__img-wrap">
+      <!-- REPLACE: Romeo's best verrière/baie vitrée photo -->
+      <img class="vitrage__img"
+        src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=80"
+        alt="Baie vitrée en fer forgé sur mesure — LRMJ Project Bruxelles"
+        loading="lazy"/>
+      <div class="vitrage__photo-badge">Fabrication atelier · Opwijk</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="realisations" class="gallery s" aria-labelledby="gal-title">
+  <div class="wrap">
+    <div class="gallery__header fi">
+      <div>
+        <span class="eyebrow">Réalisations</span>
+        <h2 class="h-large" id="gal-title">Le travail<br><em>parle pour lui-même.</em></h2>
+      </div>
+      <a href="#contact" class="btn btn--outline">Votre projet →</a>
+    </div>
+
+    <div class="masonry" id="masonryGrid" role="list">
+      <!-- Batch 1 — visible -->
+      <div class="masonry__item fi" role="listitem">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75"
+             alt="Verrière intérieure fer et verre" loading="lazy"/>
+        <div class="masonry__label">Verrière Intérieure</div>
+      </div>
+      <div class="masonry__item fi d1" role="listitem">
+        <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=600&q=75"
+             alt="Serre de jardin sur mesure" loading="lazy"/>
+        <div class="masonry__label">Serre de Jardin</div>
+      </div>
+      <div class="masonry__item fi d2" role="listitem">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=75"
+             alt="Baie vitrée extension maison" loading="lazy"/>
+        <div class="masonry__label">Extension Vitrée</div>
+      </div>
+      <div class="masonry__item fi d1" role="listitem">
+        <img src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=600&q=75"
+             alt="Garde-corps escalier fer forgé" loading="lazy"/>
+        <div class="masonry__label">Garde-corps</div>
+      </div>
+      <div class="masonry__item fi d2" role="listitem">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=75"
+             alt="Portail en fer forgé sur mesure" loading="lazy"/>
+        <div class="masonry__label">Portail Forgé</div>
+      </div>
+      <div class="masonry__item fi d3" role="listitem">
+        <img src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&q=75"
+             alt="Marquise acier et verre" loading="lazy"/>
+        <div class="masonry__label">Marquise Acier</div>
+      </div>
+      <div class="masonry__item fi" role="listitem">
+        <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=75"
+             alt="Escalier métallique design" loading="lazy"/>
+        <div class="masonry__label">Escalier Métal</div>
+      </div>
+      <div class="masonry__item fi d1" role="listitem">
+        <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600&q=75"
+             alt="Verrière atelier loft" loading="lazy"/>
+        <div class="masonry__label">Verrière Loft</div>
+      </div>
+      <!-- Batch 2 — hidden -->
+      <div class="masonry__item hidden" role="listitem">
+        <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600&q=75"
+             alt="Meuble acier sur mesure" loading="lazy"/>
+        <div class="masonry__label">Meuble Acier</div>
+      </div>
+      <div class="masonry__item hidden" role="listitem">
+        <img src="https://images.unsplash.com/photo-1505798577917-a65157d3320a?w=600&q=75"
+             alt="Clôture fer forgé" loading="lazy"/>
+        <div class="masonry__label">Clôture Forgée</div>
+      </div>
+      <div class="masonry__item hidden" role="listitem">
+        <img src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600&q=75"
+             alt="Rampe de balcon" loading="lazy"/>
+        <div class="masonry__label">Rampe de Balcon</div>
+      </div>
+      <div class="masonry__item hidden" role="listitem">
+        <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=600&q=75"
+             alt="Serre orangerie" loading="lazy"/>
+        <div class="masonry__label">Orangerie</div>
+      </div>
+    </div>
+    <div class="masonry__footer">
+      <button class="masonry__load" id="loadMoreBtn" aria-label="Afficher plus de réalisations">Voir plus de réalisations</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services" class="s s--white" aria-labelledby="svc-title">
+  <div class="wrap">
+    <div class="svc__header fi">
+      <div>
+        <span class="eyebrow">Prestations</span>
+        <h2 class="h-large" id="svc-title">Tout ce que<br><em>nous fabriquons.</em></h2>
+      </div>
+      <a href="#contact" class="btn btn--blue">Devis Gratuit →</a>
+    </div>
+
+    <div class="svc-grid">
+      <!-- Featured -->
+      <div class="svc-card svc-card--feat fi">
+        <div class="svc-img-wrap">
+          <img class="svc-img"
+            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75"
+            alt="Baies vitrées et verrières sur mesure" loading="lazy"/>
+        </div>
+        <div class="svc-body">
+          <span class="svc-tag">Spécialité</span>
+          <h3 class="svc-title">Baies Vitrées &amp; Verrières</h3>
+          <p class="svc-desc">Notre cœur de métier. Structures acier et verre pour agrandir et illuminer vos espaces : extensions vitrées, vérandas, serres de jardin, lanterneaux. Châssis sur mesure, verre feuilleté ou trempé.</p>
+          <a href="#contact" class="btn btn--outline" style="margin-top:auto;width:fit-content">Discuter →</a>
+        </div>
+      </div>
+      <!-- 4 cards -->
+      <div class="svc-card fi d1">
+        <div class="svc-img-wrap">
+          <img class="svc-img"
+            src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=600&q=75"
+            alt="Garde-corps et rampes" loading="lazy"/>
+        </div>
+        <div class="svc-body">
+          <span class="svc-tag">Sécurité</span>
+          <h3 class="svc-title">Garde-corps &amp; Rampes</h3>
+          <p class="svc-desc">Garde-corps d'escalier, balcons et mezzanines. Acier brut, peint ou inox. Design contemporain ou classique selon votre intérieur.</p>
+        </div>
+      </div>
+      <div class="svc-card fi d2">
+        <div class="svc-img-wrap">
+          <img class="svc-img"
+            src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=75"
+            alt="Portails et clôtures" loading="lazy"/>
+        </div>
+        <div class="svc-body">
+          <span class="svc-tag">Extérieur</span>
+          <h3 class="svc-title">Portails &amp; Clôtures</h3>
+          <p class="svc-desc">Portails battants ou coulissants, clôtures et portillons. Finition époxy ou galvanisation pour une longévité maximale.</p>
+        </div>
+      </div>
+      <div class="svc-card fi d1">
+        <div class="svc-img-wrap">
+          <img class="svc-img"
+            src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&q=75"
+            alt="Marquises et auvents" loading="lazy"/>
+        </div>
+        <div class="svc-body">
+          <span class="svc-tag">Protection</span>
+          <h3 class="svc-title">Marquises &amp; Auvents</h3>
+          <p class="svc-desc">Auvents en fer forgé et verre pour protéger entrées et terrasses tout en apportant une touche architecturale.</p>
+        </div>
+      </div>
+      <div class="svc-card fi d2">
+        <div class="svc-img-wrap">
+          <img class="svc-img"
+            src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=75"
+            alt="Escaliers métalliques" loading="lazy"/>
+        </div>
+        <div class="svc-body">
+          <span class="svc-tag">Structure</span>
+          <h3 class="svc-title">Escaliers Métalliques</h3>
+          <p class="svc-desc">Escaliers droits, colimaçon ou hélicoïdaux. Limons acier, marches bois ou métal, main courante design.</p>
+        </div>
+      </div>
+      <div class="svc-card fi d3">
+        <div class="svc-img-wrap">
+          <img class="svc-img"
+            src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600&q=75"
+            alt="Mobilier et déco acier" loading="lazy"/>
+        </div>
+        <div class="svc-body">
+          <span class="svc-tag">Déco</span>
+          <h3 class="svc-title">Mobilier &amp; Déco Acier</h3>
+          <p class="svc-desc">Tables, étagères, pieds de meuble, crédences. L'acier brut ou patiné comme matière décorative dans votre intérieur.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESS — glass sur fond photo ── -->
+<section id="processus" class="glass-feature" aria-labelledby="proc-title">
+  <!-- REPLACE: photo d'atelier Romeo ou verrière en construction -->
+  <img class="glass-feature__bg"
+    src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1600&q=75"
+    alt=""
+    aria-hidden="true"
+    loading="lazy"/>
+  <div class="glass-feature__overlay" aria-hidden="true"></div>
+
+  <div class="glass-feature__inner">
+    <div>
+      <span class="eyebrow eyebrow--inv fi">Processus</span>
+      <h2 class="h-large h-large--inv fi d1" id="proc-title">
+        Du trait<br><em>à la pièce.</em>
+      </h2>
+      <p class="sec-intro sec-intro--inv fi d2" style="margin-top:1rem">
+        Chaque projet démarre par une conversation. Pas de devis en l'air — on comprend votre espace, on dessine ensemble, on fabrique chez nous.
+      </p>
+    </div>
+
+    <div class="glass-steps">
+      <div class="glass-card fi d1">
+        <div class="glass-card__num">01</div>
+        <div class="glass-card__title">La rencontre</div>
+        <div class="glass-card__desc">Échange sur site ou par téléphone. On analyse votre espace, vos contraintes, vos envies. Devis gratuit sous 48h.</div>
+      </div>
+      <div class="glass-card fi d2">
+        <div class="glass-card__num">02</div>
+        <div class="glass-card__title">Le dessin</div>
+        <div class="glass-card__desc">Plans et esquisses à l'appui. Vous validez chaque détail avant qu'on allume le poste à souder.</div>
+      </div>
+      <div class="glass-card fi d3">
+        <div class="glass-card__num">03</div>
+        <div class="glass-card__title">La fabrication</div>
+        <div class="glass-card__desc">Tout est fait dans notre atelier à Opwijk — découpe, soudure, finition. Aucune sous-traitance.</div>
+      </div>
+      <div class="glass-card fi d4">
+        <div class="glass-card__num">04</div>
+        <div class="glass-card__title">La pose</div>
+        <div class="glass-card__desc">Installation par nos propres mains. On ne part pas avant que tout soit parfait et que vous soyez satisfait.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="s s--muted" aria-labelledby="testi-title">
+  <div class="wrap">
+    <div class="fi text-center" style="margin-bottom:2.5rem">
+      <span class="eyebrow" style="justify-content:center">Témoignages</span>
+      <h2 class="h-large fi d1" id="testi-title" style="margin:0 auto;text-align:center;max-width:18ch">
+        Ce que disent<br><em>nos clients.</em>
+      </h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card fi">
+        <div class="testi-stars" aria-label="5 étoiles sur 5">
+          <svg width="76" height="13" viewBox="0 0 76 13" fill="none" aria-hidden="true">
+            <path d="M6 1l1.5 4H12L8.5 7.5l1.5 4L6 9l-4 2.5 1.5-4L0 5h4.5L6 1z" fill="#3A7BD5"/>
+            <path d="M22 1l1.5 4H28l-3.5 2.5 1.5 4L22 9l-4 2.5 1.5-4L16 5h4.5L22 1z" fill="#3A7BD5"/>
+            <path d="M38 1l1.5 4H44l-3.5 2.5 1.5 4L38 9l-4 2.5 1.5-4L32 5h4.5L38 1z" fill="#3A7BD5"/>
+            <path d="M54 1l1.5 4H60l-3.5 2.5 1.5 4L54 9l-4 2.5 1.5-4L48 5h4.5L54 1z" fill="#3A7BD5"/>
+            <path d="M70 1l1.5 4H76l-3.5 2.5 1.5 4L70 9l-4 2.5 1.5-4L64 5h4.5L70 1z" fill="#3A7BD5"/>
+          </svg>
+        </div>
+        <blockquote class="testi-quote">Notre verrière de cuisine a complètement transformé la pièce. Romeo a respecté nos contraintes et les délais annoncés. Un artisan rare.</blockquote>
+        <div class="testi-author">
+          <div class="testi-av" aria-hidden="true">S</div>
+          <div>
+            <div class="testi-name">Sophie M.</div>
+            <div class="testi-loc">Uccle, Bruxelles</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card fi d1">
+        <div class="testi-stars" aria-label="5 étoiles sur 5">
+          <svg width="76" height="13" viewBox="0 0 76 13" fill="none" aria-hidden="true"><path d="M6 1l1.5 4H12L8.5 7.5l1.5 4L6 9l-4 2.5 1.5-4L0 5h4.5L6 1z" fill="#3A7BD5"/><path d="M22 1l1.5 4H28l-3.5 2.5 1.5 4L22 9l-4 2.5 1.5-4L16 5h4.5L22 1z" fill="#3A7BD5"/><path d="M38 1l1.5 4H44l-3.5 2.5 1.5 4L38 9l-4 2.5 1.5-4L32 5h4.5L38 1z" fill="#3A7BD5"/><path d="M54 1l1.5 4H60l-3.5 2.5 1.5 4L54 9l-4 2.5 1.5-4L48 5h4.5L54 1z" fill="#3A7BD5"/><path d="M70 1l1.5 4H76l-3.5 2.5 1.5 4L70 9l-4 2.5 1.5-4L64 5h4.5L70 1z" fill="#3A7BD5"/></svg>
+        </div>
+        <blockquote class="testi-quote">La serre de jardin dépasse toutes nos attentes. On sentait que c'est quelqu'un qui aime son travail — chaque détail est soigné.</blockquote>
+        <div class="testi-author">
+          <div class="testi-av" aria-hidden="true">P</div>
+          <div>
+            <div class="testi-name">Pierre &amp; Isabelle V.</div>
+            <div class="testi-loc">Woluwe-Saint-Lambert</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card fi d2">
+        <div class="testi-stars" aria-label="5 étoiles sur 5">
+          <svg width="76" height="13" viewBox="0 0 76 13" fill="none" aria-hidden="true"><path d="M6 1l1.5 4H12L8.5 7.5l1.5 4L6 9l-4 2.5 1.5-4L0 5h4.5L6 1z" fill="#3A7BD5"/><path d="M22 1l1.5 4H28l-3.5 2.5 1.5 4L22 9l-4 2.5 1.5-4L16 5h4.5L22 1z" fill="#3A7BD5"/><path d="M38 1l1.5 4H44l-3.5 2.5 1.5 4L38 9l-4 2.5 1.5-4L32 5h4.5L38 1z" fill="#3A7BD5"/><path d="M54 1l1.5 4H60l-3.5 2.5 1.5 4L54 9l-4 2.5 1.5-4L48 5h4.5L54 1z" fill="#3A7BD5"/><path d="M70 1l1.5 4H76l-3.5 2.5 1.5 4L70 9l-4 2.5 1.5-4L64 5h4.5L70 1z" fill="#3A7BD5"/></svg>
+        </div>
+        <blockquote class="testi-quote">Garde-corps d'escalier remarquable. Propre, précis, solide. Pas de blabla, il vient, il mesure, il livre. C'est ça un vrai artisan.</blockquote>
+        <div class="testi-author">
+          <div class="testi-av" aria-hidden="true">T</div>
+          <div>
+            <div class="testi-name">Thomas N.</div>
+            <div class="testi-loc">Etterbeek, Bruxelles</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="s s--white" aria-labelledby="about-title">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <div class="about-label fi">Atelier</div>
+        <h2 class="about-title fi d1" id="about-title">
+          Fabriqué ici.<br><em>Posé par nous.</em>
+        </h2>
+        <p class="about-body fi d2">
+          LRMJ Project, c'est Romeo Lesac — artisan ferronnier actif à Bruxelles depuis plus de 14 ans. Chaque pièce est dessinée, soudée et posée par la même paire de mains. Aucune sous-traitance. Du premier croquis au dernier boulon, un seul interlocuteur.
+        </p>
+        <p class="about-body fi d2" style="margin-top:1rem">
+          Spécialisé dans le travail du fer et du verre, Romeo fabrique des structures qui tiennent dans le temps et qui transforment les espaces. Il travaille aussi bien sur des nouvelles constructions que sur des rénovations, pour des particuliers comme pour des professionnels à Bruxelles et ses environs.
+        </p>
+        <div class="about-hl-grid fi d3" aria-label="Points clés">
+          <div class="about-hl">
+            <div class="about-hl-val">Bruxelles</div>
+            <div class="about-hl-lbl">zone principale</div>
+          </div>
+          <div class="about-hl">
+            <div class="about-hl-val">Atelier propre</div>
+            <div class="about-hl-lbl">Opwijk — tout sur place</div>
+          </div>
+          <div class="about-hl">
+            <div class="about-hl-val">Neuf &amp; Rénov'</div>
+            <div class="about-hl-lbl">construction et réhabilitation</div>
+          </div>
+          <div class="about-hl">
+            <div class="about-hl-val">Devis 48h</div>
+            <div class="about-hl-lbl">réponse rapide garantie</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-img-wrap fi d2" aria-hidden="true">
+        <!-- REPLACE: portrait de Romeo en atelier ou photo de la soudure -->
+        <img class="about-img"
+          src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=75"
+          alt="Romeo Lesac — artisan ferronnier LRMJ Project"
+          loading="lazy"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" class="s s--muted" aria-labelledby="contact-title">
+  <div class="wrap">
+    <div class="fi" style="margin-bottom:2.5rem">
+      <span class="eyebrow">Contact</span>
+      <h2 class="h-large" id="contact-title">Parlons de<br><em>votre projet.</em></h2>
+      <p class="sec-intro">Devis gratuit sous 48h. Pas de démarchage, pas de relance abusive — juste une réponse claire.</p>
+    </div>
+    <div class="contact-grid">
+      <!-- Infos -->
+      <div class="fi">
+        <ul class="contact-info-list" aria-label="Coordonnées">
+          <li class="contact-info-item">
+            <span class="contact-info-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 10.8a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 2 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L6.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 14.9z"/></svg>
+            </span>
+            <div>
+              <div class="contact-info-lbl">Téléphone</div>
+              <div class="contact-info-val"><a href="tel:0475399909">0475 39 99 09</a></div>
+            </div>
+          </li>
+          <li class="contact-info-item">
+            <span class="contact-info-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            <div>
+              <div class="contact-info-lbl">Email</div>
+              <div class="contact-info-val"><a href="mailto:lrmj.project@gmail.com">lrmj.project@gmail.com</a></div>
+            </div>
+          </li>
+          <li class="contact-info-item">
+            <span class="contact-info-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <div>
+              <div class="contact-info-lbl">Zone d'intervention</div>
+              <div class="contact-info-val">Bruxelles · Brabant Wallon<br>Brabant Flamand</div>
+            </div>
+          </li>
+          <li class="contact-info-item">
+            <span class="contact-info-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            <div>
+              <div class="contact-info-lbl">Horaires</div>
+              <div class="contact-info-val">Lun – Sam · 8h00 – 18h00</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- Form -->
+      <div class="contact-form fi d1" role="form" aria-label="Formulaire de contact">
+        <div class="form-eye">Demande de devis</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-lbl" for="f-prenom">Prénom</label>
+            <input class="form-inp" id="f-prenom" name="prenom" type="text" placeholder="Romeo" autocomplete="given-name" required/>
+          </div>
+          <div class="form-field">
+            <label class="form-lbl" for="f-nom">Nom</label>
+            <input class="form-inp" id="f-nom" name="nom" type="text" placeholder="Lesac" autocomplete="family-name" required/>
+          </div>
+          <div class="form-field">
+            <label class="form-lbl" for="f-tel">Téléphone</label>
+            <input class="form-inp" id="f-tel" name="tel" type="tel" placeholder="04XX XX XX XX" autocomplete="tel"/>
+          </div>
+          <div class="form-field">
+            <label class="form-lbl" for="f-email">Email</label>
+            <input class="form-inp" id="f-email" name="email" type="email" placeholder="vous@email.com" autocomplete="email" required/>
+          </div>
+          <div class="form-field form-field--full">
+            <label class="form-lbl" for="f-type">Type de projet</label>
+            <select class="form-sel" id="f-type" name="type">
+              <option value="" disabled selected>Sélectionner…</option>
+              <option>Baie vitrée / Verrière</option>
+              <option>Serre de jardin</option>
+              <option>Portail / Clôture</option>
+              <option>Garde-corps / Rampe</option>
+              <option>Escalier métallique</option>
+              <option>Marquise / Auvent</option>
+              <option>Mobilier acier</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="form-field form-field--full">
+            <label class="form-lbl" for="f-msg">Décrivez votre projet</label>
+            <textarea class="form-txt" id="f-msg" name="message" placeholder="Dimensions approximatives, délais souhaités, adresse du chantier…" rows="4"></textarea>
+          </div>
+        </div>
+        <button class="form-submit" id="formSubmit" type="button">Envoyer la demande →</button>
+        <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+          ✓ Votre demande a été envoyée. Romeo vous contactera sous 48h.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">LRMJ Project</div>
+        <p class="footer-desc">Artisan ferronnier à Bruxelles. Baies vitrées, verrières, portails et structures acier sur mesure depuis 2011.</p>
+      </div>
+      <div>
+        <div class="footer-hdg">Services</div>
+        <ul class="footer-links">
+          <li><a href="#services">Baies Vitrées</a></li>
+          <li><a href="#services">Serres & Verrières</a></li>
+          <li><a href="#services">Portails & Clôtures</a></li>
+          <li><a href="#services">Garde-corps</a></li>
+          <li><a href="#services">Escaliers</a></li>
+          <li><a href="#services">Mobilier Acier</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-hdg">Navigation</div>
+        <ul class="footer-links">
+          <li><a href="#realisations">Réalisations</a></li>
+          <li><a href="#processus">Processus</a></li>
+          <li><a href="#about">L'Atelier</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-hdg">Contact</div>
+        <ul class="footer-links">
+          <li><a href="tel:0475399909">0475 39 99 09</a></li>
+          <li><a href="mailto:lrmj.project@gmail.com">lrmj.project@gmail.com</a></li>
+          <li style="color:rgba(240,242,247,.28);font-size:.84rem;pointer-events:none">Bruxelles &amp; environs</li>
+          <li style="color:rgba(240,242,247,.28);font-size:.84rem;pointer-events:none">Lun–Sam · 8h–18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-btm">
+      <p class="footer-copy">© 2025 LRMJ Project · Romeo Lesac · <a href="#">Mentions légales</a></p>
+      <p class="footer-copy" style="color:rgba(240,242,247,.18)">Artisan ferronnier à Bruxelles</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ── FLOATING CTA ── -->
+<a href="#contact" class="fab" id="fab" aria-label="Demander un devis gratuit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  Devis Gratuit
+</a>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ── NAV ── */
+  const nav = document.getElementById('siteNav');
+  const hamburger = document.getElementById('navHamburger');
+  const mobileMenu = document.getElementById('navMobile');
+  const mobileLinks = mobileMenu.querySelectorAll('.mobile-link, .nav__mobile-cta');
+
+  // Nav state on scroll — hero is dark so nav starts as nav--dark
+  // Once scrolled past hero, switch to nav--scrolled (light)
+  function updateNav() {
+    const scrolled = window.scrollY > 60;
+    nav.classList.toggle('nav--scrolled', scrolled);
+    nav.classList.toggle('nav--dark', !scrolled);
+  }
+  window.addEventListener('scroll', updateNav, {passive:true});
+  updateNav();
+
+  // Hamburger
+  function openMenu(open) {
+    hamburger.setAttribute('aria-expanded', open);
+    hamburger.classList.toggle('open', open);
+    mobileMenu.hidden = !open;
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      const firstLink = mobileMenu.querySelector('.mobile-link');
+      if (firstLink) firstLink.focus();
+    }
+  }
+  hamburger.addEventListener('click', () => openMenu(mobileMenu.hidden));
+  mobileLinks.forEach(link => link.addEventListener('click', () => openMenu(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !mobileMenu.hidden) openMenu(false); });
+
+  /* ── SCROLL REVEALS ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fi').forEach(el => observer.observe(el));
+
+  /* ── MASONRY LOAD MORE ── */
+  const loadBtn = document.getElementById('loadMoreBtn');
+  if (loadBtn) {
+    loadBtn.addEventListener('click', () => {
+      const hidden = document.querySelectorAll('.masonry__item.hidden');
+      hidden.forEach((item, i) => {
+        setTimeout(() => {
+          item.classList.remove('hidden');
+          item.classList.add('fi');
+          requestAnimationFrame(() => item.classList.add('in'));
+        }, i * 80);
+      });
+      loadBtn.classList.add('done');
+      loadBtn.textContent = 'Toutes les réalisations affichées';
+    });
+  }
+
+  /* ── FORM SUBMIT (stub — brancher Google Forms ici) ── */
+  const formBtn = document.getElementById('formSubmit');
+  const formSuccess = document.getElementById('formSuccess');
+  if (formBtn) {
+    formBtn.addEventListener('click', () => {
+      const email = document.getElementById('f-email');
+      const prenom = document.getElementById('f-prenom');
+      if (!email || !email.value || !prenom || !prenom.value) {
+        email && !email.value && (email.style.borderColor = '#E53935');
+        prenom && !prenom.value && (prenom.style.borderColor = '#E53935');
+        return;
+      }
+      formBtn.disabled = true;
+      formBtn.textContent = 'Envoi en cours…';
+
+      /* ──────────────────────────────────────────────────
+         GOOGLE FORMS INTEGRATION — à brancher ici
+         ──────────────────────────────────────────────────
+         const FORM_URL = 'https://docs.google.com/forms/d/e/[FORM_ID]/formResponse';
+         const body = new FormData();
+         body.append('entry.XXXXXXXXX', prenom.value);
+         body.append('entry.YYYYYYYYY', document.getElementById('f-nom').value);
+         body.append('entry.ZZZZZZZZZ', email.value);
+         body.append('entry.AAAAAAAAA', document.getElementById('f-tel').value);
+         body.append('entry.BBBBBBBBB', document.getElementById('f-type').value);
+         body.append('entry.CCCCCCCCC', document.getElementById('f-msg').value);
+         fetch(FORM_URL, { method:'POST', mode:'no-cors', body })
+           .then(() => showSuccess())
+           .catch(() => showSuccess()); // no-cors renvoie toujours une opaque response
+         ──────────────────────────────────────────────────*/
+
+      // Simulation en attendant
+      setTimeout(() => {
+        formSuccess.classList.add('visible');
+        formBtn.textContent = 'Envoyé ✓';
+      }, 1200);
+    });
+  }
+
+  /* ── FLOATING CTA ── */
+  const fab = document.getElementById('fab');
+  if (fab) {
+    window.addEventListener('scroll', () => {
+      fab.classList.toggle('visible', window.scrollY > 400);
+    }, {passive:true});
+  }
+
+})();
+</script>
+</body>
+</html>

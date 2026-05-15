@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LRMJ Project — Ferronnerie &amp; Menuiserie Sur Mesure</title>
+  <meta name="description" content="LRMJ Project — Artisan ferronnier spécialisé dans la création sur mesure : portails, garde-corps, clôtures, serres, marquises en fer forgé." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── DESIGN SYSTEM ─────────────────────────────────────────────── */
+    :root {
+      /* Backgrounds */
+      --bg:          #07080c;
+      --bg-1:        #0c0e14;
+      --bg-2:        #111420;
+      --bg-3:        #171b28;
+
+      /* Surfaces */
+      --surf:        rgba(255,255,255,0.04);
+      --surf-2:      rgba(255,255,255,0.07);
+      --border:      rgba(255,255,255,0.07);
+      --border-2:    rgba(255,255,255,0.12);
+
+      /* Text */
+      --tx:          #f2f0ec;
+      --tx-2:        rgba(242,240,236,0.55);
+      --tx-3:        rgba(242,240,236,0.28);
+
+      /* Accent — Forge Red / Braise */
+      --red:         #d94f3b;
+      --red-glow:    rgba(217,79,59,0.18);
+      --red-border:  rgba(217,79,59,0.3);
+
+      /* Shadows & glows */
+      --glow-red:    0 0 80px rgba(217,79,59,0.12);
+
+      /* Type scale */
+      --f-display: 'Cormorant Garamond', Georgia, serif;
+      --f-body:    'DM Sans', system-ui, sans-serif;
+
+      /* Spacing */
+      --gap: clamp(1.5rem, 4vw, 4rem);
+
+      /* Transitions */
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; -webkit-font-smoothing: antialiased; }
+    body { background: var(--bg); color: var(--tx); font-family: var(--f-body); font-size: 1rem; line-height: 1.6; min-height: 100dvh; overflow-x: hidden; }
+    img, video { display: block; max-width: 100%; }
+    a { color: inherit; }
+    button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    ::selection { background: var(--red); color: #fff; }
+    :focus-visible { outline: 1px solid var(--red); outline-offset: 3px; }
+
+    /* ── SKIP LINK ── */
+    .skip-link { position: absolute; top: -100px; left: 1rem; background: var(--red); color: #fff; padding: .5rem 1rem; font-weight: 600; z-index: 9999; border-radius: 4px; }
+    .skip-link:focus { top: 1rem; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      transition: background 500ms ease, border-color 500ms ease;
+      border-bottom: 1px solid transparent;
+    }
+    .nav--solid {
+      background: rgba(7,8,12,0.88);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border-bottom-color: var(--border);
+    }
+    .nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px; max-width: 1360px; margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+    }
+    .nav__logo { display: flex; align-items: center; gap: 10px; text-decoration: none; transition: opacity .25s; }
+    .nav__logo:hover { opacity: .6; }
+    .nav__logo-mark { width: 26px; height: 26px; }
+    .nav__logo-text { font-family: var(--f-display); font-size: 1.05rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--tx); }
+    .nav__links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+    .nav__links a { font-size: .68rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; text-decoration: none; color: var(--tx-2); position: relative; padding-bottom: 3px; transition: color .25s; }
+    .nav__links a::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1px; background: var(--red); transform:scaleX(0); transform-origin:left; transition:transform .3s var(--ease); }
+    .nav__links a:hover { color: var(--tx); }
+    .nav__links a:hover::after { transform: scaleX(1); }
+    .nav__actions { display: flex; align-items: center; gap: 1.25rem; }
+    .nav__phone { font-size: .7rem; letter-spacing: .08em; color: var(--tx-3); text-decoration: none; display: flex; align-items: center; gap: 7px; transition: color .25s; }
+    .nav__phone:hover { color: var(--tx-2); }
+    .nav__cta-pill { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--tx); border: 1px solid var(--border-2); padding: 8px 20px; border-radius: 999px; text-decoration: none; transition: all .25s; }
+    .nav__cta-pill:hover { background: var(--red); border-color: var(--red); }
+    .nav__hamburger { display: none; flex-direction: column; gap: 5px; width: 32px; height: 32px; align-items: center; justify-content: center; }
+    .nav__hamburger span { display: block; height: 1px; background: var(--tx); border-radius: 2px; transition: transform .3s ease; }
+    .nav__hamburger span:first-child { width: 22px; }
+    .nav__hamburger span:last-child  { width: 14px; align-self: flex-start; }
+    .nav__hamburger[aria-expanded="true"] span:first-child { transform: translateY(3px) rotate(45deg); width: 20px; }
+    .nav__hamburger[aria-expanded="true"] span:last-child  { transform: translateY(-5px) rotate(-45deg); width: 20px; align-self: unset; }
+    @media (max-width: 860px) { .nav__links, .nav__phone { display: none; } .nav__hamburger { display: flex; } }
+
+    /* Mobile full-screen menu */
+    .nav__mobile { position: fixed; inset: 0; z-index: 190; background: rgba(7,8,12,.97); display: flex; flex-direction: column; justify-content: center; padding: 5rem clamp(2rem, 10vw, 6rem); opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+    .nav__mobile:not([hidden]) { opacity: 1; pointer-events: all; }
+    .nav__mobile-links { display: flex; flex-direction: column; }
+    .mobile-link { font-family: var(--f-display); font-size: clamp(3rem, 9vw, 5.5rem); line-height: 1.1; font-weight: 300; color: rgba(242,240,236,.6); text-decoration: none; padding: .15em 0; transition: color .2s ease, transform .2s ease; }
+    .mobile-link:hover { color: var(--red); transform: translateX(10px); }
+    .nav__mobile-bottom { margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
+    .nav__mobile-phone { font-size: .85rem; color: var(--tx-3); letter-spacing: .08em; text-decoration: none; }
+    .nav__mobile-cta { font-size: .78rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--red); text-decoration: none; }
+
+    /* ── HERO ── */
+    .hero { position: relative; overflow: hidden; height: 100svh; min-height: 600px; background: #030407; }
+    .hero__video { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; opacity: .65; }
+    .hero__vignette {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(to bottom,
+        rgba(7,8,12,.5) 0%,
+        transparent 30%,
+        transparent 50%,
+        rgba(7,8,12,.7) 78%,
+        rgba(7,8,12,.96) 100%
+      );
+    }
+    /* Bottom merge into dark bg */
+    .hero__merge {
+      position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 30vh; z-index: 2; pointer-events: none;
+      background: linear-gradient(to bottom, transparent, #07080c);
+    }
+    .hero__grain { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: .045; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size:200px; }
+
+    /* scroll hint */
+    .hero__scroll { position: absolute; bottom: 28vh; left: 50%; transform: translateX(-50%); z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--tx-3); text-decoration: none; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; animation: bounce 2.5s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+    /* ── SECTION UTILITIES ── */
+    .s { padding-block: clamp(5rem, 9vw, 9rem); }
+    .s--dark  { background: var(--bg); }
+    .s--lift  { background: var(--bg-1); }
+    .s--card  { background: var(--bg-2); }
+
+    /* Gradient fade dividers */
+    .sdiv { height: clamp(60px,7vw,100px); pointer-events: none; flex-shrink: 0; }
+    .sdiv--01 { background: linear-gradient(to bottom, var(--bg),   var(--bg-1)); }
+    .sdiv--10 { background: linear-gradient(to bottom, var(--bg-1), var(--bg));   }
+    .sdiv--12 { background: linear-gradient(to bottom, var(--bg-1), var(--bg-2)); }
+    .sdiv--21 { background: linear-gradient(to bottom, var(--bg-2), var(--bg-1)); }
+    .sdiv--20 { background: linear-gradient(to bottom, var(--bg-2), var(--bg));   }
+    .sdiv--02 { background: linear-gradient(to bottom, var(--bg),   var(--bg-2)); }
+
+    /* Glow backgrounds (radial) */
+    .glow-red-tl { position: relative; }
+    .glow-red-tl::before { content:''; position:absolute; inset:0; pointer-events:none; z-index:0; background: radial-gradient(ellipse 60% 50% at 15% 20%, rgba(217,79,59,.09) 0%, transparent 70%); }
+    .glow-red-br::after  { content:''; position:absolute; inset:0; pointer-events:none; z-index:0; background: radial-gradient(ellipse 50% 40% at 85% 80%, rgba(217,79,59,.07) 0%, transparent 70%); }
+    .glow-center::before { content:''; position:absolute; inset:0; pointer-events:none; z-index:0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(217,79,59,.08) 0%, transparent 70%); }
+
+    /* ── CONTAINER ── */
+    .wrap  { max-width: 1280px; margin: 0 auto; padding: 0 clamp(1.5rem,5vw,4rem); }
+    .wrap--sm { max-width: 900px; }
+
+    /* ── TYPOGRAPHY ── */
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: .64rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--red); margin-bottom: 1.25rem; }
+    .eyebrow::before { content:''; display:block; width:20px; height:1px; background: var(--red); }
+
+    .h-mega { font-family: var(--f-display); font-size: clamp(2.8rem,6vw,6rem); font-weight: 300; line-height: 1.02; letter-spacing: -.02em; color: var(--tx); }
+    .h-mega em { font-style: italic; color: rgba(242,240,236,.4); }
+    .h-large { font-family: var(--f-display); font-size: clamp(2rem,4vw,3.8rem); font-weight: 300; line-height: 1.06; letter-spacing: -.02em; color: var(--tx); }
+    .h-large em { font-style: italic; color: var(--red); }
+    .h-mid   { font-family: var(--f-display); font-size: clamp(1.4rem,2.5vw,2rem); font-weight: 400; line-height: 1.2; color: var(--tx); }
+    .lead { font-size: clamp(.9rem,1.2vw,1.05rem); color: var(--tx-2); line-height: 1.8; max-width: 52ch; }
+
+    /* ── BUTTONS ── */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 999px; font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; text-decoration: none; border: 1px solid transparent; white-space: nowrap; transition: all 280ms var(--ease); cursor: pointer; }
+    .btn:active { transform: scale(.97) !important; }
+
+    .btn--red { background: var(--red); color: #fff; border-color: var(--red); }
+    .btn--red:hover { background: #bf3a28; border-color: #bf3a28; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(217,79,59,.35); }
+
+    .btn--ghost { background: transparent; color: var(--tx-2); border-color: var(--border-2); }
+    .btn--ghost:hover { color: var(--tx); border-color: rgba(255,255,255,.3); transform: translateY(-2px); }
+
+    /* ── MASONRY GALLERY ── */
+    .masonry-hdr { display: flex; align-items: flex-end; justify-content: space-between; padding: clamp(3rem,5vw,5rem) clamp(1.5rem,5vw,4rem) 2rem; gap: 2rem; max-width: 1360px; margin: 0 auto; }
+    .masonry-grid { columns: 3 260px; column-gap: 2px; padding: 0 2px; }
+    .masonry-item { break-inside: avoid; position: relative; overflow: hidden; margin-bottom: 2px; cursor: zoom-in; }
+    .masonry-item.hidden { display: none; }
+    .masonry-item.reveal { animation: m-in 500ms var(--ease) both; }
+    @keyframes m-in { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .masonry-item img { width: 100%; height: auto; display: block; transition: transform .7s cubic-bezier(.25,.46,.45,.94), filter .7s ease; filter: brightness(.88) saturate(.85); }
+    .masonry-item:hover img { transform: scale(1.05); filter: brightness(1) saturate(1); }
+    .masonry-item__label { position:absolute; bottom:0; left:0; right:0; padding: 3rem 1rem .75rem; background: linear-gradient(to top, rgba(7,8,12,.9), transparent); color: rgba(242,240,236,.85); font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; font-weight:600; transform:translateY(100%); transition:transform .3s ease; }
+    .masonry-item:hover .masonry-item__label { transform: translateY(0); }
+    .masonry-footer { padding: 2.5rem clamp(1.5rem,5vw,4rem) clamp(4rem,6vw,6rem); text-align: center; }
+    .masonry-load-btn { font-size:.68rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color: var(--tx-3); border: 1px solid var(--border); background:none; padding: 14px 40px; border-radius:999px; cursor:pointer; transition: all .25s ease; }
+    .masonry-load-btn:hover { border-color: var(--red); color: var(--red); transform: translateY(-1px); }
+    .masonry-load-btn.done { opacity:.3; pointer-events:none; }
+
+    /* ── TESTIMONIALS ── */
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .testi-card { background: var(--bg-1); padding: 2.5rem 2rem; }
+    .testi-stars { margin-bottom: 1.5rem; }
+    .testi-quote { font-family: var(--f-display); font-size: 1.1rem; font-style: italic; line-height: 1.7; color: rgba(242,240,236,.7); margin-bottom: 2rem; quotes: none; }
+    .testi-author { display: flex; align-items: center; gap: .75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .testi-av { width: 36px; height: 36px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--f-display); font-size: 1rem; font-weight: 600; flex-shrink: 0; }
+    .testi-name { font-size: .88rem; font-weight: 500; color: var(--tx); }
+    .testi-loc  { font-size: .64rem; letter-spacing:.1em; text-transform:uppercase; color: var(--tx-3); margin-top: 2px; }
+    @media (max-width:900px) { .testi-grid { grid-template-columns:1fr 1fr; gap:.75rem; background:none; border:none; } .testi-card { border-radius:10px; border:1px solid var(--border); } }
+    @media (max-width:560px) { .testi-grid { grid-template-columns:1fr; } }
+
+    /* ── SERVICES ── */
+    .svc-hdr { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: 2.5rem; }
+    .svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .svc-card { background: var(--bg-1); overflow: hidden; display: flex; flex-direction: column; transition: background .25s ease; }
+    .svc-card:hover { background: var(--bg-2); }
+    .svc-card--feat { grid-column: span 3; flex-direction: row; }
+    .svc-img-wrap { overflow: hidden; flex-shrink: 0; }
+    .svc-img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform .7s cubic-bezier(.25,.46,.45,.94), filter .7s ease; filter: brightness(.75) saturate(.7); }
+    .svc-card--feat .svc-img { width: 480px; height: 100%; }
+    .svc-card:hover .svc-img { transform: scale(1.04); filter: brightness(.9) saturate(.9); }
+    .svc-body { padding: 1.75rem; display: flex; flex-direction: column; gap: .35rem; flex: 1; }
+    .svc-tag  { font-size: .6rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--red); margin-bottom: .25rem; }
+    .svc-title { font-family: var(--f-display); font-size: 1.3rem; font-weight: 400; color: var(--tx); line-height: 1.15; }
+    .svc-desc  { font-size: .87rem; color: var(--tx-2); line-height: 1.75; flex: 1; margin-top: .25rem; }
+    @media (max-width:900px) { .svc-grid { grid-template-columns:1fr 1fr; } .svc-card--feat { grid-column: span 2; flex-direction:column; } .svc-card--feat .svc-img { width:100%; height:220px; } }
+    @media (max-width:560px) { .svc-grid { grid-template-columns:1fr; } .svc-card--feat { grid-column:1; } }
+
+    /* ── PROCESS ── */
+    .proc-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .proc-step { background: var(--bg-1); padding: 2.5rem 2rem 2rem; transition: background .2s ease; }
+    .proc-step:hover { background: var(--bg-2); }
+    .proc-num  { display: block; font-family: var(--f-display); font-size: 3.5rem; font-weight: 300; color: var(--red); line-height: 1; margin-bottom: 1.5rem; opacity: .35; }
+    .proc-ttl  { font-family: var(--f-display); font-size: 1.2rem; font-weight: 400; color: var(--tx); margin-bottom: .75rem; }
+    .proc-desc { font-size: .87rem; color: var(--tx-2); line-height: 1.75; }
+    @media (max-width:900px) { .proc-grid { grid-template-columns:1fr 1fr; } }
+    @media (max-width:480px) { .proc-grid { grid-template-columns:1fr; } }
+
+    /* ── ABOUT ── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,6vw,5rem); align-items: center; }
+    .about-tagline { font-family: var(--f-display); font-size: clamp(1.5rem,2.8vw,2.2rem); font-weight: 300; font-style: italic; color: var(--tx); line-height: 1.3; margin: .5rem 0 1.5rem; max-width: 24ch; }
+    .about-body { font-size: .93rem; color: var(--tx-2); line-height: 1.85; max-width: 50ch; margin-bottom: 2rem; }
+    .about-hl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2.5rem; }
+    .about-hl { background: var(--bg-1); padding: 1.25rem; transition: background .2s ease; }
+    .about-hl:hover { background: var(--bg-2); }
+    .about-hl-val { font-family: var(--f-display); font-size: 1.35rem; font-weight: 400; color: var(--tx); line-height: 1; }
+    .about-hl-lbl { font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: var(--tx-3); margin-top: .5rem; }
+    .about-img { border-radius: 6px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+    .about-img img { width: 100%; aspect-ratio: 3/4; object-fit: cover; filter: brightness(.85) saturate(.8); }
+    @media (max-width:768px) { .about-grid { grid-template-columns:1fr; } .about-img { display:none; } }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,6vw,5rem); align-items: start; }
+    .contact-info-list { list-style:none; display:flex; flex-direction:column; gap:1.25rem; margin-top:2.5rem; }
+    .contact-info-item { display:flex; align-items:flex-start; gap:1rem; }
+    .contact-info-ico { width:40px; height:40px; border-radius:8px; background:var(--surf); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .contact-info-ico svg { width:15px; height:15px; color:var(--red); }
+    .contact-info-lbl { font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color:var(--tx-3); margin-bottom:3px; }
+    .contact-info-val { font-size:.95rem; color:var(--tx); font-weight:500; }
+    .contact-info-val a { color:inherit; text-decoration:none; transition:color .2s; }
+    .contact-info-val a:hover { color:var(--red); }
+    .contact-form { background:var(--bg-1); border:1px solid var(--border); border-radius:12px; padding:2.5rem; position:relative; overflow:hidden; }
+    .contact-form::before { content:''; position:absolute; top:0; left:2rem; right:2rem; height:1px; background:linear-gradient(90deg,transparent,var(--red),transparent); opacity:.4; }
+    .form-eye { font-size:.64rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--red); margin-bottom:1.5rem; display:inline-flex; align-items:center; gap:10px; }
+    .form-eye::before { content:''; display:block; width:20px; height:1px; background:var(--red); }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.875rem; }
+    .form-field { display:flex; flex-direction:column; gap:.4rem; }
+    .form-field--full { grid-column:1/-1; }
+    .form-lbl { font-size:.64rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--tx-3); }
+    .form-inp, .form-sel, .form-txt { width:100%; padding:12px 1rem; border:1px solid var(--border); border-radius:6px; font-size:.9rem; font-family:var(--f-body); background:var(--bg); color:var(--tx); transition:border-color .2s, box-shadow .2s; appearance:none; }
+    .form-inp::placeholder, .form-txt::placeholder { color:var(--tx-3); }
+    .form-inp:focus, .form-sel:focus, .form-txt:focus { outline:none; border-color:var(--red); box-shadow:0 0 0 3px rgba(217,79,59,.12); }
+    .form-txt { resize:vertical; min-height:100px; }
+    .form-sel option { background:var(--bg-1); }
+    .form-submit { width:100%; margin-top:.75rem; background:var(--red); color:#fff; border:none; border-radius:999px; padding:14px 2rem; font-size:.68rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; cursor:pointer; transition:all .28s var(--ease); }
+    .form-submit:hover { background:#bf3a28; transform:translateY(-2px); box-shadow:0 10px 30px rgba(217,79,59,.3); }
+    .form-submit:disabled { opacity:.5; pointer-events:none; }
+    .form-success { display:none; margin-top:1rem; padding:1rem; border-radius:6px; background:rgba(217,79,59,.1); border:1px solid var(--red-border); color:var(--red); font-size:.88rem; text-align:center; }
+    .form-success.visible { display:block; }
+    @media (max-width:768px) { .contact-grid { grid-template-columns:1fr; } .form-grid { grid-template-columns:1fr; } }
+
+    /* ── FOOTER ── */
+    .footer { background: #030407; border-top: 1px solid var(--border); color: var(--tx-3); padding: clamp(4rem,6vw,6rem) 0 2rem; }
+    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:3rem; padding-bottom:3rem; }
+    .footer-brand { font-family:var(--f-display); font-size:1.25rem; letter-spacing:.12em; color:var(--tx); margin-bottom:.75rem; }
+    .footer-desc { font-size:.85rem; line-height:1.7; max-width:32ch; }
+    .footer-hdg { font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--tx-3); margin-bottom:1.25rem; }
+    .footer-links { list-style:none; display:flex; flex-direction:column; gap:.6rem; }
+    .footer-links a { font-size:.88rem; color:var(--tx-3); text-decoration:none; transition:color .2s ease, padding-left .2s ease; }
+    .footer-links a:hover { color:var(--red); padding-left:4px; }
+    .footer-btm { border-top:1px solid var(--border); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+    .footer-copy { font-size:.75rem; }
+    .footer-copy a { text-decoration:none; }
+    .footer-copy a:hover { color:var(--tx-2); }
+    @media (max-width:768px) { .footer-grid { grid-template-columns:1fr 1fr; } }
+    @media (max-width:480px) { .footer-grid { grid-template-columns:1fr; } .footer-btm { flex-direction:column; align-items:flex-start; } }
+
+    /* ── FADE IN ── */
+    .fi { opacity:1; }
+
+    /* ── MISC ── */
+    .text-center { text-align: center; }
+    .mb-10 { margin-bottom: 2.5rem; }
+    .mt-auto { margin-top: auto; }
+
+  </style>
+
+<body>
+<a href="#main" class="skip-link">Aller au contenu</a>
+
+<!-- ── NAV ── -->
+<header class="nav" id="siteNav">
+  <div class="nav__inner">
+    <a href="#" class="nav__logo" aria-label="LRMJ Project">
+      <svg class="nav__logo-mark" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M8 10 L8 32 L20 32" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M22 10 L30 10 Q37 10 37 17 Q37 24 30 24 L22 24 M28 24 L37 34" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span class="nav__logo-text">LRMJ</span>
+    </a>
+    <ul class="nav__links" role="list">
+      <li><a href="#realisations">Réalisations</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">À Propos</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="tel:0475399909" class="nav__phone" aria-label="Appeler">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.9z"/></svg>
+        <span>0475 39 99 09</span>
+      </a>
+      <a href="#contact" class="nav__cta-pill">Devis Gratuit</a>
+      <button class="nav__hamburger" id="navHamburger" aria-expanded="false" aria-controls="navMobile" aria-label="Menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<div class="nav__mobile" id="navMobile" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <nav class="nav__mobile-links">
+    <a href="#realisations" class="mobile-link">Réalisations</a>
+    <a href="#services" class="mobile-link">Services</a>
+    <a href="#about" class="mobile-link">À Propos</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+  </nav>
+  <div class="nav__mobile-bottom">
+    <a href="tel:0475399909" class="nav__mobile-phone">0475 39 99 09</a>
+    <a href="#contact" class="nav__mobile-cta">Demander un devis →</a>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ── HERO — Vidéo pure ── -->
+  <section class="hero" aria-label="LRMJ Project — Ferronnerie artisanale">
+    <h1 class="sr-only">LRMJ Project — Artisan Ferronnier Belgique</h1>
+    <video class="hero__video" src="https://assets.mixkit.co/videos/43671/43671-720.mp4"
+      autoplay muted loop playsinline aria-hidden="true"
+      poster="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/909a150405840e75ea8f4f352a9b8690798972a0.jpg">
+    </video>
+    <div class="hero__vignette" aria-hidden="true"></div>
+    <div class="hero__merge"   aria-hidden="true"></div>
+    <div class="hero__grain"   aria-hidden="true"></div>
+    <a href="#realisations" class="hero__scroll" aria-label="Défiler">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </a>
+  </section>
+
+  <!-- ── RÉALISATIONS ── -->
+  <section id="realisations" class="s s--dark glow-red-tl" aria-labelledby="gal-title">
+    <div class="masonry-hdr fi">
+      <div>
+        <span class="eyebrow">Réalisations</span>
+        <h2 class="h-large" id="gal-title">Le Travail<br><em>Parle Pour Lui-Même</em></h2>
+      </div>
+      <a href="#contact" class="btn btn--ghost">Votre Projet →</a>
+    </div>
+
+    <div class="masonry-grid" id="masonryGrid" role="list">
+      <div class="masonry-item fi" role="listitem">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/909a150405840e75ea8f4f352a9b8690798972a0.jpg" alt="Portail en fer forgé monogramme entre piliers" loading="lazy"/>
+        <div class="masonry-item__label">Portail Monogramme</div>
+      </div>
+      <div class="masonry-item fi" role="listitem">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c4c99ce59805473047d23942f8b1a5f77445aa90.jpg" alt="Portail double battant en fer forgé" loading="lazy"/>
+        <div class="masonry-item__label">Portail Double Battant</div>
+      </div>
+      <div class="masonry-item fi" role="listitem">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c3fec15966e90c7666f56c83bd79ab1c42f2f174.jpg" alt="Garde-corps C-scroll fer forgé" loading="lazy"/>
+        <div class="masonry-item__label">Garde-corps C-Scroll</div>
+      </div>
+      <div class="masonry-item fi" role="listitem">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/9c76ebf8cf9aa60a2926cff3d3560612e1fffb04.jpg" alt="Serre de jardin fer et verre" loading="lazy"/>
+        <div class="masonry-item__label">Serre de Jardin</div>
+      </div>
+      <div class="masonry-item fi" role="listitem">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/dd5110df61257d4e4c05934c61a09442a9eb2544.jpg" alt="Portail de domaine en fer forgé" loading="lazy"/>
+        <div class="masonry-item__label">Entrée de Domaine</div>
+      </div>
+      <div class="masonry-item fi" role="listitem">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/f737604fb271ef236170b694a7b4663f096c504b.jpg" alt="Rampe de balcon ornementale" loading="lazy"/>
+        <div class="masonry-item__label">Balcon &amp; Rampe</div>
+      </div>
+      <div class="masonry-item fi" role="listitem">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/5d2ddb3ee3ff78886600ddcae50cdc95320a0dff.jpg" alt="Grand portail ornemental en fer forgé" loading="lazy"/>
+        <div class="masonry-item__label">Portail Ornemental</div>
+      </div>
+      <div class="masonry-item fi" role="listitem">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/2d2c4902c35390ff77defd9781eff6552285d2ec.jpg" alt="Artisan ferronnier en atelier" loading="lazy"/>
+        <div class="masonry-item__label">Fabrication Atelier</div>
+      </div>
+      <!-- Batch 2 — hidden -->
+      <div class="masonry-item hidden" role="listitem"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/909a150405840e75ea8f4f352a9b8690798972a0.jpg" alt="Portail sculpté" loading="lazy"/><div class="masonry-item__label">Portail Sculpté</div></div>
+      <div class="masonry-item hidden" role="listitem"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c3fec15966e90c7666f56c83bd79ab1c42f2f174.jpg" alt="Garde-corps intérieur" loading="lazy"/><div class="masonry-item__label">Garde-corps Intérieur</div></div>
+      <div class="masonry-item hidden" role="listitem"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/dd5110df61257d4e4c05934c61a09442a9eb2544.jpg" alt="Clôture ouvragée" loading="lazy"/><div class="masonry-item__label">Clôture Ouvragée</div></div>
+      <div class="masonry-item hidden" role="listitem"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/9c76ebf8cf9aa60a2926cff3d3560612e1fffb04.jpg" alt="Véranda sur mesure" loading="lazy"/><div class="masonry-item__label">Véranda Sur Mesure</div></div>
+      <div class="masonry-item hidden" role="listitem"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/f737604fb271ef236170b694a7b4663f096c504b.jpg" alt="Balustrade fer forgé" loading="lazy"/><div class="masonry-item__label">Balustrade</div></div>
+      <div class="masonry-item hidden" role="listitem"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/5d2ddb3ee3ff78886600ddcae50cdc95320a0dff.jpg" alt="Portail monumental" loading="lazy"/><div class="masonry-item__label">Portail Monumental</div></div>
+      <div class="masonry-item hidden" role="listitem"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c4c99ce59805473047d23942f8b1a5f77445aa90.jpg" alt="Marquise en fer forgé" loading="lazy"/><div class="masonry-item__label">Marquise</div></div>
+      <div class="masonry-item hidden" role="listitem"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/2d2c4902c35390ff77defd9781eff6552285d2ec.jpg" alt="Détail ferronnerie" loading="lazy"/><div class="masonry-item__label">Détail Artistique</div></div>
+    </div>
+
+    <div class="masonry-footer">
+      <button class="masonry-load-btn" id="loadMoreBtn">Voir plus de réalisations</button>
+    </div>
+  </section>
+
+  <div class="sdiv sdiv--01" aria-hidden="true"></div>
+
+  <!-- ── TÉMOIGNAGES ── -->
+  <section class="s s--lift glow-center" aria-labelledby="testi-title">
+    <div class="wrap">
+      <div class="fi text-center mb-10">
+        <span class="eyebrow">Témoignages</span>
+        <h2 class="h-large" id="testi-title" style="margin-inline:auto;max-width:18ch;">Ce que disent<br><em>nos clients</em></h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card fi">
+          <div class="testi-stars" aria-label="5 étoiles">
+            <svg width="72" height="11" viewBox="0 0 72 11" fill="none" aria-hidden="true"><path d="M5.5 1l1.2 3.7H10L7.3 6.8l1.2 3.7L5.5 8.6 2.5 10.5l1.2-3.7L1 4.7h3.3L5.5 1z" fill="#d94f3b"/><path d="M20 1l1.2 3.7H25l-2.7 2.1 1.2 3.7L20 8.6 17 10.5l1.2-3.7-2.7-2.1H19L20 1z" fill="#d94f3b"/><path d="M34.5 1l1.2 3.7H39l-2.7 2.1 1.2 3.7-2.9-1.9-3 1.9 1.2-3.7-2.7-2.1h3.3L34.5 1z" fill="#d94f3b"/><path d="M49 1l1.2 3.7H54l-2.7 2.1 1.2 3.7L49 8.6 46 10.5l1.2-3.7-2.7-2.1h3.3L49 1z" fill="#d94f3b"/><path d="M63.5 1l1.2 3.7H68l-2.7 2.1 1.2 3.7-2.9-1.9-3 1.9 1.2-3.7-2.7-2.1h3.3L63.5 1z" fill="#d94f3b"/></svg>
+          </div>
+          <blockquote class="testi-quote">Notre portail d'entrée est magnifique. Travail soigné, délais respectés, équipe très à l'écoute. Je recommande vivement.</blockquote>
+          <div class="testi-author">
+            <div class="testi-av" aria-hidden="true">M</div>
+            <div><div class="testi-name">Marie-Claire D.</div><div class="testi-loc">Liège</div></div>
+          </div>
+        </div>
+        <div class="testi-card fi">
+          <div class="testi-stars" aria-label="5 étoiles">
+            <svg width="72" height="11" viewBox="0 0 72 11" fill="none" aria-hidden="true"><path d="M5.5 1l1.2 3.7H10L7.3 6.8l1.2 3.7L5.5 8.6 2.5 10.5l1.2-3.7L1 4.7h3.3L5.5 1z" fill="#d94f3b"/><path d="M20 1l1.2 3.7H25l-2.7 2.1 1.2 3.7L20 8.6 17 10.5l1.2-3.7-2.7-2.1H19L20 1z" fill="#d94f3b"/><path d="M34.5 1l1.2 3.7H39l-2.7 2.1 1.2 3.7-2.9-1.9-3 1.9 1.2-3.7-2.7-2.1h3.3L34.5 1z" fill="#d94f3b"/><path d="M49 1l1.2 3.7H54l-2.7 2.1 1.2 3.7L49 8.6 46 10.5l1.2-3.7-2.7-2.1h3.3L49 1z" fill="#d94f3b"/><path d="M63.5 1l1.2 3.7H68l-2.7 2.1 1.2 3.7-2.9-1.9-3 1.9 1.2-3.7-2.7-2.1h3.3L63.5 1z" fill="#d94f3b"/></svg>
+          </div>
+          <blockquote class="testi-quote">La serre de jardin dépasse toutes nos attentes. Qualité exceptionnelle, finitions parfaites. Un vrai artisan de passion.</blockquote>
+          <div class="testi-author">
+            <div class="testi-av" aria-hidden="true">P</div>
+            <div><div class="testi-name">Pierre V.</div><div class="testi-loc">Bruxelles</div></div>
+          </div>
+        </div>
+        <div class="testi-card fi">
+          <div class="testi-stars" aria-label="5 étoiles">
+            <svg width="72" height="11" viewBox="0 0 72 11" fill="none" aria-hidden="true"><path d="M5.5 1l1.2 3.7H10L7.3 6.8l1.2 3.7L5.5 8.6 2.5 10.5l1.2-3.7L1 4.7h3.3L5.5 1z" fill="#d94f3b"/><path d="M20 1l1.2 3.7H25l-2.7 2.1 1.2 3.7L20 8.6 17 10.5l1.2-3.7-2.7-2.1H19L20 1z" fill="#d94f3b"/><path d="M34.5 1l1.2 3.7H39l-2.7 2.1 1.2 3.7-2.9-1.9-3 1.9 1.2-3.7-2.7-2.1h3.3L34.5 1z" fill="#d94f3b"/><path d="M49 1l1.2 3.7H54l-2.7 2.1 1.2 3.7L49 8.6 46 10.5l1.2-3.7-2.7-2.1h3.3L49 1z" fill="#d94f3b"/><path d="M63.5 1l1.2 3.7H68l-2.7 2.1 1.2 3.7-2.9-1.9-3 1.9 1.2-3.7-2.7-2.1h3.3L63.5 1z" fill="#d94f3b"/></svg>
+          </div>
+          <blockquote class="testi-quote">Garde-corps d'escalier réalisé avec une précision remarquable. On voit que c'est un vrai métier, pas du travail en série.</blockquote>
+          <div class="testi-author">
+            <div class="testi-av" aria-hidden="true">S</div>
+            <div><div class="testi-name">Sophie N.</div><div class="testi-loc">Namur</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sdiv sdiv--12" aria-hidden="true"></div>
+
+  <!-- ── SERVICES ── -->
+  <section id="services" class="s s--card" aria-labelledby="svc-title">
+    <div class="wrap">
+      <div class="svc-hdr fi">
+        <div>
+          <span class="eyebrow">Prestations</span>
+          <h2 class="h-large" id="svc-title">Tout ce que<br><em>nous fabriquons</em></h2>
+        </div>
+        <a href="#contact" class="btn btn--red">Devis Gratuit →</a>
+      </div>
+      <div class="svc-grid">
+        <div class="svc-card svc-card--feat fi">
+          <div class="svc-img-wrap">
+            <img class="svc-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/5d2ddb3ee3ff78886600ddcae50cdc95320a0dff.jpg" alt="Portail en fer forgé" loading="lazy"/>
+          </div>
+          <div class="svc-body">
+            <span class="svc-tag">Signature</span>
+            <h3 class="svc-title">Portails &amp; Clôtures</h3>
+            <p class="svc-desc">Entrées monumentales ou clôtures élégantes. Finitions époxy ou galvanisées pour une durabilité maximale. Conçu sur mesure pour votre propriété.</p>
+            <a href="#contact" class="btn btn--ghost mt-auto" style="width:fit-content;">Commander →</a>
+          </div>
+        </div>
+        <div class="svc-card fi">
+          <div class="svc-img-wrap"><img class="svc-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/f737604fb271ef236170b694a7b4663f096c504b.jpg" alt="Garde-corps en fer forgé" loading="lazy"/></div>
+          <div class="svc-body"><span class="svc-tag">Intérieur &amp; Extérieur</span><h3 class="svc-title">Garde-Corps &amp; Rampes</h3><p class="svc-desc">Escaliers, balcons, mezzanines. Sécurité et esthétique au service de votre espace.</p></div>
+        </div>
+        <div class="svc-card fi">
+          <div class="svc-img-wrap"><img class="svc-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/9c76ebf8cf9aa60a2926cff3d3560612e1fffb04.jpg" alt="Serre de jardin" loading="lazy"/></div>
+          <div class="svc-body"><span class="svc-tag">Jardin</span><h3 class="svc-title">Serres &amp; Baies Vitrées</h3><p class="svc-desc">Jardins d'hiver, vérandas, extensions vitrées. Structures légères et résistantes.</p></div>
+        </div>
+        <div class="svc-card fi">
+          <div class="svc-img-wrap"><img class="svc-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c3fec15966e90c7666f56c83bd79ab1c42f2f174.jpg" alt="Marquise en fer forgé" loading="lazy"/></div>
+          <div class="svc-body"><span class="svc-tag">Protection</span><h3 class="svc-title">Marquises &amp; Auvents</h3><p class="svc-desc">Protection élégante pour entrées et terrasses. Châssis fer forgé, verre feuilleté.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sdiv sdiv--21" aria-hidden="true"></div>
+
+  <!-- ── PROCESS ── -->
+  <section class="s s--lift" aria-labelledby="proc-title">
+    <div class="wrap wrap--sm">
+      <div class="fi text-center mb-10">
+        <span class="eyebrow">Comment ça marche</span>
+        <h2 class="h-large" id="proc-title">De votre idée<br><em>à la pose finale</em></h2>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="proc-grid">
+        <div class="proc-step fi"><span class="proc-num" aria-hidden="true">01</span><h3 class="proc-ttl">Contact</h3><p class="proc-desc">Appelez ou écrivez. On comprend votre projet et vos contraintes sans jargon.</p></div>
+        <div class="proc-step fi"><span class="proc-num" aria-hidden="true">02</span><h3 class="proc-ttl">Visite &amp; Devis</h3><p class="proc-desc">On se déplace, on mesure, devis détaillé et gratuit sous 48h.</p></div>
+        <div class="proc-step fi"><span class="proc-num" aria-hidden="true">03</span><h3 class="proc-ttl">Fabrication</h3><p class="proc-desc">Chaque pièce façonnée dans notre atelier. Finition époxy, galva ou thermolaqué.</p></div>
+        <div class="proc-step fi"><span class="proc-num" aria-hidden="true">04</span><h3 class="proc-ttl">Pose &amp; Réception</h3><p class="proc-desc">Installation soignée par notre équipe, finitions impeccables, remise des clés.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sdiv sdiv--10" aria-hidden="true"></div>
+
+  <!-- ── À PROPOS ── -->
+  <section id="about" class="s s--dark glow-red-br" aria-labelledby="about-title">
+    <div class="wrap">
+      <div class="about-grid">
+        <div class="fi">
+          <span class="eyebrow">À Propos</span>
+          <h2 class="about-tagline" id="about-title">L'artisanat comme vocation,<br>le terrain comme passion</h2>
+          <p class="about-body">LRMJ Project est né de la passion d'un artisan ferronnier installé en Belgique. Chaque pièce est conçue et fabriquée en atelier, posée par nos propres mains. Aucune sous-traitance. De la première esquisse au dernier boulon, vous avez notre parole.</p>
+          <div class="about-hl-grid">
+            <div class="about-hl"><div class="about-hl-val">Belgique</div><div class="about-hl-lbl">Zone d'intervention</div></div>
+            <div class="about-hl"><div class="about-hl-val">Atelier</div><div class="about-hl-lbl">Fabrication propre</div></div>
+            <div class="about-hl"><div class="about-hl-val">Neuf &amp; Rénov</div><div class="about-hl-lbl">Tous bâtiments</div></div>
+            <div class="about-hl"><div class="about-hl-val">Devis Gratuit</div><div class="about-hl-lbl">Sans engagement</div></div>
+          </div>
+        </div>
+        <div class="about-img fi">
+          <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/2d2c4902c35390ff77defd9781eff6552285d2ec.jpg" alt="Artisan ferronnier au travail" width="480" height="640" loading="lazy"/>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sdiv sdiv--01" aria-hidden="true"></div>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact" class="s s--lift" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="fi">
+          <span class="eyebrow">Contact</span>
+          <h2 class="h-large" id="contact-title">Parlons de<br><em>votre projet</em></h2>
+          <p class="lead" style="margin-top:.75rem;">Devis entièrement gratuit, sans engagement. Réponse sous 24h.</p>
+          <ul class="contact-info-list" role="list">
+            <li class="contact-info-item">
+              <div class="contact-info-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.9z"/></svg></div>
+              <div><div class="contact-info-lbl">Téléphone</div><div class="contact-info-val"><a href="tel:0475399909">0475 39 99 09</a></div></div>
+            </li>
+            <li class="contact-info-item">
+              <div class="contact-info-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <div><div class="contact-info-lbl">Email</div><div class="contact-info-val"><a href="mailto:contact@lrmjproject.be">contact@lrmjproject.be</a></div></div>
+            </li>
+            <li class="contact-info-item">
+              <div class="contact-info-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div><div class="contact-info-lbl">Disponibilité</div><div class="contact-info-val">Lun – Sam · 8h – 18h</div></div>
+            </li>
+          </ul>
+        </div>
+        <div class="fi">
+          <form class="contact-form" id="contactForm" novalidate>
+            <p class="form-eye">Demande de devis</p>
+            <div class="form-grid">
+              <div class="form-field"><label class="form-lbl" for="prenom">Prénom *</label><input class="form-inp" type="text" id="prenom" name="prenom" placeholder="Jean" required autocomplete="given-name"/></div>
+              <div class="form-field"><label class="form-lbl" for="nom">Nom *</label><input class="form-inp" type="text" id="nom" name="nom" placeholder="Dupont" required autocomplete="family-name"/></div>
+              <div class="form-field"><label class="form-lbl" for="tel">Téléphone *</label><input class="form-inp" type="tel" id="tel" name="tel" placeholder="04XX XXX XXX" required autocomplete="tel"/></div>
+              <div class="form-field"><label class="form-lbl" for="email">Email</label><input class="form-inp" type="email" id="email" name="email" placeholder="jean@email.be" autocomplete="email"/></div>
+              <div class="form-field form-field--full"><label class="form-lbl" for="service">Type de projet</label><select class="form-sel" id="service" name="service"><option value="">Sélectionnez…</option><option value="portail">Portail / Clôture</option><option value="gardecorps">Garde-corps / Rampe</option><option value="serre">Serre / Baie vitrée</option><option value="marquise">Marquise / Auvent</option><option value="autre">Autre projet</option></select></div>
+              <div class="form-field form-field--full"><label class="form-lbl" for="message">Décrivez votre projet</label><textarea class="form-txt" id="message" name="message" placeholder="Dimensions, style, délai, localisation…"></textarea></div>
+            </div>
+            <button type="submit" class="form-submit">Envoyer ma demande</button>
+            <div class="form-success" id="formSuccess" role="status" aria-live="polite">✓ Message bien reçu — nous vous recontactons sous 24h.</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">LRMJ Project</div>
+        <p class="footer-desc">Artisan ferronnier sur mesure en Belgique. Portails, garde-corps, serres, marquises.</p>
+      </div>
+      <div>
+        <p class="footer-hdg">Navigation</p>
+        <ul class="footer-links" role="list">
+          <li><a href="#realisations">Réalisations</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">À Propos</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-hdg">Services</p>
+        <ul class="footer-links" role="list">
+          <li><a href="#services">Portails</a></li>
+          <li><a href="#services">Garde-corps</a></li>
+          <li><a href="#services">Serres</a></li>
+          <li><a href="#services">Marquises</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-hdg">Contact</p>
+        <ul class="footer-links" role="list">
+          <li><a href="tel:0475399909">0475 39 99 09</a></li>
+          <li><a href="mailto:contact@lrmjproject.be">contact@lrmjproject.be</a></li>
+          <li>Lun – Sam · 8h–18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-btm">
+      <p class="footer-copy">© 2025 LRMJ Project · <a href="#">Mentions légales</a></p>
+      <p class="footer-copy">Ferronnerie artisanale · Belgique</p>
+    </div>
+  </div>
+</footer>
+
+  <script>
+    'use strict';
+
+    // NAV scroll state
+    const nav = document.getElementById('siteNav');
+    function updateNav() { nav.classList.toggle('nav--solid', window.scrollY > 40); }
+    updateNav();
+    window.addEventListener('scroll', updateNav, { passive: true });
+
+    // Mobile menu
+    const hamburger = document.getElementById('navHamburger');
+    const mobileMenu = document.getElementById('navMobile');
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener('click', () => {
+        const open = hamburger.getAttribute('aria-expanded') === 'true';
+        hamburger.setAttribute('aria-expanded', String(!open));
+        mobileMenu.hidden = open;
+        document.body.style.overflow = open ? '' : 'hidden';
+      });
+      mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        mobileMenu.hidden = true;
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }));
+    }
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const t = document.querySelector(this.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+
+    // Masonry load more
+    const loadBtn = document.getElementById('loadMoreBtn');
+    if (loadBtn) {
+      loadBtn.addEventListener('click', () => {
+        const hidden = [...document.querySelectorAll('.masonry-item.hidden')].slice(0, 8);
+        hidden.forEach((item, i) => {
+          item.classList.remove('hidden');
+          setTimeout(() => item.classList.add('reveal'), i * 55);
+        });
+        if (!document.querySelector('.masonry-item.hidden')) {
+          loadBtn.classList.add('done');
+          loadBtn.textContent = 'Toutes les réalisations affichées';
+        }
+      });
+    }
+
+    // Lightbox
+    (function() {
+      const box = document.createElement('div');
+      const img = document.createElement('img');
+      const cls = document.createElement('button');
+      box.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(3,4,7,.96);align-items:center;justify-content:center;cursor:zoom-out;';
+      img.style.cssText = 'max-width:90vw;max-height:90vh;object-fit:contain;border-radius:4px;box-shadow:0 32px 80px rgba(0,0,0,.8);';
+      cls.innerHTML = '&times;';
+      cls.setAttribute('aria-label','Fermer');
+      cls.style.cssText = 'position:fixed;top:20px;right:28px;background:none;border:none;color:rgba(255,255,255,.4);font-size:2.5rem;line-height:1;cursor:pointer;transition:color .2s;';
+      cls.onmouseenter = () => cls.style.color='#fff';
+      cls.onmouseleave = () => cls.style.color='rgba(255,255,255,.4)';
+      box.append(img, cls);
+      document.body.append(box);
+      const open = (src, alt) => { img.src=src; img.alt=alt||''; box.style.display='flex'; document.body.style.overflow='hidden'; };
+      const close = () => { box.style.display='none'; document.body.style.overflow=''; };
+      document.querySelectorAll('.masonry-item').forEach(item => {
+        const i = item.querySelector('img');
+        if (i) item.addEventListener('click', () => open(i.src, i.alt));
+      });
+      box.addEventListener('click', e => { if (e.target !== img) close(); });
+      cls.addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key==='Escape') close(); });
+    })();
+
+    // Contact form
+    const form = document.getElementById('contactForm');
+    if (form) {
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = form.querySelector('.form-submit');
+        const success = document.getElementById('formSuccess');
+        btn.disabled = true; btn.textContent = 'Envoi…';
+        setTimeout(() => {
+          if (success) success.classList.add('visible');
+          btn.textContent = '✓ Envoyé'; form.reset();
+        }, 800);
+      });
+    }
+
+    // Fade-in observer
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.fi').forEach(el => {
+        el.style.cssText += 'opacity:0;transform:translateY(18px);transition:opacity 650ms ease,transform 650ms ease;';
+        io.observe(el);
+      });
+    }
+
+  </script>
+</body>
+</html>
