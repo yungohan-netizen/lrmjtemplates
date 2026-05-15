@@ -1,0 +1,3111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07080c">
+
+  <title>LRMJ Project — Artisan Ferronnier Bruxelles · Verrières & Baies Vitrées Sur Mesure</title>
+  <meta name="description" content="Atelier de ferronnerie à Bruxelles. Verrières, baies vitrées, portails et structures fer & verre fabriqués et posés sur mesure. Devis gratuit sous 48h — 0475 39 99 09.">
+  <meta name="author" content="LRMJ Project — Romeo Lesac">
+
+  <meta property="og:title" content="LRMJ Project — Ferronnerie sur mesure à Bruxelles">
+  <meta property="og:description" content="Verrières, baies vitrées, structures fer & verre. Fabriqué à l'atelier, posé par nous.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_BE">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+  /* =========================================================================
+     TOKENS
+     ========================================================================= */
+  :root {
+    --bg:    #07080c;
+    --bg-1:  #0c0e14;
+    --bg-2:  #111420;
+    --bg-3:  #171b28;
+    --surf:    rgba(255,255,255,.04);
+    --surf-2:  rgba(255,255,255,.07);
+    --border:  rgba(255,255,255,.07);
+    --border-2:rgba(255,255,255,.12);
+    --tx:   #f2f0ec;
+    --tx-2: rgba(242,240,236,.55);
+    --tx-3: rgba(242,240,236,.28);
+    --red:        #d94f3b;
+    --red-2:      #c4432f;
+    --red-glow:   rgba(217,79,59,.18);
+    --red-border: rgba(217,79,59,.3);
+    --glow-red:   0 0 80px rgba(217,79,59,.12);
+    --f-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --f-body:    'DM Sans', system-ui, -apple-system, sans-serif;
+    --wrap-max: 1380px;
+    --pad-x:    clamp(1.25rem, 4vw, 3rem);
+    --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-flip: cubic-bezier(0.76, 0, 0.24, 1);
+    --z-nav:   100;
+    --z-mob:   150;
+    --z-grain: 9998;
+    --z-pre:   9999;
+  }
+
+  @property --btn-shimmer {
+    syntax: '<angle>';
+    initial-value: 135deg;
+    inherits: false;
+  }
+
+  /* =========================================================================
+     RESET
+     ========================================================================= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  html, body { background: var(--bg); color: var(--tx); }
+  body {
+    font-family: var(--f-body);
+    font-weight: 300;
+    line-height: 1.55;
+    font-size: 16px;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  img, video, svg { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; }
+  ul, ol { list-style: none; }
+  input, select, textarea, button { font: inherit; color: inherit; }
+  ::selection { background: var(--red); color: var(--bg); }
+
+  /* =========================================================================
+     PRELOADER — « BRAISE LUMIÈRE » · forge qui s'allume, ~3.1s
+     Couches : halo (aura large) → beam (faisceau vertical) → core (cœur brûlant)
+              + wash (radial chaud submergeant tout). Curtain final avec heat-haze.
+     ========================================================================= */
+  .preloader {
+    position: fixed; inset: 0;
+    z-index: var(--z-pre);
+    background: transparent; /* les 2 panneaux fournissent le fond noir */
+    overflow: hidden;
+    pointer-events: all;
+    contain: strict;
+    will-change: transform, filter;
+  }
+
+  /* Deux panneaux noirs qui couvrent tout l'écran puis s'écartent verticalement */
+  .pre__panel {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 50.5%; /* léger overlap pour zéro seam à l'init */
+    background: #050608;
+    z-index: 0;
+    will-change: transform;
+  }
+  .pre__panel--l { left: 0; }
+  .pre__panel--r { right: 0; }
+
+  html.is-loading,
+  body.is-loading { overflow: hidden; }
+
+  body.is-pre-active .nav,
+  body.is-pre-active .hero__scroll,
+  body.is-pre-active .hero__video,
+  body.is-pre-active .hero__poster {
+    animation-play-state: paused;
+  }
+
+  /* Halo — aura chaude large et floue qui s'élargit autour du beam */
+  .pre__halo {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: clamp(320px, 35vw, 520px);
+    height: 110vh;
+    background: linear-gradient(to right,
+      transparent 0%,
+      rgba(255,138,64,0)  35%,
+      rgba(255,138,64,.22) 50%,
+      rgba(255,138,64,0)  65%,
+      transparent 100%);
+    transform: translate(-50%, -50%) scaleX(0);
+    transform-origin: center;
+    filter: blur(26px);
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
+  /* Beam — faisceau vertical qui s'élance du cœur */
+  .pre__beam {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 2px;
+    height: 105vh;
+    background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(255,200,140,0)   8%,
+      rgba(255,180,110,.65) 28%,
+      rgba(255,220,170,1)   50%,
+      rgba(255,180,110,.65) 72%,
+      rgba(255,200,140,0)   92%,
+      transparent 100%);
+    transform: translate(-50%, -50%) scaleY(0);
+    transform-origin: center;
+    box-shadow:
+      0 0 18px rgba(255,168,74,.7),
+      0 0 36px rgba(217,79,59,.4);
+    z-index: 3;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  /* Wash — wash chaud radial qui submerge tout l'écran au peak */
+  .pre__wash {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 75% 60% at center,
+      rgba(255,200,130,.55) 0%,
+      rgba(255,138,64,.45)  18%,
+      rgba(217,79,59,.32)   38%,
+      rgba(106,36,16,.18)   60%,
+      transparent 80%);
+    opacity: 0;
+    mix-blend-mode: screen;
+    z-index: 1;
+    pointer-events: none;
+    will-change: opacity;
+  }
+
+  /* Core — la braise centrale, le point le plus brillant.
+     Base 14px + falloff gradient riche (8 stops) = aucun banding même scalé. */
+  .pre__core {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 14px; height: 14px;
+    background: radial-gradient(circle,
+      #fff7e8 0%,
+      #ffe6c2 16%,
+      #ffd49a 30%,
+      #ffb368 46%,
+      #ff8a4a 60%,
+      #d94f3b 76%,
+      rgba(140,52,28,.35) 90%,
+      transparent 100%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    box-shadow:
+      0 0 24px rgba(255,168,74,.95),
+      0 0 48px rgba(255,112,48,.7),
+      0 0 96px rgba(217,79,59,.45),
+      0 0 180px rgba(217,79,59,.22);
+    z-index: 4;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  /* Grain anti-banding : dithère les dégradés chauds (sinon bandes visibles
+     sur fond sombre). Au-dessus de tout, très léger, blend overlay. */
+  .preloader::after {
+    content: '';
+    position: absolute; inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='pn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23pn)'/%3E%3C/svg%3E");
+    opacity: .04;
+    mix-blend-mode: overlay;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .pre__halo { transform: translate(-50%, -50%) scaleX(1); opacity: 1; }
+    .pre__beam { transform: translate(-50%, -50%) scaleY(1); }
+    .pre__core { transform: translate(-50%, -50%) scale(1); }
+    .pre__wash { opacity: 1; }
+  }
+
+  /* =========================================================================
+     GRAIN
+     ========================================================================= */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    z-index: var(--z-grain);
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: .028;
+    mix-blend-mode: overlay;
+  }
+
+  /* =========================================================================
+     UTILITAIRES
+     ========================================================================= */
+  .wrap {
+    max-width: var(--wrap-max);
+    margin-inline: auto;
+    padding-inline: var(--pad-x);
+  }
+  .sr-only {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+  .skip-link {
+    position: fixed; top: -100px; left: 1rem;
+    background: var(--red); color: var(--bg);
+    padding: .75rem 1.25rem;
+    font-family: var(--f-body); font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase;
+    font-size: .75rem; z-index: 9999;
+    transition: top .25s var(--ease);
+  }
+  .skip-link:focus { top: 1rem; }
+
+  :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--f-body); font-size: .62rem;
+    font-weight: 500; letter-spacing: .28em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 1.25rem;
+  }
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--red);
+    vertical-align: middle;
+    margin-right: .7rem; margin-bottom: 2px;
+  }
+
+  /* Backgrounds de section (s'applique à TOUTE section, pas que les placeholders).
+     Sans data-bg → transparent = body var(--bg). Indispensable pour que les
+     dividers .sdiv raccordent des couleurs réelles et non du vide. */
+  section[data-bg="bg-1"] { background: var(--bg-1); }
+  section[data-bg="bg-2"] { background: var(--bg-2); }
+
+  /* Section dividers */
+  .sdiv { height: clamp(80px, 9vw, 120px); pointer-events: none; display: block; }
+  .sdiv--01 { background: linear-gradient(to bottom, var(--bg),   var(--bg-1)); }
+  .sdiv--10 { background: linear-gradient(to bottom, var(--bg-1), var(--bg));   }
+  .sdiv--12 { background: linear-gradient(to bottom, var(--bg-1), var(--bg-2)); }
+  .sdiv--21 { background: linear-gradient(to bottom, var(--bg-2), var(--bg-1)); }
+  .sdiv--02 { background: linear-gradient(to bottom, var(--bg),   var(--bg-2)); }
+  .sdiv--20 { background: linear-gradient(to bottom, var(--bg-2), var(--bg));   }
+
+  /* Glow radial */
+  .glow-red-tl { position: relative; }
+  .glow-red-tl::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 65% 55% at 12% 18%, rgba(217,79,59,.1), transparent 65%);
+  }
+  .glow-red-br { position: relative; }
+  .glow-red-br::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 55% 45% at 88% 82%, rgba(217,79,59,.08), transparent 65%);
+  }
+
+  /* Bouton shimmer */
+  .btn {
+    position: relative;
+    display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+    padding: .85rem 1.6rem;
+    font-family: var(--f-body); font-size: .75rem;
+    font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--tx); border: 1px solid var(--border-2);
+    overflow: hidden; cursor: pointer;
+    transition: color .3s var(--ease), border-color .3s var(--ease);
+  }
+  .btn::before {
+    content: ''; position: absolute; inset: 0; z-index: 0;
+    background: linear-gradient(var(--btn-shimmer), transparent 30%, rgba(255,255,255,.16) 50%, transparent 70%);
+    opacity: 0; pointer-events: none;
+    transition: opacity 300ms ease;
+  }
+  .btn > * { position: relative; z-index: 1; }
+  .btn:hover::before { opacity: 1; animation: btn-shimmer 600ms cubic-bezier(0.16,1,0.3,1) forwards; }
+  @keyframes btn-shimmer { to { --btn-shimmer: 315deg; } }
+
+  /* =========================================================================
+     00 NAV — Awwwards
+     ========================================================================= */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: var(--z-nav);
+    padding: 1.4rem 0;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background .5s var(--ease), padding .5s var(--ease), border-color .5s var(--ease);
+    opacity: 0;
+    animation: nav-in .6s var(--ease) 1.2s forwards;
+  }
+  @keyframes nav-in { to { opacity: 1; } }
+
+  .nav--scrolled {
+    background: rgba(7, 8, 12, .92);
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
+    padding: .9rem 0;
+    border-bottom-color: rgba(255,255,255,.055);
+  }
+
+  .nav__wrap {
+    max-width: var(--wrap-max);
+    margin-inline: auto;
+    padding-inline: var(--pad-x);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* — Brand — */
+  .nav__brand {
+    display: inline-flex; align-items: center; gap: .75rem;
+    justify-self: start;
+  }
+  .nav__brand-gem {
+    width: 7px; height: 7px;
+    background: var(--red);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    box-shadow: 0 0 10px var(--red-glow), 0 0 3px var(--red);
+    transition: box-shadow .45s var(--ease), transform .6s var(--ease);
+  }
+  .nav__brand:hover .nav__brand-gem {
+    box-shadow: 0 0 22px var(--red-glow), 0 0 8px var(--red);
+    transform: rotate(135deg);
+  }
+  .nav__brand-name {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: 1rem;
+    letter-spacing: .56em;
+    color: var(--tx);
+    padding-right: .56em;
+    transition: color .35s var(--ease);
+  }
+  .nav__brand:hover .nav__brand-name { color: var(--tx-2); }
+
+  /* — Center links — */
+  .nav__links {
+    justify-self: center;
+    display: flex; align-items: center; gap: 2.5rem;
+  }
+
+  /* Split-text flip on hover */
+  .nav__link {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    padding: .4rem 0;
+    line-height: 1;
+  }
+  .nav__link-text {
+    display: block;
+    font-size: .67rem;
+    font-weight: 500;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--tx-3);
+    transition: transform .42s var(--ease-flip), color .3s;
+    white-space: nowrap;
+  }
+  .nav__link::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: .4rem 0;
+    font-size: .67rem;
+    font-weight: 500;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--tx);
+    white-space: nowrap;
+    transform: translateY(105%);
+    transition: transform .42s var(--ease-flip);
+    line-height: 1;
+  }
+  .nav__link:hover .nav__link-text { transform: translateY(-105%); }
+  .nav__link:hover::after { transform: translateY(0); }
+
+  /* — Right block — */
+  .nav__right {
+    justify-self: end;
+    display: flex; align-items: center; gap: 1.25rem;
+  }
+  .nav__phone {
+    font-size: .64rem; font-weight: 400;
+    letter-spacing: .2em; color: var(--tx-3);
+    white-space: nowrap;
+    transition: color .3s var(--ease);
+  }
+  .nav__phone:hover { color: var(--tx-2); }
+  .nav__sep {
+    width: 1px; height: 14px;
+    background: var(--border-2); flex-shrink: 0;
+  }
+
+  /* CTA wipe */
+  .nav__cta {
+    position: relative; overflow: hidden;
+    display: inline-flex; align-items: center; gap: .55rem;
+    padding: .65rem 1.2rem;
+    border: 1px solid var(--border-2);
+    font-family: var(--f-body); font-size: .67rem;
+    font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--tx);
+    transition: border-color .35s var(--ease), color .35s var(--ease);
+  }
+  .nav__cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--red);
+    transform: translateY(102%);
+    transition: transform .4s var(--ease);
+    z-index: 0;
+  }
+  .nav__cta > * { position: relative; z-index: 1; }
+  .nav__cta:hover { color: var(--bg); border-color: var(--red); }
+  .nav__cta:hover::before { transform: translateY(0); }
+  .nav__cta-arrow {
+    display: inline-flex;
+    transition: transform .35s var(--ease);
+  }
+  .nav__cta:hover .nav__cta-arrow { transform: translate(2px, -2px); }
+
+  /* Scroll progress bar */
+  .nav__progress {
+    position: absolute; bottom: 0; left: 0;
+    height: 1px;
+    width: var(--nav-scroll-pct, 0%);
+    background: linear-gradient(to right, var(--red) 0%, rgba(217,79,59,.15) 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .4s var(--ease);
+    will-change: width;
+  }
+  .nav--scrolled .nav__progress { opacity: 1; }
+
+  /* — Burger — */
+  .nav__burger {
+    display: none;
+    width: 38px; height: 38px;
+    position: relative;
+    justify-self: end;
+  }
+  .nav__burger-line {
+    position: absolute; left: 7px; right: 7px;
+    height: 1px; background: var(--tx);
+    transition: transform .4s var(--ease), top .4s var(--ease), background .3s;
+  }
+  .nav__burger-line:nth-child(1) { top: 13px; }
+  .nav__burger-line:nth-child(2) { top: 22px; }
+  .nav__burger[aria-expanded="true"] .nav__burger-line:nth-child(1) { top: 18px; transform: rotate(45deg); }
+  .nav__burger[aria-expanded="true"] .nav__burger-line:nth-child(2) { top: 18px; transform: rotate(-45deg); }
+
+  @media (max-width: 900px) {
+    .nav__wrap { grid-template-columns: 1fr auto; }
+    .nav__links, .nav__phone, .nav__sep, .nav__cta { display: none; }
+    .nav__burger { display: block; }
+  }
+
+  /* — Mobile panel — */
+  .nav__mobile {
+    position: fixed; inset: 0;
+    z-index: var(--z-mob);
+    background: rgba(7, 8, 12, .97);
+    backdrop-filter: blur(40px);
+    display: flex; flex-direction: column;
+    padding: 5.5rem var(--pad-x) 3rem;
+  }
+  .nav__mobile[hidden] { display: none !important; }
+  .nav__mobile::before {
+    content: '';
+    position: fixed;
+    left: var(--pad-x);
+    top: 5.5rem; bottom: 3rem;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--red) 25%, var(--red) 75%, transparent);
+    opacity: .3;
+  }
+  .nav__mobile-link {
+    display: block;
+    font-family: var(--f-display);
+    font-size: clamp(2.2rem, 8vw, 3.8rem);
+    font-weight: 300;
+    letter-spacing: .04em;
+    color: var(--tx);
+    padding: .65rem 0 .65rem 2rem;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .5s var(--ease), transform .5s var(--ease), color .3s;
+    transition-delay: calc(var(--i, 0) * 70ms + 80ms);
+  }
+  .nav__mobile:not([hidden]) .nav__mobile-link { opacity: 1; transform: translateY(0); }
+  .nav__mobile-link:hover { color: var(--red); }
+  .nav__mobile-num {
+    font-family: var(--f-body);
+    font-size: .55rem; letter-spacing: .15em;
+    color: var(--red); opacity: .65;
+    vertical-align: middle; margin-right: .9rem;
+  }
+  .nav__mobile-footer {
+    margin-top: auto; padding-top: 2.5rem;
+    display: flex; flex-direction: column; gap: .55rem;
+  }
+  .nav__mobile-phone {
+    font-family: var(--f-display);
+    font-size: 1.9rem; font-weight: 300;
+    color: var(--red); letter-spacing: .06em;
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .5s var(--ease) .38s, transform .5s var(--ease) .38s;
+  }
+  .nav__mobile:not([hidden]) .nav__mobile-phone { opacity: 1; transform: translateY(0); }
+  .nav__mobile-loc {
+    font-size: .63rem; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--tx-3);
+    opacity: 0;
+    transition: opacity .5s var(--ease) .5s;
+  }
+  .nav__mobile:not([hidden]) .nav__mobile-loc { opacity: 1; }
+
+  /* =========================================================================
+     01 HERO
+     ========================================================================= */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    background: var(--bg);
+    isolation: isolate;
+  }
+  .hero__video,
+  .hero__poster {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    animation: hero-zoom 12s var(--ease) forwards;
+    filter: brightness(.82) saturate(.72) contrast(1.03);
+  }
+  @keyframes hero-zoom {
+    from { transform: scale(1.06); }
+    to   { transform: scale(1); }
+  }
+
+  /* Vignette — fondu bas vers #0c0e14 (= couleur exacte du ticker), pas de ligne nette */
+  .hero__vignette {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(ellipse at center, transparent 20%, rgba(7,8,12,.42) 62%, rgba(7,8,12,.78) 100%),
+      linear-gradient(
+        to top,
+        #0c0e14 0%,
+        rgba(12,14,20,.96) 6%,
+        rgba(10,12,18,.55) 14%,
+        rgba(7,8,12,.18) 24%,
+        transparent 34%,
+        transparent 78%,
+        rgba(7,8,12,.4) 100%
+      );
+  }
+
+  /* Hero text retiré pour l'instant — réservé pour rework futur */
+
+  .hero__scroll {
+    position: absolute; bottom: 2.2rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    opacity: 0;
+    animation: hero-up 1s var(--ease) 1.05s forwards;
+  }
+  .hero__scroll-line {
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, transparent, var(--tx-3));
+    animation: scroll-line 2.6s ease-in-out infinite;
+  }
+  @keyframes scroll-line {
+    0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+    50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+    51%  { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; opacity: .3; }
+  }
+  .hero__scroll-label {
+    font-size: .56rem; letter-spacing: .3em;
+    text-transform: uppercase; color: var(--tx-3);
+    white-space: nowrap;
+  }
+
+  /* Mobile : cache vidéo lourde + même fondu vers ticker */
+  @media (max-width: 768px) {
+    .hero__video { display: none; }
+    .hero__poster { display: block !important; }
+    .hero__vignette {
+      background:
+        linear-gradient(to top, #0c0e14 0%, rgba(12,14,20,.94) 8%, rgba(10,12,18,.5) 20%, transparent 34%,
+                        transparent 75%, rgba(7,8,12,.45) 100%);
+    }
+  }
+  .hero__poster { display: none; }
+
+  /* =========================================================================
+     02 TICKER — trust badges
+     ========================================================================= */
+  .ticker {
+    position: relative; overflow: hidden;
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+  }
+  .ticker__track {
+    display: inline-flex; gap: 0;
+    white-space: nowrap;
+    animation: ticker-scroll 44s linear infinite;
+    will-change: transform;
+  }
+  .ticker:hover .ticker__track { animation-play-state: paused; }
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .ticker__item {
+    display: inline-flex; align-items: center;
+    font-family: var(--f-body); font-size: .68rem;
+    font-weight: 400; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--tx-2);
+    padding: 0 2rem;
+  }
+  .ticker__item strong {
+    font-weight: 500; color: var(--tx);
+  }
+  .ticker__sep {
+    color: var(--red); font-size: .8rem;
+    margin-left: 2rem;
+    opacity: .7;
+  }
+
+  /* =========================================================================
+     03 SIGNATURE — intro artisan, split image / texte (classique, poli)
+     ========================================================================= */
+  .sig { padding: clamp(5rem, 11vw, 10rem) 0; }
+  .sig__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  .sig__visual { position: relative; }
+  .sig__media {
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+  .sig__img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(.92) brightness(.88) contrast(1.03);
+    transform: scale(1.04);
+    transition: transform 1.2s var(--ease), filter .8s var(--ease);
+    will-change: transform;
+  }
+  .sig__visual:hover .sig__img {
+    transform: scale(1.08);
+    filter: saturate(1) brightness(.95) contrast(1.03);
+  }
+  .sig__tag {
+    position: absolute; left: 0; bottom: 0;
+    background: var(--bg-1);
+    color: var(--tx-2);
+    font-family: var(--f-body);
+    font-size: .56rem; font-weight: 500;
+    letter-spacing: .24em; text-transform: uppercase;
+    padding: .85rem 1.3rem;
+  }
+  .sig__tag::before {
+    content: ''; display: inline-block;
+    width: 14px; height: 1px; background: var(--red);
+    vertical-align: middle; margin-right: .6rem; margin-bottom: 2px;
+  }
+
+  .sig__title {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(2.2rem, 4.6vw, 3.7rem);
+    line-height: 1.02;
+    letter-spacing: -.012em;
+    color: var(--tx);
+    margin: 1.1rem 0 1.6rem;
+  }
+  .sig__title em { font-style: italic; color: var(--tx-2); }
+
+  .sig__text p {
+    font-size: clamp(.92rem, 1.05vw, 1.02rem);
+    line-height: 1.75;
+    color: var(--tx-2);
+    max-width: 52ch;
+  }
+  .sig__text p + p { margin-top: 1rem; }
+
+  .sig__points {
+    margin: 2rem 0 2.5rem;
+    display: flex; flex-direction: column; gap: .85rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--border);
+  }
+  .sig__points li {
+    display: flex; align-items: center; gap: .85rem;
+    font-family: var(--f-body);
+    font-size: .82rem;
+    letter-spacing: .02em;
+    color: var(--tx);
+  }
+  .sig__points li span {
+    width: 5px; height: 5px;
+    background: var(--red);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    box-shadow: 0 0 7px var(--red-glow);
+  }
+
+  .sig__cta {
+    display: inline-flex; align-items: center; gap: .9rem;
+    font-family: var(--f-body);
+    font-size: .7rem; font-weight: 500;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--tx);
+    padding-bottom: .5rem;
+    position: relative;
+  }
+  .sig__cta::after {
+    content: '';
+    position: absolute; left: 0; bottom: 0;
+    width: 100%; height: 1px;
+    background: var(--border-2);
+    transform: scaleX(1);
+    transform-origin: right;
+    transition: transform .5s var(--ease), background-color .4s var(--ease);
+  }
+  .sig__cta:hover::after { background: var(--red); }
+  .sig__cta-arrow {
+    color: var(--red);
+    display: inline-flex;
+    transition: transform .4s var(--ease);
+  }
+  .sig__cta:hover .sig__cta-arrow { transform: translateX(5px); }
+
+  /* Reveal (JS-driven, états initiaux) */
+  .sig__visual,
+  .sig__body > * {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  @media (min-width: 900px) {
+    .sig__grid { grid-template-columns: .82fr 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sig__visual, .sig__body > * { opacity: 1; transform: none; }
+    .sig__img { transform: scale(1); }
+  }
+
+  /* =========================================================================
+     04 RÉALISATIONS — masonry + lightbox
+     ========================================================================= */
+  .reals {
+    padding: clamp(5rem, 10vw, 9rem) 0;
+    position: relative;
+  }
+
+  .reals__head {
+    max-width: 720px;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+  .reals__title {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    line-height: .98;
+    letter-spacing: -.01em;
+    color: var(--tx);
+    margin: 1.1rem 0 1.5rem;
+  }
+  .reals__title em {
+    font-style: italic;
+    color: var(--tx-2);
+  }
+  .reals__desc {
+    font-size: clamp(.85rem, 1vw, .95rem);
+    color: var(--tx-2);
+    line-height: 1.65;
+    max-width: 520px;
+  }
+
+  /* Masonry via CSS columns */
+  .reals__grid {
+    columns: 3;
+    column-gap: clamp(1rem, 2vw, 1.75rem);
+  }
+  .reals__card {
+    break-inside: avoid;
+    display: block;
+    margin-bottom: clamp(1rem, 2vw, 1.75rem);
+    /* Petit fade-in à l'arrivée dans le viewport (via IntersectionObserver JS) */
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .8s var(--ease), transform .8s var(--ease);
+  }
+  .reals__card.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reals__card:nth-child(2) { transition-delay: .08s; }
+  .reals__card:nth-child(3) { transition-delay: .14s; }
+  .reals__card:nth-child(4) { transition-delay: .04s; }
+  .reals__card:nth-child(5) { transition-delay: .10s; }
+  .reals__card:nth-child(6) { transition-delay: .16s; }
+
+  .reals__link {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--bg-3);
+    cursor: pointer;
+    isolation: isolate;
+  }
+  .reals__media {
+    aspect-ratio: 3/4;
+    overflow: hidden;
+  }
+  .reals__card--wide .reals__media { aspect-ratio: 4/3; }
+  .reals__card--tall .reals__media { aspect-ratio: 3/4.4; }
+  .reals__card--sq   .reals__media { aspect-ratio: 1/1; }
+
+  .reals__media img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 1.1s var(--ease), filter .6s var(--ease);
+    will-change: transform;
+    filter: saturate(.9) brightness(.92);
+  }
+  .reals__link:hover .reals__media img {
+    transform: scale(1.06);
+    filter: saturate(1) brightness(1);
+  }
+
+  /* Numéro + catégorie en haut */
+  .reals__num {
+    position: absolute;
+    top: clamp(.9rem, 1.5vw, 1.25rem);
+    left: clamp(.9rem, 1.5vw, 1.25rem);
+    z-index: 3;
+    font-family: var(--f-body);
+    font-size: .55rem;
+    font-weight: 500;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--tx);
+    text-shadow: 0 1px 12px rgba(0,0,0,.55);
+    display: inline-flex; align-items: center; gap: .55rem;
+  }
+  .reals__num span { color: var(--red); }
+  .reals__num::before {
+    content: '';
+    width: 14px; height: 1px;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+
+  /* Info reveal au hover */
+  .reals__info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    z-index: 2;
+    padding: clamp(1.1rem, 2vw, 1.6rem);
+    background: linear-gradient(to top,
+      rgba(7,8,12,.96) 0%,
+      rgba(7,8,12,.7) 55%,
+      rgba(7,8,12,0) 100%);
+    color: var(--tx);
+    transform: translateY(28%);
+    opacity: 0;
+    transition: transform .55s var(--ease), opacity .35s ease;
+    pointer-events: none;
+  }
+  .reals__link:hover .reals__info,
+  .reals__link:focus-visible .reals__info {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .reals__name {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(1.25rem, 1.9vw, 1.65rem);
+    line-height: 1.05;
+    letter-spacing: .005em;
+    margin-bottom: .35rem;
+  }
+  .reals__meta {
+    font-family: var(--f-body);
+    font-size: .56rem;
+    font-weight: 400;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--tx-2);
+  }
+
+  /* CTA bas de section */
+  .reals__cta {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    display: flex;
+    justify-content: center;
+  }
+  .reals__cta-btn {
+    padding: 1.05rem 2rem;
+    font-size: .72rem;
+    letter-spacing: .25em;
+  }
+  .reals__cta-btn svg {
+    transition: transform .35s var(--ease);
+  }
+  .reals__cta-btn:hover svg { transform: translateX(4px); }
+
+  @media (max-width: 900px) {
+    .reals__grid { columns: 2; }
+  }
+  @media (max-width: 560px) {
+    .reals__grid { columns: 1; }
+  }
+
+  /* — Modal lightbox — */
+  .reals-modal {
+    position: fixed; inset: 0;
+    z-index: 200;
+    background: rgba(7, 8, 12, .96);
+    backdrop-filter: blur(22px) saturate(1.1);
+    -webkit-backdrop-filter: blur(22px) saturate(1.1);
+    display: flex;
+    align-items: center; justify-content: center;
+    padding: clamp(2.5rem, 5vw, 4.5rem);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s var(--ease);
+  }
+  .reals-modal[aria-hidden="false"] {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .reals-modal__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1.1rem, 2.5vw, 1.75rem);
+    width: 100%;
+    max-width: min(1100px, 92vw);
+  }
+  .reals-modal__media {
+    width: 100%;
+    max-height: 74vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(17, 20, 28, .4);
+    overflow: hidden;
+  }
+  .reals-modal__img {
+    max-width: 100%;
+    max-height: 74vh;
+    width: auto; height: auto;
+    object-fit: contain;
+    transform: scale(1.03);
+    transition: transform .9s var(--ease), opacity .4s ease;
+  }
+  .reals-modal[aria-hidden="false"] .reals-modal__img { transform: scale(1); }
+  .reals-modal__img.is-swap { opacity: 0; }
+
+  /* Caption fine sous la photo */
+  .reals-modal__caption {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    flex-wrap: wrap;
+    text-align: center;
+    color: var(--tx);
+  }
+  .reals-modal__num {
+    font-family: var(--f-body);
+    font-size: .58rem;
+    font-weight: 500;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--red);
+    display: inline-flex; align-items: center; gap: .55rem;
+    flex-shrink: 0;
+  }
+  .reals-modal__num::before {
+    content: '';
+    width: 18px; height: 1px;
+    background: var(--red);
+  }
+  .reals-modal__title {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    line-height: 1;
+    letter-spacing: -.005em;
+  }
+  .reals-modal__year {
+    font-family: var(--f-body);
+    font-size: .62rem;
+    font-weight: 400;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--tx-3);
+    flex-shrink: 0;
+  }
+
+  .reals-modal__close {
+    position: absolute;
+    top: clamp(1.3rem, 2.5vw, 2rem);
+    right: clamp(1.3rem, 2.5vw, 2rem);
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--tx-2);
+    border: 1px solid var(--border);
+    transition: color .3s, border-color .3s, transform .45s var(--ease);
+    z-index: 3;
+  }
+  .reals-modal__close:hover {
+    color: var(--tx);
+    border-color: var(--red);
+    transform: rotate(90deg);
+  }
+
+  .reals-modal__nav {
+    position: absolute;
+    bottom: clamp(1.6rem, 3vw, 2.4rem);
+    right: clamp(1.6rem, 3vw, 2.4rem);
+    display: flex; gap: .6rem;
+    z-index: 3;
+  }
+  .reals-modal__nav-btn {
+    width: 44px; height: 44px;
+    border: 1px solid var(--border-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--tx-2);
+    transition: border-color .3s, color .3s, background-color .3s;
+  }
+  .reals-modal__nav-btn:hover {
+    border-color: var(--red);
+    color: var(--tx);
+    background: rgba(217,79,59,.08);
+  }
+
+  @media (max-width: 820px) {
+    .reals-modal { padding: clamp(1.25rem, 5vw, 2.5rem); }
+    .reals-modal__media { max-height: 62vh; }
+    .reals-modal__img { max-height: 62vh; }
+    .reals-modal__nav { bottom: 1rem; right: 1rem; }
+    .reals-modal__close { top: 1rem; right: 1rem; }
+  }
+
+  /* =========================================================================
+     05 SERVICES — liste interactive + visuel au survol
+     ========================================================================= */
+  .srv { padding: clamp(5rem, 10vw, 9rem) 0; }
+  .srv__head { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .srv__title {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    line-height: .98; letter-spacing: -.01em;
+    color: var(--tx); margin-top: 1.1rem;
+  }
+  .srv__title em { font-style: italic; color: var(--tx-2); }
+
+  .srv__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  .srv__list { display: flex; flex-direction: column; }
+  .srv__item { border-top: 1px solid var(--border); }
+  .srv__item:last-child { border-bottom: 1px solid var(--border); }
+
+  .srv__link {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding: clamp(1.4rem, 3vw, 2.4rem) 0;
+    text-decoration: none;
+  }
+  .srv__num {
+    font-family: var(--f-body);
+    font-size: .62rem; font-weight: 500;
+    letter-spacing: .22em; color: var(--tx-3);
+    transition: color .4s var(--ease);
+    align-self: start; padding-top: .4rem;
+  }
+  .srv__name {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 4vw, 3.1rem);
+    line-height: 1.05; letter-spacing: -.005em;
+    color: var(--tx-2);
+    transition: color .4s var(--ease), transform .5s var(--ease);
+  }
+  .srv__desc {
+    grid-column: 2;
+    font-family: var(--f-body);
+    font-size: .8rem; color: var(--tx-3);
+    letter-spacing: .02em; margin-top: .5rem;
+    max-width: 36ch;
+    opacity: 0; height: 0; overflow: hidden;
+    transition: opacity .4s var(--ease);
+  }
+  .srv__arrow {
+    color: var(--red);
+    opacity: 0; transform: translateX(-12px);
+    transition: opacity .4s var(--ease), transform .5s var(--ease);
+  }
+  .srv__item:hover .srv__name,
+  .srv__item.is-active .srv__name { color: var(--tx); transform: translateX(8px); }
+  .srv__item:hover .srv__num,
+  .srv__item.is-active .srv__num { color: var(--red); }
+  .srv__item:hover .srv__desc,
+  .srv__item.is-active .srv__desc { opacity: 1; height: auto; }
+  .srv__item:hover .srv__arrow,
+  .srv__item.is-active .srv__arrow { opacity: 1; transform: translateX(0); }
+
+  .srv__visual {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--bg-2);
+    display: none;
+  }
+  .srv__img {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    opacity: 0; transform: scale(1.06);
+    transition: opacity .7s var(--ease), transform 1.2s var(--ease);
+    filter: saturate(.9) brightness(.9);
+  }
+  .srv__img.is-active { opacity: 1; transform: scale(1); }
+
+  @media (min-width: 900px) {
+    .srv__layout { grid-template-columns: 1.15fr .85fr; align-items: start; }
+    .srv__visual { display: block; position: sticky; top: 18vh; }
+  }
+
+  /* =========================================================================
+     06 PROCESSUS — étapes horizontales numérotées
+     ========================================================================= */
+  .proc { padding: clamp(5rem, 10vw, 9rem) 0; }
+  .proc__head { max-width: 620px; margin-bottom: clamp(3rem, 6vw, 5rem); }
+  .proc__title {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    line-height: .98; letter-spacing: -.01em;
+    color: var(--tx); margin: 1.1rem 0 1.25rem;
+  }
+  .proc__title em { font-style: italic; color: var(--tx-2); }
+  .proc__intro {
+    font-size: clamp(.85rem, 1vw, .95rem);
+    color: var(--tx-2); line-height: 1.65; max-width: 480px;
+  }
+
+  .proc__steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    counter-reset: proc;
+  }
+  .proc__step {
+    position: relative;
+    padding-top: 2.25rem;
+    border-top: 1px solid var(--border-2);
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .8s var(--ease), transform .8s var(--ease);
+  }
+  .proc__step.is-in { opacity: 1; transform: translateY(0); }
+  .proc__step:nth-child(2) { transition-delay: .1s; }
+  .proc__step:nth-child(3) { transition-delay: .2s; }
+  .proc__step:nth-child(4) { transition-delay: .3s; }
+  .proc__step::before {
+    content: '';
+    position: absolute; top: -1px; left: 0;
+    width: 36px; height: 2px;
+    background: var(--red);
+  }
+  .proc__num {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    color: var(--tx-3); line-height: 1;
+    display: block; margin-bottom: 1rem;
+  }
+  .proc__name {
+    font-family: var(--f-body);
+    font-size: .72rem; font-weight: 600;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--tx); margin-bottom: .8rem;
+  }
+  .proc__desc {
+    font-size: .82rem; color: var(--tx-2);
+    line-height: 1.6;
+  }
+  @media (max-width: 860px) {
+    .proc__steps { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+  }
+  @media (max-width: 520px) {
+    .proc__steps { grid-template-columns: 1fr; }
+    .proc__step:nth-child(n) { transition-delay: 0s; }
+  }
+
+  /* =========================================================================
+     07 TÉMOIGNAGES — avis Google live (carrousel)
+     ========================================================================= */
+  .rev { padding: clamp(5rem, 10vw, 9rem) 0; }
+  .rev__head { text-align: center; margin-bottom: clamp(3rem, 6vw, 4.5rem); }
+  .rev__title {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    line-height: .98; color: var(--tx); margin: 1.1rem 0 1.5rem;
+  }
+  .rev__title em { font-style: italic; color: var(--tx-2); }
+  .rev__aggregate {
+    display: inline-flex; align-items: center; gap: .7rem;
+    font-family: var(--f-body); font-size: .68rem;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--tx-2);
+  }
+  .rev__stars { color: var(--red); letter-spacing: .15em; font-size: .8rem; }
+  .rev__score { color: var(--tx); font-weight: 600; }
+  .rev__count { color: var(--tx-3); }
+
+  .rev__stage {
+    max-width: 780px; margin: 0 auto;
+    text-align: center;
+    min-height: 240px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .rev__quote {
+    transition: opacity .45s var(--ease), transform .45s var(--ease);
+  }
+  .rev__quote.is-swap { opacity: 0; transform: translateY(12px); }
+  .rev__text {
+    font-family: var(--f-display);
+    font-weight: 300; font-style: italic;
+    font-size: clamp(1.25rem, 2.6vw, 1.95rem);
+    line-height: 1.45; color: var(--tx);
+    letter-spacing: .005em;
+  }
+  .rev__text::before { content: '“'; color: var(--red); margin-right: .1em; }
+  .rev__text::after  { content: '”'; color: var(--red); margin-left: .1em; }
+  .rev__by {
+    margin-top: 1.75rem;
+    display: flex; flex-direction: column; gap: .3rem;
+  }
+  .rev__name {
+    font-family: var(--f-body);
+    font-size: .72rem; font-weight: 600;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--tx); font-style: normal;
+  }
+  .rev__when {
+    font-size: .62rem; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--tx-3);
+  }
+
+  .rev__controls {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1.5rem; margin-top: 2.5rem;
+  }
+  .rev__btn {
+    width: 44px; height: 44px;
+    border: 1px solid var(--border-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--tx-2);
+    transition: border-color .3s, color .3s, background-color .3s;
+  }
+  .rev__btn:hover { border-color: var(--red); color: var(--tx); background: rgba(217,79,59,.08); }
+  .rev__dots { display: flex; gap: .5rem; }
+  .rev__dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--border-2);
+    transition: background-color .3s, transform .3s;
+    cursor: pointer;
+  }
+  .rev__dot.is-active { background: var(--red); transform: scale(1.3); }
+
+  .rev__google {
+    display: flex; align-items: center; justify-content: center;
+    gap: .6rem; margin: 3rem auto 0;
+    font-family: var(--f-body); font-size: .66rem;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: var(--tx-3); width: fit-content;
+    transition: color .3s var(--ease);
+  }
+  .rev__google:hover { color: var(--tx); }
+  .rev__google svg { color: var(--red); }
+
+  /* =========================================================================
+     08 ATELIER — split éditorial portrait + récit
+     ========================================================================= */
+  .atl { padding: clamp(5rem, 10vw, 9rem) 0; }
+  .atl__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  .atl__media { position: relative; }
+  .atl__img {
+    width: 100%; aspect-ratio: 4/5;
+    object-fit: cover;
+    filter: saturate(.92) brightness(.9) contrast(1.02);
+  }
+  .atl__badge {
+    position: absolute; left: 0; bottom: 0;
+    background: var(--bg);
+    color: var(--tx-2);
+    font-family: var(--f-body);
+    font-size: .58rem; font-weight: 500;
+    letter-spacing: .24em; text-transform: uppercase;
+    padding: .9rem 1.4rem;
+  }
+  .atl__badge::before {
+    content: ''; display: inline-block;
+    width: 14px; height: 1px; background: var(--red);
+    vertical-align: middle; margin-right: .6rem; margin-bottom: 2px;
+  }
+  .atl__title {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1; letter-spacing: -.01em;
+    color: var(--tx); margin: 1.1rem 0 1.75rem;
+  }
+  .atl__title em { font-style: italic; color: var(--tx-2); }
+  .atl__text p {
+    font-size: clamp(.9rem, 1.05vw, 1rem);
+    color: var(--tx-2); line-height: 1.75;
+    margin-bottom: 1.1rem; max-width: 52ch;
+  }
+  .atl__sign {
+    margin: 2rem 0;
+    display: flex; flex-direction: column; gap: .25rem;
+  }
+  .atl__sign-name {
+    font-family: var(--f-display);
+    font-style: italic; font-weight: 400;
+    font-size: 2rem; color: var(--tx);
+    line-height: 1;
+  }
+  .atl__sign-role {
+    font-family: var(--f-body);
+    font-size: .58rem; letter-spacing: .24em;
+    text-transform: uppercase; color: var(--tx-3);
+  }
+  .atl__stats {
+    display: flex; gap: clamp(1.5rem, 4vw, 3rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .atl__stats li { display: flex; flex-direction: column; gap: .3rem; }
+  .atl__stats strong {
+    font-family: var(--f-display);
+    font-weight: 300; font-size: clamp(1.8rem, 3vw, 2.6rem);
+    color: var(--red); line-height: 1;
+  }
+  .atl__stats span {
+    font-family: var(--f-body);
+    font-size: .56rem; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--tx-3);
+  }
+  @media (min-width: 880px) {
+    .atl__grid { grid-template-columns: .85fr 1fr; }
+  }
+  /* Reveal sobre (JS-driven) — 1re section de contenu, soignée */
+  .atl__media,
+  .atl__body > * {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .atl__media, .atl__body > * { opacity: 1; transform: none; }
+  }
+
+  /* =========================================================================
+     09 CONTACT — récit + formulaire (Web3Forms)
+     ========================================================================= */
+  .ct { padding: clamp(5rem, 10vw, 9rem) 0; }
+  .ct__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 6vw, 5rem);
+  }
+  .ct__title {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    line-height: .98; letter-spacing: -.01em;
+    color: var(--tx); margin: 1.1rem 0 1.4rem;
+  }
+  .ct__title em { font-style: italic; color: var(--tx-2); }
+  .ct__lead {
+    font-size: clamp(.85rem, 1vw, .95rem);
+    color: var(--tx-2); line-height: 1.65;
+    max-width: 42ch; margin-bottom: 2.5rem;
+  }
+  .ct__coords { display: flex; flex-direction: column; }
+  .ct__coords li {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1rem; align-items: baseline;
+    padding: .9rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .ct__coords li:last-child { border-bottom: 1px solid var(--border); }
+  .ct__coord-k {
+    font-family: var(--f-body);
+    font-size: .55rem; font-weight: 500;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--tx-3);
+  }
+  .ct__coord-v {
+    font-size: .92rem; color: var(--tx);
+    font-style: normal;
+    transition: color .3s var(--ease);
+  }
+  a.ct__coord-v:hover { color: var(--red); }
+
+  .ct__form { display: flex; flex-direction: column; gap: 1.5rem; }
+  .ct__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .ct__field { position: relative; }
+  .ct__field input,
+  .ct__field select,
+  .ct__field textarea {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--border-2);
+    padding: .9rem 0 .7rem;
+    font-family: var(--f-body);
+    font-size: .92rem; color: var(--tx);
+    transition: border-color .35s var(--ease);
+    border-radius: 0;
+  }
+  .ct__field textarea { resize: vertical; min-height: 90px; }
+  .ct__field select { cursor: pointer; appearance: none; }
+  .ct__field select option { background: var(--bg-2); color: var(--tx); }
+  .ct__field input:focus,
+  .ct__field select:focus,
+  .ct__field textarea:focus {
+    outline: none;
+    border-bottom-color: var(--red);
+  }
+  .ct__field label {
+    position: absolute; left: 0; top: .9rem;
+    font-family: var(--f-body);
+    font-size: .92rem; color: var(--tx-3);
+    pointer-events: none;
+    transition: transform .3s var(--ease), font-size .3s var(--ease), color .3s var(--ease);
+    transform-origin: left;
+  }
+  .ct__field input:focus + label,
+  .ct__field input:not(:placeholder-shown) + label,
+  .ct__field textarea:focus + label,
+  .ct__field textarea:not(:placeholder-shown) + label,
+  .ct__field select:focus + label,
+  .ct__field select:valid + label {
+    transform: translateY(-1.55rem) scale(.72);
+    color: var(--red);
+  }
+  .ct__field label span { color: var(--tx-3); font-size: .85em; }
+
+  .ct__submit {
+    align-self: flex-start;
+    margin-top: .5rem;
+    padding: 1.05rem 2.1rem;
+    gap: .7rem;
+  }
+  .ct__submit[disabled] { opacity: .5; pointer-events: none; }
+  .ct__submit-arrow { transition: transform .35s var(--ease); }
+  .ct__submit:hover .ct__submit-arrow { transform: translateX(4px); }
+
+  .ct__status {
+    font-family: var(--f-body);
+    font-size: .8rem; letter-spacing: .02em;
+    min-height: 1.2em;
+    opacity: 0; transform: translateY(4px);
+    transition: opacity .4s var(--ease), transform .4s var(--ease);
+  }
+  .ct__status.is-show { opacity: 1; transform: translateY(0); }
+  .ct__status.is-ok  { color: #6fae7d; }
+  .ct__status.is-err { color: var(--red); }
+
+  @media (min-width: 880px) {
+    .ct__grid { grid-template-columns: .8fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .ct__row { grid-template-columns: 1fr; }
+  }
+
+  /* =========================================================================
+     10 FOOTER — colonnes fonctionnelles
+     ========================================================================= */
+  .ft {
+    background: var(--bg);
+    padding: clamp(4rem, 8vw, 6.5rem) 0 2.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .ft__top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+  }
+  .ft__logo { display: inline-flex; align-items: center; gap: .7rem; }
+  .ft__gem {
+    width: 6px; height: 6px; background: var(--red);
+    transform: rotate(45deg);
+    box-shadow: 0 0 8px var(--red-glow);
+  }
+  .ft__name {
+    font-family: var(--f-display);
+    font-weight: 300; font-size: 1.1rem;
+    letter-spacing: .5em; color: var(--tx);
+    padding-right: .5em;
+  }
+  .ft__tagline {
+    margin: 1.25rem 0;
+    font-size: .82rem; color: var(--tx-2);
+    line-height: 1.65; max-width: 38ch;
+  }
+  .ft__phone {
+    font-family: var(--f-display);
+    font-size: 1.5rem; font-weight: 300;
+    color: var(--tx); letter-spacing: .04em;
+    transition: color .3s var(--ease);
+  }
+  .ft__phone:hover { color: var(--red); }
+
+  .ft__cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .ft__col { display: flex; flex-direction: column; gap: .8rem; }
+  .ft__col h3 {
+    font-family: var(--f-body);
+    font-size: .56rem; font-weight: 600;
+    letter-spacing: .24em; text-transform: uppercase;
+    color: var(--tx-3); margin-bottom: .5rem;
+  }
+  .ft__col a, .ft__col span {
+    font-size: .84rem; color: var(--tx-2);
+    transition: color .3s var(--ease);
+  }
+  .ft__col a:hover { color: var(--red); }
+
+  .ft__bottom {
+    display: flex; flex-wrap: wrap;
+    justify-content: space-between; gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--f-body);
+    font-size: .62rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--tx-3);
+  }
+  .ft__legal { display: inline-flex; gap: .6rem; }
+  .ft__legal a { transition: color .3s var(--ease); }
+  .ft__legal a:hover { color: var(--tx-2); }
+
+  @media (min-width: 760px) {
+    .ft__top { grid-template-columns: 1fr 1.4fr; }
+  }
+  @media (max-width: 540px) {
+    .ft__cols { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+    .ft__bottom { flex-direction: column; gap: .6rem; }
+  }
+
+  /* =========================================================================
+     PLACEHOLDERS SECTIONS 03–10 (Bloc 2)
+     ========================================================================= */
+  .placeholder-section {
+    min-height: 60vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 6rem var(--pad-x);
+    text-align: center;
+  }
+  .placeholder-section[data-bg="bg-1"] { background: var(--bg-1); }
+  .placeholder-section[data-bg="bg-2"] { background: var(--bg-2); }
+  .placeholder-section .ph-label {
+    font-family: var(--f-display); font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 300; color: var(--tx-3); letter-spacing: .04em;
+  }
+  .placeholder-section .ph-tag {
+    display: block; font-family: var(--f-body);
+    font-size: .62rem; letter-spacing: .28em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: .9rem;
+  }
+
+  /* =========================================================================
+     REDUCED MOTION
+     ========================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+    .hero__video, .hero__poster { transform: none !important; }
+    .ticker__track { animation: none !important; }
+    .nav, .hero__scroll { opacity: 1 !important; transform: none !important; }
+  }
+  </style>
+</head>
+<body class="is-loading is-pre-active">
+
+  <!-- =====================================================================
+       PRELOADER — Braise Lumière (sortie : ouverture verticale + zoom)
+       ===================================================================== -->
+  <div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Chargement">
+    <div class="pre__panel pre__panel--l" aria-hidden="true"></div>
+    <div class="pre__panel pre__panel--r" aria-hidden="true"></div>
+    <div class="pre__halo" aria-hidden="true"></div>
+    <div class="pre__beam" aria-hidden="true"></div>
+    <div class="pre__wash" aria-hidden="true"></div>
+    <div class="pre__core" aria-hidden="true"></div>
+  </div>
+
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <h1 class="sr-only">LRMJ Project — Artisan ferronnier à Bruxelles. Verrières, baies vitrées et structures fer & verre sur mesure.</h1>
+
+  <!-- =====================================================================
+       00 NAV
+       ===================================================================== -->
+  <header class="nav" id="nav" role="banner">
+    <div class="nav__wrap">
+
+      <a class="nav__brand" href="#" aria-label="LRMJ Project — accueil">
+        <span class="nav__brand-gem" aria-hidden="true"></span>
+        <span class="nav__brand-name">LRMJ</span>
+      </a>
+
+      <nav class="nav__links" aria-label="Navigation principale">
+        <a class="nav__link" href="#realisations" data-text="Réalisations">
+          <span class="nav__link-text">Réalisations</span>
+        </a>
+        <a class="nav__link" href="#services" data-text="Services">
+          <span class="nav__link-text">Services</span>
+        </a>
+        <a class="nav__link" href="#atelier" data-text="Atelier">
+          <span class="nav__link-text">Atelier</span>
+        </a>
+        <a class="nav__link" href="#contact" data-text="Contact">
+          <span class="nav__link-text">Contact</span>
+        </a>
+      </nav>
+
+      <div class="nav__right">
+        <a class="nav__phone" href="tel:0475399909" aria-label="Appeler le 0475 39 99 09">0475 39 99 09</a>
+        <span class="nav__sep" aria-hidden="true"></span>
+        <a class="nav__cta" href="#contact" aria-label="Demander un devis gratuit">
+          <span>Devis gratuit</span>
+          <span class="nav__cta-arrow" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1.5 8.5 L8.5 1.5"/>
+              <path d="M3 1.5 H8.5 V7"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <button class="nav__burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-mobile">
+        <span class="nav__burger-line"></span>
+        <span class="nav__burger-line"></span>
+      </button>
+
+    </div>
+    <div class="nav__progress" aria-hidden="true"></div>
+  </header>
+
+  <!-- Mobile panel — hors du header pour stacking propre -->
+  <div class="nav__mobile" id="nav-mobile" hidden>
+    <a class="nav__mobile-link" href="#realisations" style="--i:0">
+      <span class="nav__mobile-num" aria-hidden="true">01</span>Réalisations
+    </a>
+    <a class="nav__mobile-link" href="#services" style="--i:1">
+      <span class="nav__mobile-num" aria-hidden="true">02</span>Services
+    </a>
+    <a class="nav__mobile-link" href="#atelier" style="--i:2">
+      <span class="nav__mobile-num" aria-hidden="true">03</span>Atelier
+    </a>
+    <a class="nav__mobile-link" href="#contact" style="--i:3">
+      <span class="nav__mobile-num" aria-hidden="true">04</span>Contact
+    </a>
+    <div class="nav__mobile-footer">
+      <a class="nav__mobile-phone" href="tel:0475399909">0475 39 99 09</a>
+      <span class="nav__mobile-loc">Bruxelles &amp; environs · Atelier Opwijk</span>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- =====================================================================
+         01 HERO
+         ===================================================================== -->
+    <section class="hero" aria-label="Présentation LRMJ Project">
+
+      <video
+        class="hero__video"
+        autoplay muted loop playsinline
+        preload="metadata"
+        poster="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1920&q=80&auto=format&fit=crop"
+        fetchpriority="high"
+        aria-hidden="true"
+        onerror="this.closest('.hero').querySelector('.hero__poster').style.display='block'"
+      >
+        <!-- Vidéo client Cloudinary (q_auto + f_auto = optimisée auto) -->
+        <source src="https://res.cloudinary.com/dqfgzja87/video/upload/q_auto/f_auto/v1778605936/G%C3%A9n%C3%A9ration_de_vid%C3%A9o_d_animation_architecturale_hjld8j.mp4" type="video/mp4">
+        <!-- Fallback Pexels -->
+        <source src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4" type="video/mp4">
+      </video>
+
+      <img
+        class="hero__poster"
+        src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1920&q=80&auto=format&fit=crop"
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        fetchpriority="high"
+      >
+
+      <div class="hero__vignette" aria-hidden="true"></div>
+
+      <!-- Hero text retiré — la vidéo respire seule pour l'instant -->
+
+
+      <a class="hero__scroll" href="#ticker" aria-label="Défiler vers le bas">
+        <span class="hero__scroll-line" aria-hidden="true"></span>
+        <span class="hero__scroll-label">Découvrir</span>
+      </a>
+    </section>
+
+    <!-- =====================================================================
+         02 TICKER — trust badges
+         ===================================================================== -->
+    <section class="ticker" id="ticker" aria-label="Engagement qualité LRMJ Project">
+      <div class="ticker__track" aria-hidden="true">
+        <!-- Dupli 2× pour boucle sans couture — calcul translateX(-50%) -->
+        <span class="ticker__item"><strong>+14 ans</strong>&nbsp;d'expérience<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Fabrication artisanale locale<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Devis gratuit <strong>sous 48h</strong><span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Pose assurée par nos équipes<span class="ticker__sep">—</span></span>
+        <span class="ticker__item"><strong>100% sur mesure</strong>, aucun standard<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Aucun sous-traitant<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Suivi de chantier complet<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Matériaux premium, sourcés en Europe<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Intervenant à <strong>Bruxelles</strong> &amp; environs<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Garantie sur toutes nos réalisations<span class="ticker__sep">—</span></span>
+
+        <span class="ticker__item"><strong>+14 ans</strong>&nbsp;d'expérience<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Fabrication artisanale locale<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Devis gratuit <strong>sous 48h</strong><span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Pose assurée par nos équipes<span class="ticker__sep">—</span></span>
+        <span class="ticker__item"><strong>100% sur mesure</strong>, aucun standard<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Aucun sous-traitant<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Suivi de chantier complet<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Matériaux premium, sourcés en Europe<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Intervenant à <strong>Bruxelles</strong> &amp; environs<span class="ticker__sep">—</span></span>
+        <span class="ticker__item">Garantie sur toutes nos réalisations<span class="ticker__sep">—</span></span>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         03 — ATELIER (Romeo, le maker) · puis Projet signature · galerie...
+         ===================================================================== -->
+    <!-- Ticker et Atelier partagent bg-1 : aucun divider entre les deux -->
+    <section id="atelier" class="atl" data-bg="bg-1" aria-labelledby="atl-title">
+      <div class="wrap">
+        <div class="atl__grid">
+
+          <div class="atl__media">
+            <img class="atl__img"
+              src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=900&amp;q=82&amp;auto=format&amp;fit=crop"
+              alt="Romeo, fondateur de LRMJ Project, dans son atelier" loading="lazy" width="900" height="1125">
+            <span class="atl__badge">L'atelier — Opwijk</span>
+          </div>
+
+          <div class="atl__body">
+            <span class="eyebrow">L'atelier</span>
+            <h2 class="atl__title" id="atl-title">L'homme derrière <em>le métal</em></h2>
+            <div class="atl__text">
+              <p>Depuis plus de quatorze ans, je façonne le fer et le verre dans mon atelier d'Opwijk. Chaque pièce qui sort d'ici, je l'ai pensée, découpée, soudée — et posée. Avec mon équipe, jamais en sous-traitance.</p>
+              <p>Je ne fais pas de standard. Une verrière, un escalier, un portail : c'est toujours un lieu, une lumière, une contrainte à résoudre. Ce qui me plaît, c'est transformer une idée en quelque chose qui tiendra des décennies.</p>
+            </div>
+            <div class="atl__sign">
+              <span class="atl__sign-name">Romeo</span>
+              <span class="atl__sign-role">Fondateur · Ferronnier</span>
+            </div>
+            <ul class="atl__stats">
+              <li><strong>+14</strong><span>ans de métier</span></li>
+              <li><strong>100%</strong><span>sur mesure</span></li>
+              <li><strong>0</strong><span>sous-traitant</span></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="sdiv sdiv--10" aria-hidden="true"></div>
+
+    <section id="signature" class="sig" aria-labelledby="sig-title">
+      <div class="wrap sig__grid">
+
+        <div class="sig__visual">
+          <div class="sig__media">
+            <img class="sig__img"
+              src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&amp;q=84&amp;auto=format&amp;fit=crop"
+              alt="Verrière & baie vitrée sur mesure — projet signature LRMJ" loading="lazy" width="1200" height="1500">
+          </div>
+          <span class="sig__tag" aria-hidden="true">Ixelles — 2024</span>
+        </div>
+
+        <div class="sig__body">
+          <span class="eyebrow">Projet signature</span>
+          <h2 class="sig__title" id="sig-title">Verrière &amp; baie <em>d'exception</em></h2>
+          <div class="sig__text">
+            <p>Une intervention complète sur une maison de maître : verrière intérieure deux niveaux et baie pivotante de 3,2&nbsp;m ouvrant sur le jardin. Un chantier où la lumière devait traverser sans jamais voir la structure.</p>
+            <p>Cadres acier brut soudés d'un bloc, vitrage feuilleté à fleur d'acier, mécanisme de pivot invisible. Six semaines d'atelier, trois jours de pose.</p>
+          </div>
+
+          <ul class="sig__points">
+            <li><span aria-hidden="true"></span>Lieu — Ixelles, Bruxelles</li>
+            <li><span aria-hidden="true"></span>Matériaux — Acier noir mat · verre feuilleté 8&nbsp;mm</li>
+            <li><span aria-hidden="true"></span>Livré — 2024</li>
+          </ul>
+
+          <a class="sig__cta" href="#realisations">
+            <span class="sig__cta-label">Voir toutes les réalisations</span>
+            <span class="sig__cta-arrow" aria-hidden="true">
+              <svg width="26" height="10" viewBox="0 0 26 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 5h24M20 1l4 4-4 4"/></svg>
+            </span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="realisations" class="reals glow-red-tl" aria-labelledby="reals-title">
+      <div class="wrap">
+
+        <header class="reals__head">
+          <span class="eyebrow">Réalisations</span>
+          <h2 class="reals__title" id="reals-title">
+            Quelques&nbsp;<em>réalisations</em>
+          </h2>
+          <p class="reals__desc">
+            Une sélection de projets récents — verrières, baies vitrées, escaliers et structures sur mesure, conçus et posés par nos équipes.
+          </p>
+        </header>
+
+        <!-- NOTE asset management : voir bloc /* CLOUDINARY */ en JS.
+             Les 6 cards ci-dessous sont des placeholders, à remplacer en prod
+             par le rendu dynamique de loadCloudinaryRealisations(). -->
+        <div class="reals__grid" id="reals-grid">
+
+          <article class="reals__card reals__card--tall" data-name="Verrière d'atelier" data-year="2024">
+            <a class="reals__link" href="#contact" data-index="0">
+              <span class="reals__num" aria-hidden="true">01</span>
+              <div class="reals__media">
+                <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=900&amp;q=82&amp;auto=format&amp;fit=crop"
+                     alt="Verrière d'atelier en acier noir, 2024" loading="lazy" width="900" height="1200">
+              </div>
+              <div class="reals__info">
+                <h3 class="reals__name">Verrière d'atelier</h3>
+                <span class="reals__meta">2024</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="reals__card reals__card--wide" data-name="Baie vitrée pivotante" data-year="2024">
+            <a class="reals__link" href="#contact" data-index="1">
+              <span class="reals__num" aria-hidden="true">02</span>
+              <div class="reals__media">
+                <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?w=1000&amp;q=82&amp;auto=format&amp;fit=crop"
+                     alt="Baie vitrée pivotante, 2024" loading="lazy" width="1000" height="750">
+              </div>
+              <div class="reals__info">
+                <h3 class="reals__name">Baie pivotante</h3>
+                <span class="reals__meta">2024</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="reals__card reals__card--tall" data-name="Escalier hélicoïdal" data-year="2023">
+            <a class="reals__link" href="#contact" data-index="2">
+              <span class="reals__num" aria-hidden="true">03</span>
+              <div class="reals__media">
+                <img src="https://images.unsplash.com/photo-1485628390555-1a7bd503f9fe?w=900&amp;q=82&amp;auto=format&amp;fit=crop"
+                     alt="Escalier hélicoïdal métallique, 2023" loading="lazy" width="900" height="1350">
+              </div>
+              <div class="reals__info">
+                <h3 class="reals__name">Escalier hélicoïdal</h3>
+                <span class="reals__meta">2023</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="reals__card reals__card--sq" data-name="Portail coulissant" data-year="2023">
+            <a class="reals__link" href="#contact" data-index="3">
+              <span class="reals__num" aria-hidden="true">04</span>
+              <div class="reals__media">
+                <img src="https://images.unsplash.com/photo-1604147495798-57beb5d6af73?w=800&amp;q=82&amp;auto=format&amp;fit=crop"
+                     alt="Portail coulissant en acier, 2023" loading="lazy" width="800" height="800">
+              </div>
+              <div class="reals__info">
+                <h3 class="reals__name">Portail coulissant</h3>
+                <span class="reals__meta">2023</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="reals__card reals__card--wide" data-name="Garde-corps inox" data-year="2023">
+            <a class="reals__link" href="#contact" data-index="4">
+              <span class="reals__num" aria-hidden="true">05</span>
+              <div class="reals__media">
+                <img src="https://images.unsplash.com/photo-1551041777-ed44b6cbbb1c?w=1000&amp;q=82&amp;auto=format&amp;fit=crop"
+                     alt="Garde-corps inox et verre, 2023" loading="lazy" width="1000" height="750">
+              </div>
+              <div class="reals__info">
+                <h3 class="reals__name">Garde-corps inox</h3>
+                <span class="reals__meta">2023</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="reals__card reals__card--sq" data-name="Marquise riveté" data-year="2022">
+            <a class="reals__link" href="#contact" data-index="5">
+              <span class="reals__num" aria-hidden="true">06</span>
+              <div class="reals__media">
+                <img src="https://images.unsplash.com/photo-1572883454114-1cf0031ede2a?w=800&amp;q=82&amp;auto=format&amp;fit=crop"
+                     alt="Marquise verre et acier, 2022" loading="lazy" width="800" height="800">
+              </div>
+              <div class="reals__info">
+                <h3 class="reals__name">Marquise riveté</h3>
+                <span class="reals__meta">2022</span>
+              </div>
+            </a>
+          </article>
+
+        </div>
+
+        <div class="reals__cta">
+          <a class="btn reals__cta-btn" href="#contact" aria-label="Voir toutes les réalisations">
+            <span>Voir toutes les réalisations</span>
+            <svg width="12" height="10" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M0.5 5 H11 M7 1 L11 5 L7 9"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="sdiv sdiv--01" aria-hidden="true"></div>
+
+    <section id="services" class="srv" data-bg="bg-1" aria-labelledby="srv-title">
+      <div class="wrap">
+        <header class="srv__head">
+          <span class="eyebrow">Savoir-faire</span>
+          <h2 class="srv__title" id="srv-title">Ce que nous <em>façonnons</em></h2>
+        </header>
+
+        <div class="srv__layout">
+          <ul class="srv__list">
+            <li class="srv__item is-active" data-i="0">
+              <a class="srv__link" href="#contact">
+                <span class="srv__num" aria-hidden="true">01</span>
+                <span class="srv__name">Verrières d'atelier</span>
+                <span class="srv__desc">Cloisons fer &amp; verre, esprit atelier industriel</span>
+                <span class="srv__arrow" aria-hidden="true">
+                  <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 5h20M16 1l4 4-4 4"/></svg>
+                </span>
+              </a>
+            </li>
+            <li class="srv__item" data-i="1">
+              <a class="srv__link" href="#contact">
+                <span class="srv__num" aria-hidden="true">02</span>
+                <span class="srv__name">Baies vitrées</span>
+                <span class="srv__desc">Grandes ouvertures acier, fixes ou pivotantes</span>
+                <span class="srv__arrow" aria-hidden="true">
+                  <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 5h20M16 1l4 4-4 4"/></svg>
+                </span>
+              </a>
+            </li>
+            <li class="srv__item" data-i="2">
+              <a class="srv__link" href="#contact">
+                <span class="srv__num" aria-hidden="true">03</span>
+                <span class="srv__name">Portails &amp; clôtures</span>
+                <span class="srv__desc">Entrées sur mesure, contemporaines ou classiques</span>
+                <span class="srv__arrow" aria-hidden="true">
+                  <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 5h20M16 1l4 4-4 4"/></svg>
+                </span>
+              </a>
+            </li>
+            <li class="srv__item" data-i="3">
+              <a class="srv__link" href="#contact">
+                <span class="srv__num" aria-hidden="true">04</span>
+                <span class="srv__name">Garde-corps &amp; rampes</span>
+                <span class="srv__desc">Sécurité et ligne épurée, intérieur comme extérieur</span>
+                <span class="srv__arrow" aria-hidden="true">
+                  <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 5h20M16 1l4 4-4 4"/></svg>
+                </span>
+              </a>
+            </li>
+            <li class="srv__item" data-i="4">
+              <a class="srv__link" href="#contact">
+                <span class="srv__num" aria-hidden="true">05</span>
+                <span class="srv__name">Escaliers métalliques</span>
+                <span class="srv__desc">Droits, hélicoïdaux ou autoportants, sur mesure</span>
+                <span class="srv__arrow" aria-hidden="true">
+                  <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 5h20M16 1l4 4-4 4"/></svg>
+                </span>
+              </a>
+            </li>
+          </ul>
+
+          <div class="srv__visual" aria-hidden="true">
+            <div class="srv__img is-active" style="background-image:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=900&amp;q=80&amp;auto=format&amp;fit=crop')"></div>
+            <div class="srv__img" style="background-image:url('https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&amp;q=80&amp;auto=format&amp;fit=crop')"></div>
+            <div class="srv__img" style="background-image:url('https://images.unsplash.com/photo-1604147495798-57beb5d6af73?w=900&amp;q=80&amp;auto=format&amp;fit=crop')"></div>
+            <div class="srv__img" style="background-image:url('https://images.unsplash.com/photo-1551041777-ed44b6cbbb1c?w=900&amp;q=80&amp;auto=format&amp;fit=crop')"></div>
+            <div class="srv__img" style="background-image:url('https://images.unsplash.com/photo-1485628390555-1a7bd503f9fe?w=900&amp;q=80&amp;auto=format&amp;fit=crop')"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="temoignages" class="rev" data-bg="bg-1" aria-labelledby="rev-title">
+      <div class="wrap">
+        <header class="rev__head">
+          <span class="eyebrow">Témoignages</span>
+          <h2 class="rev__title" id="rev-title">Ce qu'ils <em>en disent</em></h2>
+          <div class="rev__aggregate" id="rev-aggregate">
+            <span class="rev__stars" aria-hidden="true">★★★★★</span>
+            <span class="rev__score" id="rev-score">5,0</span>
+            <span class="rev__count" id="rev-count">Avis Google vérifiés</span>
+          </div>
+        </header>
+
+        <div class="rev__stage">
+          <blockquote class="rev__quote" id="rev-quote">
+            <p class="rev__text" id="rev-text">—</p>
+            <footer class="rev__by">
+              <cite class="rev__name" id="rev-name">—</cite>
+              <span class="rev__when" id="rev-when">—</span>
+            </footer>
+          </blockquote>
+
+          <div class="rev__controls">
+            <button class="rev__btn" id="rev-prev" type="button" aria-label="Témoignage précédent">
+              <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 5H1M5 1L1 5l4 4"/></svg>
+            </button>
+            <span class="rev__dots" id="rev-dots" aria-hidden="true"></span>
+            <button class="rev__btn" id="rev-next" type="button" aria-label="Témoignage suivant">
+              <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h16M13 1l4 4-4 4"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <a class="rev__google" id="rev-google" href="https://www.google.com/maps/search/?api=1&amp;query=LRMJ+Project" target="_blank" rel="noopener noreferrer">
+          <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" opacity=".7"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" opacity=".5"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" opacity=".85"/></svg>
+          <span>Voir tous les avis sur Google</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="sdiv sdiv--10" aria-hidden="true"></div>
+
+    <section id="processus" class="proc" aria-labelledby="proc-title">
+      <div class="wrap">
+        <header class="proc__head">
+          <span class="eyebrow">Méthode</span>
+          <h2 class="proc__title" id="proc-title">De l'idée à <em>la pose</em></h2>
+          <p class="proc__intro">Un interlocuteur unique, de la première visite à la dernière soudure. Aucun sous-traitant.</p>
+        </header>
+
+        <ol class="proc__steps">
+          <li class="proc__step">
+            <span class="proc__num" aria-hidden="true">01</span>
+            <h3 class="proc__name">Devis</h3>
+            <p class="proc__desc">Échange, visite sur site et étude de faisabilité. Devis détaillé et gratuit sous 48&nbsp;h.</p>
+          </li>
+          <li class="proc__step">
+            <span class="proc__num" aria-hidden="true">02</span>
+            <h3 class="proc__name">Conception</h3>
+            <p class="proc__desc">Plans techniques, choix des matériaux et des finitions, validés ensemble avant lancement.</p>
+          </li>
+          <li class="proc__step">
+            <span class="proc__num" aria-hidden="true">03</span>
+            <h3 class="proc__name">Fabrication</h3>
+            <p class="proc__desc">Façonnage intégral à l'atelier d'Opwijk — découpe, soudure, ajustage, traitement.</p>
+          </li>
+          <li class="proc__step">
+            <span class="proc__num" aria-hidden="true">04</span>
+            <h3 class="proc__name">Pose</h3>
+            <p class="proc__desc">Installation par nos équipes, finitions sur place et contrôle qualité final.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="sdiv sdiv--01" aria-hidden="true"></div>
+
+    <section id="contact" class="ct" data-bg="bg-1" aria-labelledby="ct-title">
+      <div class="wrap">
+        <div class="ct__grid">
+
+          <div class="ct__intro">
+            <span class="eyebrow">Contact</span>
+            <h2 class="ct__title" id="ct-title">Parlons de <em>votre projet</em></h2>
+            <p class="ct__lead">Décrivez votre besoin en quelques lignes — nous revenons vers vous avec un devis détaillé et gratuit sous 48&nbsp;h.</p>
+
+            <ul class="ct__coords">
+              <li>
+                <span class="ct__coord-k">Téléphone</span>
+                <a class="ct__coord-v" href="tel:0475399909">0475 39 99 09</a>
+              </li>
+              <li>
+                <span class="ct__coord-k">Email</span>
+                <a class="ct__coord-v" href="mailto:contact@lrmjproject.be">contact@lrmjproject.be</a>
+              </li>
+              <li>
+                <span class="ct__coord-k">Atelier</span>
+                <span class="ct__coord-v">Opwijk, Brabant flamand</span>
+              </li>
+              <li>
+                <span class="ct__coord-k">Zone</span>
+                <span class="ct__coord-v">Bruxelles &amp; environs (~40 km)</span>
+              </li>
+              <li>
+                <span class="ct__coord-k">Horaires</span>
+                <span class="ct__coord-v">Lun–Ven · 7h30–17h</span>
+              </li>
+            </ul>
+          </div>
+
+          <form class="ct__form" id="ct-form" novalidate>
+            <!-- Web3Forms : remplir l'access key au delivery (voir doc JS) -->
+            <input type="hidden" name="access_key" id="ct-access-key" value="">
+            <input type="hidden" name="subject" value="Nouvelle demande de devis — lrmjproject.be">
+            <input type="hidden" name="from_name" value="Site LRMJ Project">
+            <input type="checkbox" name="botcheck" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <div class="ct__row">
+              <div class="ct__field">
+                <input id="f-name" name="name" type="text" required placeholder=" " autocomplete="name">
+                <label for="f-name">Nom complet</label>
+              </div>
+              <div class="ct__field">
+                <input id="f-email" name="email" type="email" required placeholder=" " autocomplete="email">
+                <label for="f-email">Email</label>
+              </div>
+            </div>
+
+            <div class="ct__row">
+              <div class="ct__field">
+                <input id="f-phone" name="phone" type="tel" placeholder=" " autocomplete="tel">
+                <label for="f-phone">Téléphone <span aria-hidden="true">(optionnel)</span></label>
+              </div>
+              <div class="ct__field">
+                <select id="f-type" name="type" required>
+                  <option value="" selected disabled hidden></option>
+                  <option>Verrière</option>
+                  <option>Baie vitrée</option>
+                  <option>Portail / clôture</option>
+                  <option>Garde-corps / rampe</option>
+                  <option>Escalier</option>
+                  <option>Autre projet</option>
+                </select>
+                <label for="f-type">Type de projet</label>
+              </div>
+            </div>
+
+            <div class="ct__field">
+              <textarea id="f-msg" name="message" rows="4" required placeholder=" "></textarea>
+              <label for="f-msg">Votre projet</label>
+            </div>
+
+            <button class="btn ct__submit" type="submit" id="ct-submit">
+              <span class="ct__submit-label">Envoyer la demande</span>
+              <svg class="ct__submit-arrow" width="13" height="10" viewBox="0 0 13 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M0.5 5H11M7.5 1l4 4-4 4"/></svg>
+            </button>
+
+            <p class="ct__status" id="ct-status" role="status" aria-live="polite"></p>
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="sdiv sdiv--10" aria-hidden="true"></div>
+
+  </main>
+
+  <footer class="ft" role="contentinfo">
+    <div class="wrap">
+
+      <div class="ft__top">
+        <div class="ft__brand">
+          <span class="ft__logo">
+            <span class="ft__gem" aria-hidden="true"></span>
+            <span class="ft__name">LRMJ</span>
+          </span>
+          <p class="ft__tagline">Ferronnerie d'art &amp; structures fer / verre sur mesure. Atelier à Opwijk, intervention à Bruxelles &amp; environs.</p>
+          <a class="ft__phone" href="tel:0475399909">0475 39 99 09</a>
+        </div>
+
+        <nav class="ft__cols" aria-label="Pied de page">
+          <div class="ft__col">
+            <h3>Navigation</h3>
+            <a href="#realisations">Réalisations</a>
+            <a href="#services">Services</a>
+            <a href="#atelier">Atelier</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <div class="ft__col">
+            <h3>Savoir-faire</h3>
+            <a href="#services">Verrières</a>
+            <a href="#services">Baies vitrées</a>
+            <a href="#services">Portails &amp; clôtures</a>
+            <a href="#services">Garde-corps</a>
+            <a href="#services">Escaliers</a>
+          </div>
+          <div class="ft__col">
+            <h3>Contact</h3>
+            <a href="tel:0475399909">0475 39 99 09</a>
+            <a href="mailto:contact@lrmjproject.be">contact@lrmjproject.be</a>
+            <span>Opwijk, Brabant flamand</span>
+            <span>Lun–Ven · 7h30–17h</span>
+          </div>
+        </nav>
+      </div>
+
+      <div class="ft__bottom">
+        <span>© <span id="ft-year">2026</span> LRMJ Project — Tous droits réservés</span>
+        <span class="ft__legal">
+          <a href="#">Mentions légales</a>
+          <span aria-hidden="true">·</span>
+          <a href="#">Confidentialité</a>
+        </span>
+        <span class="ft__credit">TVA BE 0000.000.000</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       MODAL LIGHTBOX (Réalisations)
+       ===================================================================== -->
+  <div class="reals-modal" id="reals-modal" role="dialog" aria-modal="true" aria-labelledby="reals-modal-title" aria-hidden="true">
+
+    <button class="reals-modal__close" id="reals-modal-close" type="button" aria-label="Fermer la galerie">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M2 2 L12 12 M12 2 L2 12"/>
+      </svg>
+    </button>
+
+    <div class="reals-modal__container">
+      <div class="reals-modal__media">
+        <img class="reals-modal__img" id="reals-modal-img" src="" alt="">
+      </div>
+      <div class="reals-modal__caption">
+        <span class="reals-modal__num" id="reals-modal-num">01 / 06</span>
+        <h2 class="reals-modal__title" id="reals-modal-title">—</h2>
+        <span class="reals-modal__year" id="reals-modal-year">—</span>
+      </div>
+    </div>
+
+    <div class="reals-modal__nav">
+      <button class="reals-modal__nav-btn" id="reals-modal-prev" type="button" aria-label="Réalisation précédente">
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M13.5 5 H1 M5 1 L1 5 L5 9"/>
+        </svg>
+      </button>
+      <button class="reals-modal__nav-btn" id="reals-modal-next" type="button" aria-label="Réalisation suivante">
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M0.5 5 H13 M9 1 L13 5 L9 9"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- =====================================================================
+       SCRIPTS
+       ===================================================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/bundled/lenis.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+
+  <script defer>
+  document.addEventListener('DOMContentLoaded', () => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nav     = document.getElementById('nav');
+
+    /* =====================================================================
+       LRMJ namespace — API publique (état + helpers)
+       ===================================================================== */
+    const loadedCallbacks = [];
+    window.LRMJ = window.LRMJ || {};
+    window.LRMJ.isLoaded = false;
+    /** Souscription "loaded". Si déjà loaded, appelle cb immédiatement. */
+    window.LRMJ.onLoaded = (cb) => {
+      if (typeof cb !== 'function') return () => {};
+      if (window.LRMJ.isLoaded) { cb(); return () => {}; }
+      loadedCallbacks.push(cb);
+      return () => {
+        const i = loadedCallbacks.indexOf(cb);
+        if (i > -1) loadedCallbacks.splice(i, 1);
+      };
+    };
+
+    const fireLoaded = () => {
+      if (window.LRMJ.isLoaded) return;
+      window.LRMJ.isLoaded = true;
+      document.body.classList.remove('is-loading', 'is-pre-active');
+      document.documentElement.classList.remove('is-loading');
+      document.body.classList.add('is-loaded');
+      loadedCallbacks.splice(0).forEach(cb => { try { cb(); } catch (_) {} });
+      window.dispatchEvent(new CustomEvent('lrmj:loaded'));
+    };
+
+    /* =====================================================================
+       PRELOADER — timeline GSAP autonome, cleanup propre, onComplete callback
+       ===================================================================== */
+    const initPreloader = ({ onComplete } = {}) => {
+      const pre = document.getElementById('preloader');
+      if (!pre) { (onComplete || (() => {}))(); return null; }
+
+      const core    = pre.querySelector('.pre__core');
+      const beam    = pre.querySelector('.pre__beam');
+      const halo    = pre.querySelector('.pre__halo');
+      const wash    = pre.querySelector('.pre__wash');
+      const panelL  = pre.querySelector('.pre__panel--l');
+      const panelR  = pre.querySelector('.pre__panel--r');
+
+      const cleanup = () => {
+        clearTimeout(watchdog);
+        if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+        (onComplete || (() => {}))();
+      };
+      const watchdog = setTimeout(() => {
+        if (!window.LRMJ.isLoaded) cleanup();
+      }, 5500);
+
+      /* — Fallback : pas de GSAP — */
+      if (!window.gsap) {
+        pre.style.transition = 'opacity .3s ease';
+        requestAnimationFrame(() => { pre.style.opacity = '0'; });
+        setTimeout(cleanup, 320);
+        return { kill: cleanup };
+      }
+
+      /* — Reduced motion — */
+      if (reduced) {
+        gsap.set(core, { scale: 1 });
+        gsap.set(beam, { scaleY: 1 });
+        gsap.set(halo, { scaleX: 1, opacity: 1 });
+        gsap.set(wash, { opacity: .6 });
+        gsap.to([panelL, panelR], {
+          xPercent: (i) => i === 0 ? -100 : 100,
+          opacity: 0,
+          duration: 0.35, delay: 0.25,
+          onComplete: cleanup,
+        });
+        return { kill: cleanup };
+      }
+
+      /* — Timeline principale ~2.9s — */
+      const tl = gsap.timeline({ onComplete: cleanup });
+
+      // PHASE 1 — La braise apparaît (t=0.2 → 0.75)
+      tl.fromTo(core,
+        { scale: 0 },
+        { scale: 1, duration: 0.55, ease: 'expo.out' },
+        0.2);
+
+      // PHASE 2 — Respiration (t=0.8 → 1.3) — battement claquant, plus dense
+      tl.to(core, { scale: 1.7, duration: 0.22, ease: 'power3.out' },  0.8);
+      tl.to(core, { scale: 1.1, duration: 0.28, ease: 'power2.inOut' }, 1.02);
+
+      // PHASE 3 — Le faisceau s'élance (t=1.2 → 1.75)
+      tl.to(beam, {
+        scaleY: 1, duration: 0.55, ease: 'expo.inOut',
+      }, 1.2);
+
+      // PHASE 4 — Le halo déborde (t=1.4 → 2.05)
+      tl.to(halo, {
+        scaleX: 1, opacity: 1, duration: 0.65, ease: 'power3.out',
+      }, 1.4);
+
+      // PHASE 5 — Submersion (t=1.6 → 2.1) : le wash chaud monte à son pic,
+      //   le core fait un dernier flare maîtrisé (pas de zoom pixellisé)
+      tl.to(wash, { opacity: .92, duration: 0.6, ease: 'power2.out' }, 1.6);
+      tl.to(core, { scale: 2.6, duration: 0.5, ease: 'power3.out' },   1.75);
+
+      // PHASE 6 — Pre-exit (t=2.0)
+      tl.call(() => { document.body.classList.remove('is-pre-active'); }, null, 2.0);
+
+      // PHASE 7 — Ouverture verticale + immersion dans la lumière (t=2.05 → 2.95)
+      //   Le "zoom dans la lumière" est porté par le HALO (flou 26px → scale
+      //   parfaitement propre) et le WASH plein écran (gradient = zéro pixel).
+      //   Le core s'éteint vite (petit scale) au lieu de zoomer en gros.
+      tl.to(panelL, { xPercent: -100, duration: 0.9, ease: 'expo.inOut' }, 2.05);
+      tl.to(panelR, { xPercent:  100, duration: 0.9, ease: 'expo.inOut' }, 2.05);
+
+      // Halo : grossit et porte l'immersion (propre car très flou)
+      tl.to(halo, {
+        scaleX: 3.4, scaleY: 1.15, opacity: 0,
+        duration: 0.9, ease: 'power2.in',
+      }, 2.05);
+      // Wash : léger gonflement + fondu (full-screen → net)
+      tl.to(wash, {
+        opacity: 0, scale: 1.22,
+        duration: 0.85, ease: 'power2.in',
+      }, 2.1);
+      // Core : s'éteint vite, scale modéré (jamais assez gros pour pixelliser)
+      tl.to(core, {
+        scale: 5, opacity: 0,
+        duration: 0.45, ease: 'power2.in',
+      }, 2.05);
+      // Beam : fondu net, sans scale extrême ni blur
+      tl.to(beam, {
+        scaleX: 3, opacity: 0,
+        duration: 0.5, ease: 'power2.in',
+      }, 2.05);
+      // Très léger pas-en-avant caméra (net, sans filtre blur)
+      tl.to(pre, {
+        scale: 1.02,
+        duration: 0.9, ease: 'power2.in',
+      }, 2.05);
+
+      // → fin ≈ 2.95s
+
+      return {
+        kill: () => { tl.kill(); cleanup(); },
+        timeline: tl,
+      };
+    };
+
+    /* — Lance le preloader, déclenche fireLoaded à la fin — */
+    const preloaderInstance = initPreloader({
+      onComplete: fireLoaded,
+    });
+
+    /* — Lenis + GSAP — */
+    let lenis;
+    if (!reduced && window.Lenis && window.gsap && window.ScrollTrigger) {
+      gsap.registerPlugin(ScrollTrigger);
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(time => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+      /* Bloque scroll tant que le preloader est actif */
+      if (!window.LRMJ.isLoaded) {
+        lenis.stop();
+        window.LRMJ.onLoaded(() => lenis.start());
+      }
+    } else if (reduced && window.gsap) {
+      gsap.globalTimeline.timeScale(10);
+    }
+
+    /* — Nav scroll state + progress bar — */
+    const onScroll = () => {
+      const y   = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? Math.min((y / max) * 100, 100) : 0;
+      nav.classList.toggle('nav--scrolled', y > 60);
+      nav.style.setProperty('--nav-scroll-pct', pct.toFixed(1) + '%');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* — Burger mobile — */
+    const burger = document.querySelector('.nav__burger');
+    const panel  = document.getElementById('nav-mobile');
+
+    const closeMenu = () => {
+      panel.setAttribute('hidden', '');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      if (lenis) lenis.start();
+    };
+    const openMenu = () => {
+      panel.removeAttribute('hidden');
+      burger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      if (lenis) lenis.stop();
+    };
+
+    burger.addEventListener('click', () => {
+      panel.hasAttribute('hidden') ? openMenu() : closeMenu();
+    });
+    panel.addEventListener('click', e => {
+      if (e.target.closest('a')) closeMenu();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !panel.hasAttribute('hidden')) closeMenu();
+    });
+
+    /* =====================================================================
+       ASSET MANAGEMENT — CLOUDINARY (FREE TIER, ZÉRO BACKEND)
+       ---------------------------------------------------------------------
+       Objectif : Romeo (le client, artisan, peu technique) doit pouvoir
+       ajouter / retirer / réordonner ses photos en autonomie totale, sans
+       intervention dev, gratuitement.
+
+       SOLUTION : Cloudinary free tier
+         · 25 GB stockage + 25 GB bande passante/mois (large pour un
+           portfolio artisan ~50-100 photos)
+         · q_auto + f_auto = compression & format auto (AVIF/WebP) → léger
+           sur mobile/tablette sans rien configurer
+         · Endpoint public "image/list/{tag}.json" : liste les ressources
+           d'un tag SANS clé API ni backend (parfait pour un site statique)
+
+       WORKFLOW ROMEO (3 étapes, aucune connaissance technique) :
+         1. cloudinary.com → Media Library → bouton "Upload"
+         2. Glisser la photo, la renommer avec le titre voulu
+            ex. public_id : "Verriere atelier -- 2024"
+                (le " -- AAAA" optionnel force l'année ; sinon = date upload)
+         3. Ajouter le tag "lrmj-realisation" → Save. En ligne au reload.
+
+       LIMITE ASSUMÉE : l'endpoint /list/ ne renvoie PAS les context
+       (description, lieu, matériaux). Récupérer ça imposerait une clé API
+       (donc un backend). On a donc volontairement réduit le modal à
+       photo + titre + année — les seules infos que Romeo entretiendra.
+
+       PRÉREQUIS COMPTE (à faire une fois au delivery) :
+         Cloudinary → Settings → Security → décocher "Resource list"
+         dans "Restricted media types" (sinon /list/ renvoie 404).
+
+       ACTIVATION EN PROD :
+         1. Renseigner CLOUD_NAME ci-dessous
+         2. Vider le <div id="reals-grid"> de son HTML statique
+         3. La fonction prend le relais automatiquement (fallback = HTML
+            statique conservé si Cloudinary injoignable / non configuré)
+       ===================================================================== */
+    const CLOUDINARY = {
+      cloudName: '',                       // ← à remplir au delivery (ex: 'lrmj-project')
+      tags: { realisations: 'lrmj-realisation' },
+      // Pattern masonry appliqué en boucle sur les photos récupérées
+      masonryPattern: ['tall', 'wide', 'tall', 'sq', 'wide', 'sq'],
+    };
+
+    const cldUrl = (publicId, version, format, w) =>
+      `https://res.cloudinary.com/${CLOUDINARY.cloudName}/image/upload`
+      + `/q_auto,f_auto,c_limit,w_${w}/v${version}/${publicId}.${format}`;
+
+    const parseCldResource = (r) => {
+      const file  = r.public_id.split('/').pop();
+      const m     = file.match(/^(.+?)\s*--\s*(\d{4})\s*$/);   // "Titre -- 2024"
+      const title = (m ? m[1] : file).replace(/[_-]+/g, ' ').trim();
+      const year  = m ? m[2] : new Date(r.created_at).getFullYear().toString();
+      return {
+        name: title,
+        year,
+        img:   cldUrl(r.public_id, r.version, r.format, 900),
+        imgHd: cldUrl(r.public_id, r.version, r.format, 1600),
+      };
+    };
+
+    /* =====================================================================
+       04 RÉALISATIONS — fade-in + Modal lightbox (+ injection Cloudinary)
+       ===================================================================== */
+    {
+      const grid       = document.getElementById('reals-grid');
+      const modal      = document.getElementById('reals-modal');
+      const modalImg   = document.getElementById('reals-modal-img');
+      const modalNum   = document.getElementById('reals-modal-num');
+      const modalTitle = document.getElementById('reals-modal-title');
+      const modalYear  = document.getElementById('reals-modal-year');
+      const closeBtn   = document.getElementById('reals-modal-close');
+      const prevBtn    = document.getElementById('reals-modal-prev');
+      const nextBtn    = document.getElementById('reals-modal-next');
+
+      let cardEls    = [];
+      let currentIdx = 0;
+      let lastFocus  = null;
+
+      // — IntersectionObserver pour le fade-in cascade —
+      const io = ('IntersectionObserver' in window)
+        ? new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+              if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+            });
+          }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' })
+        : null;
+
+      const fillModal = (idx) => {
+        const card = cardEls[idx];
+        if (!card) return;
+        const img = card.querySelector('img');
+        // Si data-img-hd dispo (Cloudinary) on l'utilise, sinon on up-scale l'URL Unsplash
+        const hd = card.getAttribute('data-img-hd')
+          || img.src.replace(/w=\d+/, 'w=1600').replace(/q=\d+/, 'q=88');
+
+        modalImg.classList.add('is-swap');
+        const preload = new Image();
+        preload.onload = () => {
+          modalImg.src = hd;
+          modalImg.alt = card.getAttribute('data-name') || '';
+          requestAnimationFrame(() => modalImg.classList.remove('is-swap'));
+        };
+        preload.onerror = () => {
+          modalImg.src = img.src;
+          modalImg.alt = card.getAttribute('data-name') || '';
+          modalImg.classList.remove('is-swap');
+        };
+        preload.src = hd;
+
+        const total = String(cardEls.length).padStart(2, '0');
+        const curr  = String(idx + 1).padStart(2, '0');
+        modalNum.textContent   = `${curr} / ${total}`;
+        modalTitle.textContent = card.getAttribute('data-name') || '';
+        modalYear.textContent  = card.getAttribute('data-year') || '';
+      };
+
+      const openModal = (idx) => {
+        currentIdx = idx;
+        lastFocus  = document.activeElement;
+        fillModal(idx);
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        if (typeof lenis !== 'undefined' && lenis) lenis.stop();
+        setTimeout(() => closeBtn.focus(), 200);
+      };
+      const closeModal = () => {
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (typeof lenis !== 'undefined' && lenis) lenis.start();
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+      };
+      const next = () => fillModal(currentIdx = (currentIdx + 1) % cardEls.length);
+      const prev = () => fillModal(currentIdx = (currentIdx - 1 + cardEls.length) % cardEls.length);
+
+      // (Re)scanne les cards du DOM et (re)branche listeners + observer
+      const bindRealsCards = () => {
+        cardEls = Array.from(grid.querySelectorAll('.reals__card'));
+        cardEls.forEach((card, i) => {
+          if (io) io.observe(card); else card.classList.add('is-in');
+          const link = card.querySelector('.reals__link');
+          if (!link || link.dataset.bound) return;
+          link.dataset.bound = '1';
+          link.addEventListener('click', (e) => { e.preventDefault(); openModal(i); });
+        });
+      };
+
+      // Construit le HTML d'une card à partir d'un asset Cloudinary parsé
+      const cardHtml = (p, i) => {
+        const size = CLOUDINARY.masonryPattern[i % CLOUDINARY.masonryPattern.length];
+        const num  = String(i + 1).padStart(2, '0');
+        return `<article class="reals__card reals__card--${size}" data-name="${p.name}" data-year="${p.year}" data-img-hd="${p.imgHd}">
+          <a class="reals__link" href="#contact" data-index="${i}">
+            <span class="reals__num" aria-hidden="true">${num}</span>
+            <div class="reals__media"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
+            <div class="reals__info">
+              <h3 class="reals__name">${p.name}</h3>
+              <span class="reals__meta">${p.year}</span>
+            </div>
+          </a></article>`;
+      };
+
+      // Tente le fetch Cloudinary ; si OK remplace le HTML statique, sinon le garde
+      const loadCloudinaryRealisations = async () => {
+        if (!CLOUDINARY.cloudName) return;                       // pas encore configuré
+        const url = `https://res.cloudinary.com/${CLOUDINARY.cloudName}/image/list/${CLOUDINARY.tags.realisations}.json`;
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`Cloudinary list ${res.status}`);
+          const { resources = [] } = await res.json();
+          if (!resources.length) return;                         // garde le fallback statique
+          resources.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          grid.innerHTML = resources.map((r, i) => cardHtml(parseCldResource(r), i)).join('');
+          bindRealsCards();
+        } catch (err) {
+          console.warn('[LRMJ] Cloudinary injoignable — fallback HTML statique.', err);
+        }
+      };
+
+      bindRealsCards();                 // 1) branche le HTML statique (placeholders)
+      loadCloudinaryRealisations();     // 2) remplace par le live si configuré
+
+      closeBtn.addEventListener('click', closeModal);
+      nextBtn .addEventListener('click', next);
+      prevBtn .addEventListener('click', prev);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', (e) => {
+        if (modal.getAttribute('aria-hidden') !== 'false') return;
+        if (e.key === 'Escape')          { e.preventDefault(); closeModal(); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); next();       }
+        else if (e.key === 'ArrowLeft')  { e.preventDefault(); prev();       }
+      });
+    }
+
+    /* =====================================================================
+       03 ATELIER + SIGNATURE — reveal sobre (image + texte fade-up)
+       ===================================================================== */
+    {
+      const revealSection = (sel, mediaSel, bodySel) => {
+        const sec = document.querySelector(sel);
+        if (!sec) return;
+        const media = sec.querySelector(mediaSel);
+        const body  = Array.from(sec.querySelectorAll(bodySel));
+        const items = [media, ...body].filter(Boolean);
+        if (!reduced && window.gsap && window.ScrollTrigger) {
+          gsap.to(items, {
+            opacity: 1, y: 0,
+            duration: 1, ease: 'power3.out',
+            stagger: 0.09,
+            scrollTrigger: { trigger: sec, start: 'top 74%' },
+          });
+        } else {
+          items.forEach(e => { e.style.opacity = 1; e.style.transform = 'none'; });
+        }
+      };
+      revealSection('#atelier',   '.atl__media', '.atl__body > *');
+      revealSection('#signature', '.sig__visual', '.sig__body > *');
+    }
+
+    /* =====================================================================
+       05 SERVICES — liste interactive / crossfade visuel
+       ===================================================================== */
+    {
+      const items = Array.from(document.querySelectorAll('.srv__item'));
+      const imgs  = Array.from(document.querySelectorAll('.srv__img'));
+      if (items.length && imgs.length) {
+        const setActive = (i) => {
+          items.forEach((it, k) => it.classList.toggle('is-active', k === i));
+          imgs.forEach((im, k) => im.classList.toggle('is-active', k === i));
+        };
+        items.forEach((it, i) => {
+          it.addEventListener('mouseenter', () => setActive(i));
+          const link = it.querySelector('.srv__link');
+          if (link) link.addEventListener('focus', () => setActive(i));
+        });
+      }
+    }
+
+    /* =====================================================================
+       06 PROCESSUS — reveal au scroll (IntersectionObserver)
+       ===================================================================== */
+    {
+      const steps = document.querySelectorAll('.proc__step');
+      if ('IntersectionObserver' in window && steps.length) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.2, rootMargin: '0px 0px -60px 0px' });
+        steps.forEach(s => io.observe(s));
+      } else {
+        steps.forEach(s => s.classList.add('is-in'));
+      }
+    }
+
+    /* =====================================================================
+       07 TÉMOIGNAGES — Google Reviews (live) + carrousel
+       ---------------------------------------------------------------------
+       MÊME PHILOSOPHIE QUE CLOUDINARY : zéro maintenance pour Romeo, ses
+       avis Google Business remontent automatiquement, toujours à jour.
+
+       SETUP (une fois, au delivery) :
+         1. console.cloud.google.com → créer un projet → activer
+            "Places API (New)"
+         2. Créer une clé API → la RESTREINDRE :
+            · Application restrictions : HTTP referrers → ajouter le domaine
+              du site (ex: https://lrmjproject.be/*)
+            · API restrictions : limiter à "Places API (New)"
+            (la restriction referrer rend la clé inexploitable ailleurs,
+             donc safe en clair côté client)
+         3. Récupérer le PLACE ID de la fiche LRMJ :
+            developers.google.com/maps/documentation/places/web-service/place-id
+         4. Renseigner GOOGLE_REVIEWS.apiKey / placeId / mapsUrl ci-dessous
+
+       QUOTA : Places API (New) Essentials inclut un large volume gratuit
+       mensuel ; un site vitrine est très loin de l'atteindre. En plus on
+       cache la réponse en sessionStorage (1 appel / session navigateur).
+
+       LIMITE GOOGLE : l'API renvoie au maximum 5 avis (les plus pertinents).
+       FALLBACK : si non configuré ou injoignable, on garde les 3 avis
+       placeholder ci-dessous pour que le design reste vivant en preview.
+       ===================================================================== */
+    {
+      const GOOGLE_REVIEWS = {
+        apiKey:  '',   // ← clé API restreinte (à remplir au delivery)
+        placeId: '',   // ← Place ID fiche Google LRMJ
+        mapsUrl: 'https://www.google.com/maps/search/?api=1&query=LRMJ+Project',
+      };
+
+      // Fallback placeholders (remplacés dès que l'API répond)
+      const FALLBACK = [
+        { text: "Travail d'une précision remarquable. Notre verrière a transformé l'espace, la pose a été nette et dans les délais annoncés.", author: 'Sophie & Marc D.', when: 'il y a 2 mois' },
+        { text: "Romeo est un vrai artisan. Conseil honnête, devis clair, fabrication impeccable. Je recommande sans hésiter.", author: 'Julien V.', when: 'il y a 4 mois' },
+        { text: "Un escalier sur mesure qui dépasse ce qu'on imaginait. Du premier contact à la pose, tout a été géré avec sérieux.", author: 'Catherine L.', when: 'il y a 7 mois' },
+      ];
+
+      const elQuote = document.getElementById('rev-quote');
+      const elText  = document.getElementById('rev-text');
+      const elName  = document.getElementById('rev-name');
+      const elWhen  = document.getElementById('rev-when');
+      const elScore = document.getElementById('rev-score');
+      const elCount = document.getElementById('rev-count');
+      const elDots  = document.getElementById('rev-dots');
+      const elPrev  = document.getElementById('rev-prev');
+      const elNext  = document.getElementById('rev-next');
+      const elGoogle= document.getElementById('rev-google');
+
+      let reviews = FALLBACK.slice();
+      let idx = 0;
+      let timer = null;
+
+      const buildDots = () => {
+        elDots.innerHTML = '';
+        reviews.forEach((_, i) => {
+          const d = document.createElement('button');
+          d.className = 'rev__dot' + (i === 0 ? ' is-active' : '');
+          d.type = 'button';
+          d.setAttribute('aria-label', `Témoignage ${i + 1}`);
+          d.addEventListener('click', () => { show(i); restart(); });
+          elDots.appendChild(d);
+        });
+      };
+
+      const show = (i) => {
+        idx = (i + reviews.length) % reviews.length;
+        const r = reviews[idx];
+        elQuote.classList.add('is-swap');
+        setTimeout(() => {
+          elText.textContent = r.text;
+          elName.textContent = r.author;
+          elWhen.textContent = r.when;
+          elDots.querySelectorAll('.rev__dot').forEach((d, k) =>
+            d.classList.toggle('is-active', k === idx));
+          elQuote.classList.remove('is-swap');
+        }, 320);
+      };
+
+      const next = () => show(idx + 1);
+      const prev = () => show(idx - 1);
+      const restart = () => {
+        if (timer) clearInterval(timer);
+        timer = setInterval(next, 6500);
+      };
+
+      elNext.addEventListener('click', () => { next(); restart(); });
+      elPrev.addEventListener('click', () => { prev(); restart(); });
+
+      const render = () => {
+        buildDots();
+        elText.textContent = reviews[0].text;
+        elName.textContent = reviews[0].author;
+        elWhen.textContent = reviews[0].when;
+        restart();
+      };
+
+      const relTime = (sec) => {
+        const days = Math.floor((Date.now() / 1000 - sec) / 86400);
+        if (days < 30)  return 'il y a quelques semaines';
+        if (days < 365) return `il y a ${Math.max(1, Math.round(days / 30))} mois`;
+        return `il y a ${Math.round(days / 365)} an${days >= 730 ? 's' : ''}`;
+      };
+
+      const loadGoogleReviews = async () => {
+        const { apiKey, placeId, mapsUrl } = GOOGLE_REVIEWS;
+        if (mapsUrl && elGoogle) elGoogle.href = mapsUrl;
+        if (!apiKey || !placeId) return;          // pas configuré → fallback
+
+        const cacheKey = 'lrmj_greviews';
+        try {
+          const cached = sessionStorage.getItem(cacheKey);
+          if (cached) { apply(JSON.parse(cached)); return; }
+        } catch (_) {}
+
+        try {
+          const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
+            headers: {
+              'X-Goog-Api-Key': apiKey,
+              'X-Goog-FieldMask': 'reviews,rating,userRatingCount,googleMapsUri',
+            },
+          });
+          if (!res.ok) throw new Error(`Places API ${res.status}`);
+          const data = await res.json();
+          try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch (_) {}
+          apply(data);
+        } catch (err) {
+          console.warn('[LRMJ] Google Reviews injoignable — fallback placeholders.', err);
+        }
+      };
+
+      const apply = (data) => {
+        const list = (data.reviews || [])
+          .filter(r => r.text && (r.text.text || '').trim().length > 0)
+          .map(r => ({
+            text: r.text.text.trim(),
+            author: (r.authorAttribution && r.authorAttribution.displayName) || 'Client Google',
+            when: r.publishTime ? relTime(Date.parse(r.publishTime) / 1000) : '',
+          }));
+        if (!list.length) return;                 // garde le fallback
+        reviews = list;
+        idx = 0;
+        if (typeof data.rating === 'number') {
+          elScore.textContent = data.rating.toFixed(1).replace('.', ',');
+        }
+        if (typeof data.userRatingCount === 'number') {
+          elCount.textContent = `${data.userRatingCount} avis Google`;
+        }
+        if (data.googleMapsUri && elGoogle) elGoogle.href = data.googleMapsUri;
+        render();
+      };
+
+      render();              // 1) affiche le fallback immédiatement
+      loadGoogleReviews();   // 2) remplace par le live si configuré
+    }
+
+    /* =====================================================================
+       09 CONTACT — soumission Web3Forms (AJAX, zéro backend)
+       ---------------------------------------------------------------------
+       Web3Forms : service gratuit ILLIMITÉ, pas de compte serveur.
+
+       SETUP (une fois, au delivery) :
+         1. web3forms.com → entrer l'email de Romeo → recevoir l'access key
+         2. Coller la clé dans WEB3FORMS_KEY ci-dessous
+         (la clé est publique par design : elle ne fait QUE router un envoi
+          de formulaire vers l'email de Romeo, aucun risque de fuite)
+
+       Tant que la clé est vide : le form fonctionne en "mode démo" — il
+       valide et affiche le message de succès SANS envoyer (pour la preview).
+       Honeypot anti-spam (champ botcheck) + validation native + UX inline.
+       ===================================================================== */
+    {
+      const WEB3FORMS_KEY = ''; // ← access key Web3Forms (à remplir au delivery)
+
+      const form   = document.getElementById('ct-form');
+      const status = document.getElementById('ct-status');
+      const submit = document.getElementById('ct-submit');
+      const keyInp = document.getElementById('ct-access-key');
+
+      if (form && keyInp) {
+        keyInp.value = WEB3FORMS_KEY;
+
+        const setStatus = (msg, ok) => {
+          status.textContent = msg;
+          status.classList.remove('is-ok', 'is-err');
+          status.classList.add('is-show', ok ? 'is-ok' : 'is-err');
+        };
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          // Validation native
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+          // Honeypot : si rempli = bot, on ignore silencieusement
+          if (form.querySelector('[name="botcheck"]').checked) return;
+
+          const labelEl = submit.querySelector('.ct__submit-label');
+          const original = labelEl.textContent;
+          submit.disabled = true;
+          labelEl.textContent = 'Envoi…';
+          status.classList.remove('is-show');
+
+          // MODE DÉMO (pas de clé) — simule un succès pour la preview
+          if (!WEB3FORMS_KEY) {
+            setTimeout(() => {
+              setStatus('Mode démo — formulaire non connecté (renseigner la clé Web3Forms au delivery).', true);
+              form.reset();
+              submit.disabled = false;
+              labelEl.textContent = original;
+            }, 700);
+            return;
+          }
+
+          // ENVOI RÉEL
+          try {
+            const res = await fetch('https://api.web3forms.com/submit', {
+              method: 'POST',
+              headers: { 'Accept': 'application/json' },
+              body: new FormData(form),
+            });
+            const data = await res.json();
+            if (data.success) {
+              setStatus('Merci — votre demande est bien partie. Réponse sous 48 h.', true);
+              form.reset();
+            } else {
+              setStatus("Échec de l'envoi. Réessayez ou appelez le 0475 39 99 09.", false);
+            }
+          } catch (_) {
+            setStatus("Problème réseau. Réessayez ou appelez le 0475 39 99 09.", false);
+          } finally {
+            submit.disabled = false;
+            labelEl.textContent = original;
+          }
+        });
+      }
+    }
+
+    /* — Année footer auto — */
+    {
+      const y = document.getElementById('ft-year');
+      if (y) y.textContent = new Date().getFullYear();
+    }
+
+    /* — Smooth-scroll ancres — */
+    if (lenis) {
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+          const id = a.getAttribute('href');
+          if (!id || id.length < 2) return;
+          const target = document.querySelector(id);
+          if (!target) return;
+          e.preventDefault();
+          closeMenu();
+          lenis.scrollTo(target, { offset: -62, duration: 1.4 });
+        });
+      });
+    }
+  });
+  </script>
+
+</body>
+</html>
