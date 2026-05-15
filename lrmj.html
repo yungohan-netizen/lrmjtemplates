@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LRMJ Project — Ferronnerie d'Exception · Belgique</title>
+<meta name="description" content="Artisan ferronnier belge. Portails, garde-corps et créations sur mesure en fer forgé."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,200;9..144,0,300;9..144,1,200;9..144,1,300&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{background:#07070e;color:#f0ede8;font-family:'DM Mono',monospace;font-size:1rem;line-height:1.75;overflow-x:hidden;cursor:none}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button,input,textarea{font:inherit;color:inherit;cursor:none}
+:root{
+  --bg:#07070e;--bg2:#0c0d18;--bg3:#11121f;--bg4:#181926;
+  --ac:#6ab0f5;--t0:#f0ede8;--t1:rgba(240,237,232,.52);--t2:rgba(240,237,232,.2);--t3:rgba(240,237,232,.07);
+  --ln:rgba(255,255,255,.07);--e:cubic-bezier(.16,1,.3,1);
+  --serif:'Fraunces',Georgia,serif;--mono:'DM Mono',monospace;
+}
+
+/* GRAIN */
+#grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px}
+
+/* PROGRESS */
+#prog{position:fixed;top:0;left:0;height:1px;background:var(--ac);z-index:9000;width:0}
+
+/* CURSOR */
+#cur{position:fixed;width:5px;height:5px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+#cur-r{position:fixed;width:38px;height:38px;border:1px solid rgba(106,176,245,.35);border-radius:50%;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);transition:width .6s var(--e),height .6s var(--e),border-color .4s,background .4s}
+#cur-r.h{width:64px;height:64px;border-color:var(--ac);background:rgba(106,176,245,.05)}
+@media(pointer:coarse){#cur,#cur-r{display:none}body,button,input,textarea{cursor:auto}}
+
+/* PRELOADER */
+#pre{position:fixed;inset:0;z-index:8000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.1s var(--e),visibility 1.1s}
+#pre.out{opacity:0;visibility:hidden}
+.pre-logo{font-family:var(--serif);font-size:clamp(4rem,9vw,7.5rem);font-weight:200;letter-spacing:-.04em;color:#fff;overflow:hidden;display:flex}
+.pre-char{display:inline-block;animation:prechar .7s var(--e) both}
+.pre-char:nth-child(1){animation-delay:.05s}.pre-char:nth-child(2){animation-delay:.15s}.pre-char:nth-child(3){animation-delay:.25s}.pre-char:nth-child(4){animation-delay:.35s}
+@keyframes prechar{from{transform:translateY(110%);opacity:0}to{transform:none;opacity:1}}
+.pre-line{width:1px;height:0;background:var(--ac);margin-top:2rem;animation:preline 1s .6s var(--e) both}
+@keyframes preline{to{height:60px}}
+.pre-sub{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--t2);margin-top:1rem;opacity:0;animation:pfade .5s .9s ease both}
+@keyframes pfade{to{opacity:1}}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.6rem clamp(1.5rem,4vw,3rem);transition:padding .6s var(--e),background .7s var(--e),border-color .6s;border-bottom:1px solid transparent}
+header.s{padding-top:.9rem;padding-bottom:.9rem;background:rgba(7,7,14,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-color:var(--ln)}
+.h-logo{font-family:var(--serif);font-size:1.45rem;font-weight:200;letter-spacing:-.04em;color:#fff}
+.h-logo em{font-style:normal;color:var(--ac)}
+.h-nav{display:flex;align-items:center;gap:2.8rem}
+.h-nav a{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--t1);transition:color .3s}
+.h-nav a:hover{color:#fff}
+.h-cta{position:relative;padding:.65rem 1.5rem;border:1px solid rgba(255,255,255,.18);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;transition:all .4s var(--e);overflow:hidden}
+.h-cta::before{content:'';position:absolute;inset:0;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--e)}
+.h-cta:hover{border-color:var(--ac);color:#07070e}.h-cta:hover::before{transform:scaleX(1)}
+.h-cta span{position:relative;z-index:1}
+#hmb{display:none;flex-direction:column;gap:6px;background:none;border:none;padding:4px;cursor:none}
+#hmb span{width:24px;height:1px;background:#fff;display:block;transition:all .5s var(--e);transform-origin:left}
+#hmb.o span:nth-child(1){transform:rotate(35deg)}#hmb.o span:nth-child(2){opacity:0;transform:scaleX(0)}#hmb.o span:nth-child(3){transform:rotate(-35deg)}
+@media(max-width:820px){.h-nav{display:none}#hmb{display:flex}header{padding:1.1rem 1.5rem}}
+
+/* MOBILE MENU */
+#mob{position:fixed;inset:0;z-index:400;background:var(--bg);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:3rem clamp(1.5rem,6vw,4rem);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .6s var(--e),visibility .6s}
+#mob.o{opacity:1;visibility:visible;pointer-events:all}
+#mob a{font-family:var(--serif);font-size:clamp(2.5rem,7vw,5rem);font-weight:200;color:rgba(255,255,255,.25);display:block;line-height:1.15;transform:translateX(-20px);opacity:0;transition:color .4s var(--e),transform .6s var(--e),opacity .6s var(--e)}
+#mob.o a{transform:none;opacity:1}
+#mob.o a:nth-child(1){transition-delay:.05s}#mob.o a:nth-child(2){transition-delay:.12s}#mob.o a:nth-child(3){transition-delay:.19s}#mob.o a:nth-child(4){transition-delay:.26s}
+#mob a:hover{color:#fff}
+#mob a.mcta{color:var(--ac)!important;font-style:italic}
+.mob-foot{margin-top:2.5rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--t2)}
+
+/* FLOATING CTA */
+#fcta{position:fixed;bottom:2rem;right:2rem;z-index:600;padding:.8rem 1.6rem;background:var(--bg);border:1px solid rgba(255,255,255,.14);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;font-family:var(--mono);opacity:0;transform:translateY(14px);pointer-events:none;transition:all .5s var(--e);overflow:hidden}
+#fcta::before{content:'';position:absolute;inset:0;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--e)}
+#fcta:hover{color:#07070e;border-color:var(--ac)}#fcta:hover::before{transform:scaleX(1)}
+#fcta span{position:relative;z-index:1}
+#fcta.vis{opacity:1;transform:none;pointer-events:all}
+@media(max-width:600px){#fcta{bottom:1rem;right:1rem}}
+
+/* HERO */
+.hero{position:relative;height:100svh;overflow:hidden;background:#03030a}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.62;filter:saturate(.85)}
+.hero-vig{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse 90% 55% at 50% 110%,rgba(7,7,14,.97) 0%,transparent 70%),radial-gradient(ellipse 100% 30% at 50% 0%,rgba(7,7,14,.35) 0%,transparent 65%),radial-gradient(ellipse 40% 50% at 0% 50%,rgba(7,7,14,.2) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 100% 50%,rgba(7,7,14,.2) 0%,transparent 60%)}
+.hero-ui{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none}
+.hero-bot{display:flex;justify-content:space-between;align-items:flex-end;padding:0 clamp(1.5rem,4vw,3rem) clamp(2rem,4vh,3.5rem);gap:1rem}
+.hero-vert{writing-mode:vertical-rl;text-orientation:mixed;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.2);line-height:1;animation:fadein 1.2s 1.8s both var(--e)}
+.hero-scroll{display:flex;flex-direction:column;align-items:center;gap:.6rem;font-size:.52rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.2);animation:fadein 1.2s 2s both var(--e)}
+.hero-line{width:1px;height:55px;background:linear-gradient(to bottom,var(--ac),transparent);animation:sc 2.4s var(--e) infinite}
+@keyframes sc{0%,100%{opacity:.2;transform:scaleY(1) translateY(0)}50%{opacity:.8;transform:scaleY(.5) translateY(8px)}}
+@keyframes fadein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* MANIFESTO */
+.manifesto{overflow:hidden;padding:clamp(5rem,10vw,9rem) clamp(1.5rem,4vw,3rem);background:var(--bg);border-bottom:1px solid var(--ln)}
+.m-line{overflow:hidden;display:block}
+.m-txt{font-family:var(--serif);font-size:clamp(3rem,8.5vw,10rem);font-weight:200;line-height:1.03;letter-spacing:-.03em;color:#fff;display:block;transform:translateY(110%);transition:transform 1.1s var(--e)}
+.m-line:nth-child(2) .m-txt{transition-delay:.08s}.m-line:nth-child(3) .m-txt{transition-delay:.16s}.m-line:nth-child(4) .m-txt{transition-delay:.24s}
+.m-txt em{font-style:italic;color:var(--ac)}
+.manifesto.on .m-txt{transform:none}
+.m-sub{margin-top:2.5rem;max-width:55ch;font-size:.78rem;color:var(--t1);line-height:2;opacity:0;transform:translateY(18px);transition:opacity .8s .65s var(--e),transform .8s .65s var(--e)}
+.manifesto.on .m-sub{opacity:1;transform:none}
+
+/* MARQUEE */
+.mq-wrap{overflow:hidden;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln);background:var(--bg2)}
+.mq-inner{display:flex;animation:mq 30s linear infinite;white-space:nowrap}
+.mq-inner:hover{animation-play-state:paused}
+.mq-item{display:inline-flex;align-items:center;gap:.8rem;flex-shrink:0;padding:1.15rem 3rem;border-right:1px solid var(--ln);font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+.mq-item svg{color:var(--ac);flex-shrink:0}
+.flag-be{width:18px;height:12px;display:flex;border-radius:1px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.5);flex-shrink:0}
+.flag-be span{flex:1}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* GALLERY GRID */
+.gal-sec{background:var(--bg);padding:clamp(5rem,10vw,8rem) clamp(1.5rem,4vw,3rem)}
+.gal-hd{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.8rem;gap:2rem;flex-wrap:wrap}
+.gal-big{font-family:var(--serif);font-size:clamp(4rem,8vw,8rem);font-weight:200;font-style:italic;line-height:1;color:rgba(255,255,255,.04);letter-spacing:-.04em;user-select:none}
+.gal-grid{
+  display:grid;
+  grid-template-columns:1.55fr 1fr 1fr;
+  grid-template-rows:340px 340px;
+  gap:8px;
+}
+.gal-item{position:relative;overflow:hidden;cursor:pointer;background:var(--bg3)}
+.gal-item:first-child{grid-row:span 2}
+.gal-img{width:100%;height:100%;object-fit:cover;filter:saturate(.72) brightness(.9);transition:transform .85s var(--e),filter .6s}
+.gal-item:hover .gal-img{transform:scale(1.06);filter:saturate(1) brightness(1)}
+.gal-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 55%);opacity:0;transition:opacity .4s;display:flex;align-items:flex-end;padding:1.4rem 1.6rem;justify-content:space-between;align-items:flex-end}
+.gal-item:hover .gal-ov{opacity:1}
+.gal-cap{font-size:.58rem;font-weight:500;text-transform:uppercase;letter-spacing:.18em;color:rgba(255,255,255,.88);transform:translateY(6px);transition:transform .4s var(--e)}
+.gal-item:hover .gal-cap{transform:none}
+.gal-num{font-family:var(--serif);font-size:3.5rem;font-weight:200;font-style:italic;color:rgba(255,255,255,.1);line-height:1;position:absolute;top:1rem;right:1.2rem;pointer-events:none}
+
+@media(max-width:960px){.gal-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}.gal-item{height:260px}.gal-item:first-child{grid-row:span 1}}
+@media(max-width:540px){.gal-grid{grid-template-columns:1fr}.gal-item{height:240px}}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ln);border-bottom:1px solid var(--ln);background:var(--bg)}
+.stat{padding:clamp(3rem,6vw,5rem) clamp(2rem,5vw,4rem);border-right:1px solid var(--ln);position:relative;overflow:hidden;transition:background .5s}
+.stat:last-child{border-right:none}.stat:hover{background:rgba(106,176,245,.025)}
+.stat-v{font-family:var(--serif);font-size:clamp(3.5rem,6vw,7rem);font-weight:200;line-height:1;color:#fff;letter-spacing:-.04em;display:block}
+.stat-v em{font-style:normal;color:var(--ac)}
+.stat-l{display:block;margin-top:1rem;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--t2)}
+.stat-g{position:absolute;top:-1rem;right:1rem;font-family:var(--serif);font-size:9.5rem;font-weight:200;font-style:italic;color:rgba(255,255,255,.02);line-height:1;pointer-events:none;user-select:none;transition:color .5s}
+.stat:hover .stat-g{color:rgba(106,176,245,.032)}
+@media(max-width:700px){.stats-row{grid-template-columns:1fr}.stat{border-right:none;border-bottom:1px solid var(--ln)}.stat:last-child{border-bottom:none}}
+
+/* SERVICES */
+.srvs{background:var(--bg2);border-top:1px solid var(--ln)}
+.srvs-top{padding:clamp(4rem,8vw,6rem) clamp(1.5rem,4vw,3rem) 0;display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap}
+.srv{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--ln);transition:background .5s}
+.srv:first-of-type{border-top:1px solid var(--ln)}
+.srv:hover{background:rgba(106,176,245,.012)}
+.srv-l{padding:2.8rem clamp(1.5rem,4vw,3rem);display:flex;flex-direction:column;justify-content:space-between;min-height:320px;border-right:1px solid var(--ln)}
+.srv-n{font-size:.56rem;letter-spacing:.2em;color:var(--t2);margin-bottom:1.5rem}
+.srv-t{font-family:var(--serif);font-size:clamp(1.8rem,3vw,3.2rem);font-weight:200;letter-spacing:-.025em;color:#fff;line-height:1.1}
+.srv-d{font-size:.76rem;color:var(--t1);line-height:1.85;max-width:40ch;margin-top:1.5rem}
+.srv-r{overflow:hidden;position:relative;min-height:320px}
+.srv-r img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.7) brightness(.85);transform:scale(1.06);transition:transform .9s var(--e),filter .7s}
+.srv:hover .srv-r img{transform:scale(1);filter:saturate(.95) brightness(.95)}
+@media(max-width:760px){.srv{grid-template-columns:1fr}.srv-r{display:none}.srv-l{min-height:auto}}
+
+/* CTA BAND */
+.ctab{background:var(--bg);border-top:1px solid var(--ln);border-bottom:1px solid var(--ln);padding:4rem clamp(1.5rem,4vw,3rem);display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;position:relative;overflow:hidden}
+.ctab::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(108deg,transparent 35%,rgba(106,176,245,.04) 55%,transparent 75%);animation:sh 10s linear infinite}
+@keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.ctab-t{font-family:var(--serif);font-size:clamp(1.2rem,2vw,1.8rem);font-weight:200;font-style:italic;color:rgba(255,255,255,.6)}
+.ctab-t strong{color:#fff;font-weight:200;font-style:normal}
+.ctab-r{text-align:right;position:relative;z-index:1}
+.ctab-lbl{font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--t2);display:block;margin-bottom:.4rem}
+.ctab-ph{font-family:var(--serif);font-size:clamp(1.6rem,2.8vw,2.8rem);font-weight:200;color:var(--ac);transition:color .3s}
+.ctab-ph:hover{color:#fff}
+@media(max-width:680px){.ctab{flex-direction:column;text-align:center}.ctab-r{text-align:center}}
+
+/* PROCESS */
+.proc{background:var(--bg3)}
+.proc-g{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
+.proc-s{padding:3rem 2.5rem;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln);position:relative;overflow:hidden;transition:background .4s}
+.proc-s:hover{background:rgba(106,176,245,.03)}
+.proc-gh{position:absolute;bottom:-2rem;right:1rem;font-family:var(--serif);font-size:8rem;font-weight:200;font-style:italic;color:rgba(255,255,255,.03);line-height:1;pointer-events:none;transition:color .5s}
+.proc-s:hover .proc-gh{color:rgba(106,176,245,.055)}
+.proc-n{font-size:.56rem;letter-spacing:.2em;color:var(--ac);margin-bottom:1.8rem}
+.proc-ico{width:36px;height:36px;border:1px solid var(--ln);display:flex;align-items:center;justify-content:center;color:var(--ac);margin-bottom:1.4rem}
+.proc-t{font-family:var(--serif);font-size:1.35rem;font-weight:200;color:#fff;letter-spacing:-.01em;margin-bottom:.85rem;line-height:1.2}
+.proc-d{font-size:.74rem;color:var(--t1);line-height:1.8}
+@media(max-width:900px){.proc-g{grid-template-columns:1fr 1fr}}@media(max-width:520px){.proc-g{grid-template-columns:1fr}}
+
+/* TESTIMONIALS */
+.testi{background:var(--bg2);border-top:1px solid var(--ln)}
+.testi-in{max-width:800px;margin:0 auto;text-align:center;padding:clamp(4rem,8vw,7rem) clamp(1.5rem,4vw,3rem)}
+.testi-q-mark{font-family:var(--serif);font-size:8rem;line-height:.3;color:var(--ac);opacity:.18;margin-bottom:3rem;user-select:none}
+.t-slide{display:none}.t-slide.on{display:block}
+.t-q{font-family:var(--serif);font-size:clamp(1.05rem,1.8vw,1.5rem);font-weight:200;font-style:italic;line-height:1.72;color:rgba(255,255,255,.8);margin-bottom:2.5rem}
+.t-sep{width:28px;height:1px;background:var(--ac);margin:0 auto 1.5rem}
+.t-nm{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--t1)}
+.t-rl{font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ac);margin-top:.3rem}
+.t-dots{display:flex;justify-content:center;gap:.6rem;margin-top:2.5rem}
+.t-dot{width:5px;height:5px;border-radius:50%;background:var(--t3);border:none;padding:0;transition:all .4s var(--e);cursor:pointer}
+.t-dot.on{background:var(--ac);transform:scale(1.5)}
+.t-google{display:inline-flex;align-items:center;gap:1.2rem;border:1px solid var(--ln);padding:1rem 1.8rem;margin-top:3rem}
+.t-stars{display:flex;gap:2px;color:#FBBC04}
+.t-rat{font-size:.7rem;color:var(--t1)}.t-rat strong{color:#fff}
+
+/* ABOUT */
+.about{display:grid;grid-template-columns:1fr 1fr;min-height:680px}
+.about-txt{background:var(--bg);padding:clamp(4rem,8vw,6rem) clamp(2rem,5vw,4.5rem);display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--ln)}
+.about-img{position:relative;overflow:hidden}
+.about-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.72) brightness(.9);transform:scale(1.05);transition:transform 1.2s var(--e),filter .8s}
+.about-img:hover img{transform:scale(1);filter:saturate(.88) brightness(.95)}
+.afeats{margin-top:3rem;display:flex;flex-direction:column;gap:2rem}
+.af{display:flex;gap:1.2rem;align-items:flex-start}
+.af-dot{width:8px;height:8px;background:var(--ac);border-radius:50%;flex-shrink:0;margin-top:.6rem}
+.af-t{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;margin-bottom:.3rem}
+.af-d{font-size:.74rem;color:var(--t1);line-height:1.75}
+@media(max-width:860px){.about{grid-template-columns:1fr}.about-img{height:360px}.about-txt{padding:3rem 1.8rem}.about-img img{transform:none}}
+
+/* CONTACT */
+.cont{background:var(--bg);border-top:1px solid var(--ln)}
+.cont-top{max-width:1400px;margin:0 auto;padding:clamp(3.5rem,7vw,5rem) clamp(1.5rem,4vw,3rem) 0}
+.cont-g{display:grid;grid-template-columns:1fr 1.4fr;border-top:1px solid var(--ln)}
+.cont-info{padding:clamp(3.5rem,7vw,5.5rem) clamp(2rem,5vw,4rem);border-right:1px solid var(--ln)}
+.c-items{margin-top:3rem;display:flex;flex-direction:column;gap:2.2rem}
+.ci{display:flex;gap:1.4rem;align-items:flex-start}
+.ci-ico{width:42px;height:42px;flex-shrink:0;border:1px solid var(--ln);display:flex;align-items:center;justify-content:center;color:var(--ac)}
+.ci-lbl{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--t2);margin-bottom:.35rem}
+.ci-val{font-size:.82rem;color:rgba(255,255,255,.72)}.ci-val a{transition:color .3s}.ci-val a:hover{color:var(--ac)}
+.cont-form-wrap{padding:clamp(3.5rem,7vw,5.5rem) clamp(2rem,5vw,4rem)}
+.ff-row{display:grid;grid-template-columns:1fr 1fr;gap:0 3rem}
+.ff{position:relative;padding-top:1.8rem;border-bottom:1px solid var(--ln);margin-bottom:2.2rem;transition:border-color .35s}
+.ff:focus-within{border-color:var(--ac)}
+.ff label{position:absolute;top:0;left:0;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--t2);transition:color .35s}
+.ff:focus-within label{color:var(--ac)}
+.ff input,.ff textarea{width:100%;background:none;border:none;outline:none;font-size:.82rem;color:rgba(255,255,255,.82);font-family:var(--mono);padding:.45rem 0 .8rem;resize:none}
+.ff input::placeholder,.ff textarea::placeholder{color:var(--t3)}
+.ff-full{grid-column:span 2}.ff textarea{min-height:88px}
+.sub-btn{position:relative;overflow:hidden;padding:.9rem 2.6rem;background:none;border:1px solid rgba(255,255,255,.14);font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:#fff;font-family:var(--mono);transition:border-color .4s var(--e)}
+.sub-btn::before{content:'';position:absolute;inset:0;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--e)}
+.sub-btn:hover{border-color:var(--ac);color:#07070e}.sub-btn:hover::before{transform:scaleX(1)}
+.sub-btn span{position:relative;z-index:1}
+@media(max-width:880px){.cont-g{grid-template-columns:1fr}.cont-info{border-right:none;border-bottom:1px solid var(--ln)}.ff-row{grid-template-columns:1fr}.ff-full{grid-column:span 1}}
+
+/* FOOTER */
+footer{background:#04040b;border-top:1px solid var(--ln);overflow:hidden}
+.ft-main{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:5rem;padding:clamp(3rem,6vw,5rem) clamp(1.5rem,4vw,3rem);border-bottom:1px solid var(--ln)}
+.ft-logo{font-family:var(--serif);font-size:clamp(2.5rem,5vw,4rem);font-weight:200;letter-spacing:-.04em;color:#fff;line-height:1;margin-bottom:1.2rem}
+.ft-logo em{color:var(--ac);font-style:normal}
+.ft-desc{font-size:.7rem;color:rgba(255,255,255,.2);max-width:28ch;line-height:1.9}
+.ft-h{font-size:.52rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.18);margin-bottom:1.6rem}
+.ft-ls{display:flex;flex-direction:column;gap:.9rem}
+.ft-ls a{font-size:.74rem;color:rgba(255,255,255,.38);transition:color .3s}.ft-ls a:hover{color:var(--ac)}
+.ft-bot{display:flex;justify-content:space-between;align-items:center;padding:1.6rem clamp(1.5rem,4vw,3rem);gap:1rem;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.12)}
+.ft-super{font-family:var(--serif);font-size:clamp(6rem,18vw,16rem);font-weight:200;letter-spacing:-.05em;color:rgba(255,255,255,.025);line-height:.85;padding:0 clamp(1.5rem,4vw,3rem);user-select:none}
+@media(max-width:800px){.ft-main{grid-template-columns:1fr;gap:2.5rem}.ft-bot{flex-direction:column;text-align:center}}
+
+/* UTILS */
+.sec{padding:clamp(5rem,10vw,8rem) clamp(1.5rem,4vw,3rem)}
+.sec-in{max-width:1400px;margin:0 auto}
+.lbl{font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ac);display:block;margin-bottom:1.4rem}
+.h2{font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,5rem);font-weight:200;line-height:1.08;letter-spacing:-.03em;color:#fff}
+.h2 em{font-style:italic;color:var(--ac)}
+.lead{font-size:.8rem;color:var(--t1);max-width:50ch;line-height:2;margin-top:1.2rem}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s var(--e),transform .9s var(--e)}
+.rv.on{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.26s}.rv.d4{transition-delay:.36s}
+
+/* LIGHTBOX */
+#lb{position:fixed;inset:0;z-index:7000;background:rgba(4,4,10,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+#lb.on{opacity:1;pointer-events:all}
+#lb img{max-width:88vw;max-height:84vh;object-fit:contain}
+#lbc{position:absolute;top:1.5rem;right:1.5rem;width:40px;height:40px;border:1px solid var(--ln);background:none;color:var(--t1);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .3s}
+#lbc:hover{border-color:#fff;color:#fff}
+</style>
+</head>
+<body>
+
+<div id="grain"></div>
+<div id="prog"></div>
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- PRELOADER -->
+<div id="pre">
+  <div class="pre-logo"><span class="pre-char">L</span><span class="pre-char">R</span><span class="pre-char">M</span><span class="pre-char">J</span></div>
+  <div class="pre-line"></div>
+  <div class="pre-sub">Ferronnerie d'Art · Belgique</div>
+</div>
+
+<!-- MOBILE MENU -->
+<div id="mob">
+  <a href="#realisations">Photos</a>
+  <a href="#services">Services</a>
+  <a href="#about">Artisan</a>
+  <a href="#contact" class="mcta">Devis →</a>
+  <div class="mob-foot">0475 39 99 09</div>
+</div>
+
+<!-- HEADER -->
+<header id="hdr">
+  <a href="#" class="h-logo">LRMJ<em>.</em></a>
+  <nav class="h-nav">
+    <a href="#realisations">Photos</a>
+    <a href="#services">Services</a>
+    <a href="#about">Artisan</a>
+    <a href="#contact" class="h-cta mag-btn"><span>Devis gratuit</span></a>
+  </nav>
+  <button id="hmb" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<!-- FLOATING CTA -->
+<a href="#contact" id="fcta"><span>→ Devis gratuit</span></a>
+
+<!-- HERO -->
+<section class="hero">
+  <video autoplay loop muted playsinline>
+    <source src="https://res.cloudinary.com/dqfgzja87/video/upload/q_auto/f_auto/v1778605945/R%C3%A9v%C3%A9lation_par_la_Lumi%C3%A8re_IA_Vid%C3%A9o_om7bu7.mp4" type="video/mp4"/>
+  </video>
+  <div class="hero-vig"></div>
+  <div class="hero-ui">
+    <div class="hero-bot">
+      <div class="hero-vert">LRMJ Project &nbsp;·&nbsp; Ferronnerie d'Art &nbsp;·&nbsp; Belgique</div>
+      <div class="hero-scroll">Défiler<div class="hero-line"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto" id="manifesto">
+  <span class="lbl rv">Manifeste</span>
+  <div>
+    <div class="m-line"><span class="m-txt">Le métal comme</span></div>
+    <div class="m-line"><span class="m-txt"><em>matière première.</em></span></div>
+    <div class="m-line"><span class="m-txt">Le geste comme</span></div>
+    <div class="m-line"><span class="m-txt">héritage.</span></div>
+  </div>
+  <p class="m-sub">Basés en Belgique, nous perpétuons la tradition de la ferronnerie d'art en y alliant les exigences techniques de notre époque. Chaque pièce est dessinée, forgée et posée par nos propres mains.</p>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq-wrap">
+  <div class="mq-inner">
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Garantie Décennale</div>
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>Pose Professionnelle</div>
+    <div class="mq-item"><span class="flag-be"><span style="background:#000"></span><span style="background:#FDDA24"></span><span style="background:#EF3340"></span></span>100% Artisanat Belge</div>
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Devis Gratuit 48h</div>
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>Toute la Belgique</div>
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>Acier Qualité Supérieure</div>
+    <!-- duplicate for loop -->
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Garantie Décennale</div>
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>Pose Professionnelle</div>
+    <div class="mq-item"><span class="flag-be"><span style="background:#000"></span><span style="background:#FDDA24"></span><span style="background:#EF3340"></span></span>100% Artisanat Belge</div>
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Devis Gratuit 48h</div>
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>Toute la Belgique</div>
+    <div class="mq-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>Acier Qualité Supérieure</div>
+  </div>
+</div>
+
+<!-- GALLERY GRID -->
+<section class="gal-sec" id="realisations">
+  <div class="gal-hd">
+    <div>
+      <span class="lbl rv">Portfolio</span>
+      <h2 class="h2 rv d1">Quelques-unes de<br><em>nos créations</em></h2>
+      <p class="lead rv d2">Chaque pièce est unique, forgée à la main dans notre atelier.</p>
+    </div>
+    <div class="gal-big rv d3" aria-hidden="true">05</div>
+  </div>
+  <div class="gal-grid rv d2">
+    <div class="gal-item" onclick="openLb(this)">
+      <img class="gal-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c4c99ce59805473047d23942f8b1a5f77445aa90.jpg" alt="Portail double battant" loading="lazy"/>
+      <div class="gal-ov"><span class="gal-cap">Portail double battant</span></div>
+      <div class="gal-num">01</div>
+    </div>
+    <div class="gal-item" onclick="openLb(this)">
+      <img class="gal-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c3fec15966e90c7666f56c83bd79ab1c42f2f174.jpg" alt="Ferronnerie ornementale" loading="lazy"/>
+      <div class="gal-ov"><span class="gal-cap">Ferronnerie ornementale</span></div>
+      <div class="gal-num">02</div>
+    </div>
+    <div class="gal-item" onclick="openLb(this)">
+      <img class="gal-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/9c76ebf8cf9aa60a2926cff3d3560612e1fffb04.jpg" alt="Serre de jardin" loading="lazy"/>
+      <div class="gal-ov"><span class="gal-cap">Serre de jardin</span></div>
+      <div class="gal-num">03</div>
+    </div>
+    <div class="gal-item" onclick="openLb(this)">
+      <img class="gal-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/dd5110df61257d4e4c05934c61a09442a9eb2544.jpg" alt="Garde-corps forgé" loading="lazy"/>
+      <div class="gal-ov"><span class="gal-cap">Garde-corps forgé</span></div>
+      <div class="gal-num">04</div>
+    </div>
+    <div class="gal-item" onclick="openLb(this)">
+      <img class="gal-img" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/909a150405840e75ea8f4f352a9b8690798972a0.jpg" alt="Portail traditionnel" loading="lazy"/>
+      <div class="gal-ov"><span class="gal-cap">Portail traditionnel</span></div>
+      <div class="gal-num">05</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-row" id="stats">
+  <div class="stat"><div class="stat-g">15</div><span class="stat-v"><em id="c1">0</em> ans</span><span class="stat-l">D'expérience artisanale</span></div>
+  <div class="stat"><div class="stat-g">200</div><span class="stat-v"><em>+</em><em id="c2">0</em></span><span class="stat-l">Projets réalisés en Belgique</span></div>
+  <div class="stat"><div class="stat-g">5★</div><span class="stat-v"><em>4.9</em></span><span class="stat-l">Note Google · 42 avis vérifiés</span></div>
+</div>
+
+<!-- SERVICES -->
+<div class="srvs" id="services">
+  <div class="srvs-top">
+    <div><span class="lbl rv">Prestations</span><h2 class="h2 rv d1">Le savoir-faire<br>au service de<br><em>votre maison</em></h2></div>
+    <p class="lead rv d2" style="text-align:right;margin-top:0">Du projet à la pose,<br>nous maîtrisons chaque étape.</p>
+  </div>
+  <div style="margin-top:3rem">
+    <div class="srv rv">
+      <div class="srv-l"><div><div class="srv-n">01 — Portails &amp; Clôtures</div><div class="srv-t">Portails &amp;<br>Clôtures</div></div><p class="srv-d">Entrées majestueuses ou clôtures discrètes, nous sécurisons votre propriété avec élégance et durabilité. Finitions galvanisées ou thermolaquées selon vos souhaits.</p></div>
+      <div class="srv-r"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/5d2ddb3ee3ff78886600ddcae50cdc95320a0dff.jpg" alt="Portails" loading="lazy"/></div>
+    </div>
+    <div class="srv rv">
+      <div class="srv-l"><div><div class="srv-n">02 — Garde-Corps &amp; Rampes</div><div class="srv-t">Garde-Corps<br>&amp; Rampes</div></div><p class="srv-d">Sécurité certifiée et esthétique raffinée pour vos escaliers, terrasses et balcons. Dimensionné aux normes en vigueur.</p></div>
+      <div class="srv-r"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/f737604fb271ef236170b694a7b4663f096c504b.jpg" alt="Garde-corps" loading="lazy"/></div>
+    </div>
+    <div class="srv rv">
+      <div class="srv-l"><div><div class="srv-n">03 — Aménagements &amp; Structures</div><div class="srv-t">Aménagements<br>&amp; Structures</div></div><p class="srv-d">Serres à l'ancienne, marquises, tonnelles et verrières sur mesure. Le fer forgé habille vos espaces avec caractère.</p></div>
+      <div class="srv-r"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/9c76ebf8cf9aa60a2926cff3d3560612e1fffb04.jpg" alt="Aménagements" loading="lazy"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="ctab">
+  <p class="ctab-t rv">Travail soigné, créations sur mesure —<br><strong>garantie artisan.</strong></p>
+  <div class="ctab-r rv d2"><span class="ctab-lbl">Appelez-nous directement</span><a href="tel:0475399909" class="ctab-ph">0475 39 99 09</a></div>
+</div>
+
+<!-- PROCESS -->
+<section class="proc sec" id="process">
+  <div class="sec-in">
+    <span class="lbl rv">Méthode</span>
+    <h2 class="h2 rv d1">De l'Esquisse<br><em>à la Pose</em></h2>
+    <div class="proc-g" style="margin-top:3.5rem">
+      <div class="proc-s rv d1"><div class="proc-gh">01</div><div class="proc-n">01</div><div class="proc-ico"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg></div><div class="proc-t">Consultation</div><p class="proc-d">Échange sur vos besoins et premières prises de mesures sur site. Devis gratuit sous 48h.</p></div>
+      <div class="proc-s rv d2"><div class="proc-gh">02</div><div class="proc-n">02</div><div class="proc-ico"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg></div><div class="proc-t">Conception</div><p class="proc-d">Réalisation de plans cotés et validation du design ornemental avant mise en fabrication.</p></div>
+      <div class="proc-s rv d3"><div class="proc-gh">03</div><div class="proc-n">03</div><div class="proc-ico"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM9.75 12a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0z"/></svg></div><div class="proc-t">Fabrication</div><p class="proc-d">Forgeage artisanal en atelier selon les techniques traditionnelles. Chaque pièce vérifiée.</p></div>
+      <div class="proc-s rv d4"><div class="proc-gh">04</div><div class="proc-n">04</div><div class="proc-ico"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/></svg></div><div class="proc-t">Installation</div><p class="proc-d">Pose soignée par notre équipe avec finitions de protection et réception contradictoire.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<div class="testi" id="avis">
+  <div class="testi-in rv">
+    <div class="testi-q-mark">"</div>
+    <div class="testi-slides">
+      <div class="t-slide on"><p class="t-q">Un travail d'orfèvre. Le portail s'intègre parfaitement à l'architecture de notre maison. Solide, élégant, et l'équipe a fait preuve d'une rigueur absolue de la conception à la pose.</p><div class="t-sep"></div><div class="t-nm">Jean-Michel R.</div><div class="t-rl">Particulier · Bruxelles</div></div>
+      <div class="t-slide"><p class="t-q">Je collabore régulièrement avec LRMJ pour mes projets d'architecture. Leur capacité à traduire des croquis en pièces d'une telle précision est remarquable.</p><div class="t-sep"></div><div class="t-nm">Sophie L.</div><div class="t-rl">Architecte d'intérieur · Liège</div></div>
+      <div class="t-slide"><p class="t-q">Notre nouvelle verrière sur-mesure a complètement redéfini les volumes de notre intérieur. La qualité des finitions acier est superbe. Merci pour ce savoir-faire rare.</p><div class="t-sep"></div><div class="t-nm">Marc &amp; Valérie D.</div><div class="t-rl">Particuliers · Gand</div></div>
+    </div>
+    <div class="t-dots">
+      <button class="t-dot on" onclick="goT(0)"></button>
+      <button class="t-dot" onclick="goT(1)"></button>
+      <button class="t-dot" onclick="goT(2)"></button>
+    </div>
+    <div class="t-google rv d3">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      <div class="t-stars"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="t-rat"><strong>4.9 / 5</strong> · 42 avis Google</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="about" id="about">
+  <div class="about-txt">
+    <span class="lbl rv">L'Artisanat Belge</span>
+    <h2 class="h2 rv d1" style="font-size:clamp(2.2rem,4vw,4.5rem)">LRMJ Project<br><em>Une passion<br>transmise.</em></h2>
+    <p class="lead rv d2">Basés en Belgique, nous perpétuons la tradition de la ferronnerie d'art en y alliant les techniques modernes de protection des métaux.</p>
+    <div class="afeats rv d3">
+      <div class="af"><div class="af-dot"></div><div><div class="af-t">Acier Européen Certifié</div><p class="af-d">Utilisation exclusive d'acier de première qualité pour une longévité maximale face aux intempéries.</p></div></div>
+      <div class="af"><div class="af-dot"></div><div><div class="af-t">Traitement Durable</div><p class="af-d">Galvanisation à chaud et thermolaquage pour une protection totale contre la corrosion, garantie 10 ans.</p></div></div>
+      <div class="af"><div class="af-dot"></div><div><div class="af-t">Sur Mesure Absolu</div><p class="af-d">Chaque pièce est unique, dimensionnée à votre espace et forgée selon vos souhaits stylistiques.</p></div></div>
+    </div>
+  </div>
+  <div class="about-img rv"><img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/8591871f76d630ba2501e7cd15494191dc38d38b.jpg" alt="Artisan au travail" loading="lazy"/></div>
+</div>
+
+<!-- CONTACT -->
+<section class="cont" id="contact">
+  <div class="cont-top">
+    <span class="lbl rv">Contact</span>
+    <h2 class="h2 rv d1">Un projet en tête ?<br><em>Parlons-en.</em></h2>
+  </div>
+  <div class="cont-g">
+    <div class="cont-info">
+      <p class="lead" style="margin-top:0">Nous nous déplaçons partout en Belgique pour vos prises de mesures et devis gratuits.</p>
+      <div class="c-items rv d2">
+        <div class="ci"><div class="ci-ico"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg></div><div><div class="ci-lbl">Téléphone</div><div class="ci-val"><a href="tel:0475399909">0475 39 99 09</a></div></div></div>
+        <div class="ci"><div class="ci-ico"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></div><div><div class="ci-lbl">E-mail</div><div class="ci-val"><a href="mailto:contact@lrmjproject.be">contact@lrmjproject.be</a></div></div></div>
+        <div class="ci"><div class="ci-ico"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg></div><div><div class="ci-lbl">Zone d'intervention</div><div class="ci-val">Toute la Belgique</div></div></div>
+      </div>
+    </div>
+    <div class="cont-form-wrap rv d3">
+      <form onsubmit="handleForm(event)" novalidate>
+        <div class="ff-row">
+          <div class="ff"><label>Prénom</label><input type="text" placeholder="Jean" autocomplete="given-name"/></div>
+          <div class="ff"><label>Nom</label><input type="text" placeholder="Dupont" autocomplete="family-name"/></div>
+        </div>
+        <div class="ff"><label>E-mail</label><input type="email" placeholder="jean.dupont@exemple.com" autocomplete="email"/></div>
+        <div class="ff"><label>Téléphone</label><input type="tel" placeholder="04XX XX XX XX" autocomplete="tel"/></div>
+        <div class="ff ff-full"><label>Votre projet</label><textarea placeholder="Décrivez votre projet (type, dimensions, délai…)"></textarea></div>
+        <button class="sub-btn mag-btn" type="submit"><span>Envoyer ma demande →</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-main">
+    <div><div class="ft-logo">LRMJ<em>.</em></div><p class="ft-desc">L'excellence de la ferronnerie artisanale belge au service de vos projets les plus ambitieux.</p></div>
+    <div><div class="ft-h">Navigation</div><div class="ft-ls"><a href="#realisations">Réalisations</a><a href="#services">Prestations</a><a href="#process">Notre méthode</a><a href="#about">À Propos</a></div></div>
+    <div><div class="ft-h">Contact</div><div class="ft-ls"><a href="tel:0475399909">0475 39 99 09</a><a href="mailto:contact@lrmjproject.be">contact@lrmjproject.be</a><a href="#contact">Devis gratuit</a></div></div>
+  </div>
+  <div class="ft-super" aria-hidden="true">LRMJ</div>
+  <div class="ft-bot"><span>© 2024 LRMJ Project · Artisan Ferronnier · Belgique</span><span>Conçu avec passion</span></div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lb" onclick="closeLb()"><button id="lbc" onclick="closeLb()">✕</button><img id="lb-img" src="" alt="" onclick="event.stopPropagation()"/></div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-r');
+let cx=0,cy=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cur.style.left=cx+'px';cur.style.top=cy+'px'});
+(function ar(){rx+=(cx-rx)*.1;ry+=(cy-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar)})();
+document.querySelectorAll('a,button,.gal-item,.srv').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('h'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('h'));
+});
+
+/* PRELOADER */
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('pre').classList.add('out'),1600));
+
+/* PROGRESS BAR */
+const prog=document.getElementById('prog');
+function updateProg(){const m=document.documentElement.scrollHeight-window.innerHeight;prog.style.width=(m>0?window.scrollY/m*100:0)+'%'}
+
+/* HEADER + FLOATING CTA */
+const hdr=document.getElementById('hdr'),fcta=document.getElementById('fcta');
+let heroH=window.innerHeight;
+function updateHeader(){const s=window.scrollY;hdr.classList.toggle('s',s>40);fcta.classList.toggle('vis',s>heroH*.6)}
+
+/* SCROLL */
+window.addEventListener('scroll',()=>{updateHeader();updateProg()},{passive:true});
+window.addEventListener('resize',()=>{heroH=window.innerHeight});
+
+/* INTERSECTION OBSERVER */
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}})},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.rv,.manifesto').forEach(el=>io.observe(el));
+
+/* COUNTERS */
+function animCnt(el,target,dur){const s=performance.now();(function st(n){const t=Math.min((n-s)/dur,1);el.textContent=Math.round((1-Math.pow(1-t,4))*target);if(t<1)requestAnimationFrame(st)})(s)}
+let counted=false;
+new IntersectionObserver(e=>{if(e[0].isIntersecting&&!counted){counted=true;animCnt(document.getElementById('c1'),15,1800);animCnt(document.getElementById('c2'),200,2200)}},{threshold:.3}).observe(document.getElementById('stats'));
+
+/* MOBILE MENU */
+const mob=document.getElementById('mob'),hmb=document.getElementById('hmb');
+hmb.addEventListener('click',()=>{const o=mob.classList.toggle('o');hmb.classList.toggle('o',o);document.body.style.overflow=o?'hidden':''});
+document.querySelectorAll('#mob a').forEach(a=>a.addEventListener('click',()=>{mob.classList.remove('o');hmb.classList.remove('o');document.body.style.overflow=''}));
+
+/* TESTIMONIALS */
+let tIdx=0;
+function goT(n){document.querySelectorAll('.t-slide').forEach((s,i)=>s.classList.toggle('on',i===n));document.querySelectorAll('.t-dot').forEach((d,i)=>d.classList.toggle('on',i===n));tIdx=n}
+setInterval(()=>goT((tIdx+1)%3),5500);
+
+/* LIGHTBOX */
+const lb=document.getElementById('lb'),lbImg=document.getElementById('lb-img');
+function openLb(el){const img=el.querySelector('img');lbImg.src=img.src;lbImg.alt=img.alt;lb.classList.add('on');document.body.style.overflow='hidden'}
+function closeLb(){lb.classList.remove('on');document.body.style.overflow=''}
+
+/* KEYBOARD */
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLb();mob.classList.remove('o');hmb.classList.remove('o');document.body.style.overflow=''}});
+
+/* MAGNETIC BUTTONS */
+document.querySelectorAll('.mag-btn').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect();btn.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.28}px,${(e.clientY-r.top-r.height/2)*.28}px)`});
+  btn.addEventListener('mouseleave',()=>{btn.style.transition='transform .7s cubic-bezier(.16,1,.3,1)';btn.style.transform='';setTimeout(()=>btn.style.transition='',700)});
+});
+
+/* FORM */
+function handleForm(e){e.preventDefault();const s=e.target.querySelector('.sub-btn span');s.textContent='Envoi…';setTimeout(()=>{s.textContent='✓ Message envoyé !';e.target.reset();setTimeout(()=>s.textContent='Envoyer ma demande →',3000)},1200)}
+
+updateHeader();updateProg();
+</script>
+</body>
+</html>
